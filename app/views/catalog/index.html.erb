@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog - Flowers Store</title>
+    
+    <!-- Import catalog-specific stylesheet -->
+    <%= stylesheet_link_tag 'catalog.css', "data-turbo-track": "reload" %>
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+  </head>
+  <body>
+
+
+    </header>
+
+    <div class="catalog-container">
+      <h1 class="catalog-title">Catalog</h1>
+
+      <ul class="catalog-list">
+        <% @products.each do |product| %>
+          <li class="catalog-item">
+            <div class="product-info">
+              <%= link_to product.name, catalog_product_path(product), class: "product-name" %>
+              <span class="product-price"><%= number_to_currency(product.price) %></span>
+              <span class="product-type">(<%= product.product_type %>)</span>
+            </div>
+            <%= button_to 'Добавить в заказ', add_item_order_path(product_id: product.id), method: :post, class: 'add-to-order-btn' %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    
+  </body>
+</html>

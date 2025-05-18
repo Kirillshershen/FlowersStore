@@ -1,0 +1,17 @@
+<h1>Корзина</h1>
+
+<% if @product_in_orders.any? %>
+  <ul>
+    <% @product_in_orders.each do |item| %>
+      <li>
+        <%= item.product.name %> — <%= item.quantity %> шт.
+        <%= button_to 'Удалить', remove_item_order_path(product_id: item.product.id), method: :delete %>
+
+      </li>
+    <% end %>
+  </ul>
+
+<%= button_to 'Оформить заказ', confirm_order_path, method: :post %>
+<% else %>
+  <p>Ваша корзина пуста</p>
+<% end %>

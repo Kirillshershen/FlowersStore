@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  size: MyString
+  material: MyString
+  price: 9.99
+  discount: 9.99
+  diameter: 9.99
+
+two:
+  name: MyString
+  size: MyString
+  material: MyString
+  price: 9.99
+  discount: 9.99
+  diameter: 9.99

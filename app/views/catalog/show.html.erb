@@ -1,0 +1,24 @@
+<h1><%= @product.name %></h1>
+
+<p>Type: <%= @product.product_type %></p>
+<p>Price: <%= number_to_currency(@product.price) %></p>
+
+<% if @specific.present? %>
+  <h3>Details:</h3>
+  <ul>
+    <% @specific.attributes.except("id", "created_at", "updated_at", "price").each do |key, value| %>
+      <li><strong><%= key.humanize %>:</strong> <%= value %></li>
+    <% end %>
+  </ul>
+<% end %>
+<% if @product.product_type == "Букет" %>
+  <h2>Состав букета:</h2>
+  <ul>
+    <% @flowers_in_bouquet.each do |item| %>
+      <li><strong><%= item.flower.name %></strong> — <%= item.quantity %> шт.</li>
+    <% end %>
+  </ul>
+<% end %>
+<%= button_to 'Добавить в заказ', add_item_order_path(product_id: @product.id), method: :post %>
+
+<%= link_to "Back to catalog", catalog_path %>

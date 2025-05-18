@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  bouquet_type: one
+  bouquet_packaging: one
+  price: 9.99
+  discount: 9.99
+
+two:
+  name: MyString
+  bouquet_type: two
+  bouquet_packaging: two
+  price: 9.99
+  discount: 9.99

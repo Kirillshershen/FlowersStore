@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Flowers Store" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag 'header', "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+   <header class="header">
+  <div class="header-container">
+    <div class="logo">
+      <%= link_to "Flowers Store", root_path %>
+    </div>
+
+    <div class="user-links">
+      <% if user_signed_in? %>
+        <%= link_to '🛒 Корзина', order_path, class: "cart-link" %>
+        <%= link_to 'Мои заказы', orders_path %>
+
+        <%= link_to 'Выйти', destroy_user_session_path, method: :delete %>
+      <% else %>
+        <%= link_to 'Войти', new_user_session_path %> |
+        <%= link_to 'Регистрация', new_user_registration_path %>
+      <% end %>
+    </div>
+  </div>
+
+  <nav class="nav-categories">
+    <strong>Категории:</strong>
+    <%= link_to "Цветы", catalog_path(type: "Flower") %> |
+    <%= link_to "Букеты", catalog_path(type: "Bouquet") %> |
+    <%= link_to "Игрушки", catalog_path(type: "Toy") %> |
+    <%= link_to "Вазы", catalog_path(type: "Vase") %>
+  </nav>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <%= form_with url: catalog_path, method: :get, local: true, class: "search-form" do |form| %>
+      <%= form.text_field :query, placeholder: "Поиск по продуктам", value: params[:query], class: "search-input" %>
+      <%= form.submit "Поиск", class: "search-button" %>
+    <% end %>
+  </div>
+</header>
+
+
+    <%= yield %>
+  </body>
+</html>

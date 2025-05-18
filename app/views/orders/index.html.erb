@@ -1,0 +1,22 @@
+<h1>Ваши заказы</h1>
+
+<% if @orders.any? %>
+  <ul>
+    <% @orders.each do |order| %>
+      <li>
+        <strong>Заказ №<%= order.id %></strong>
+        <ul>
+          <% order.product_in_orders.each do |item| %>
+            <li>
+              <%= item.product.name %> (Количество: <%= item.quantity %>) - Цена: <%= item.product.price * item.quantity %> руб.
+            </li>
+          <% end %>
+        </ul>
+        <p><strong>Дата оформления:</strong> <%= order.ready_date.strftime('%d-%m-%Y %H:%M') %></p>
+        <p><strong>Статус:</strong> <%= order.status.capitalize %></p>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>У вас нет подтвержденных заказов.</p>
+<% end %>

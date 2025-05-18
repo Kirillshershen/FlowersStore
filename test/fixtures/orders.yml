@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  price: 9.99
+  payment_method: MyString
+  delivery_method: MyString
+  ready_date: 2025-05-14 14:26:58
+
+two:
+  user: two
+  price: 9.99
+  payment_method: MyString
+  delivery_method: MyString
+  ready_date: 2025-05-14 14:26:58

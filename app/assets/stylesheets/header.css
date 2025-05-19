@@ -1,63 +1,167 @@
-/* Base styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+/* Общая структура */
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #fff;
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
+/* Верхняя информационная строка */
+.top-info-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 16px;
+  font-size: 12px;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Шапка */
 .header {
-  background-color: #f8f8f8;
-  padding: 10px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
 }
 
 .header-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
-.logo {
+/* Логотип */
+.logo a {
+  font-family: 'Cursive', sans-serif;
   font-size: 24px;
-  font-weight: bold;
-  color: #5a5a5a;
+  text-decoration: none;
+  color: black;
 }
 
+/* Поисковая строка */
+.search-bar {
+  flex: 1;
+  max-width: 400px;
+  margin: 10px;
+}
+
+.search-form {
+  display: flex;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 25px 0 0 25px;
+  outline: none;
+}
+
+.search-button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-left: none;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 0 25px 25px 0;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Ссылки пользователя */
 .user-links {
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .user-links a {
-  color: #3498db;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 6px 12px;
   text-decoration: none;
-  margin-left: 10px;
+  color: black;
+  font-size: 14px;
+  transition: background-color 0.3s;
 }
 
+.user-links a:hover {
+  background-color: #f2f2f2;
+}
+
+/* Навигация по категориям */
 .nav-categories {
-  background-color: #ffffff;
-  padding: 10px 20px;
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.nav-categories strong {
-  margin-right: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 0;
+  background-color: #fff;
 }
 
 .nav-categories a {
-  color: #5a5a5a;
+  padding: 8px 16px;
+  border: 1px solid black;
+  border-radius: 16px;
   text-decoration: none;
-  margin-right: 15px;
+  color: black;
   font-size: 14px;
+  background-color: white;  /* добавлено */
+  transition: background-color 0.3s;
 }
 
+/* hover остаётся прежним */
 .nav-categories a:hover {
-  color: #3498db;
+  background-color: #f2f2f2;
+}
+
+/* Контейнер выпадающего меню */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Кнопка меню */
+.dropbtn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 10px 15px;
+}
+
+/* Скрытый контент меню */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  z-index: 1000;
+  margin-top: 5px;
+  border-radius: 4px;
+}
+
+/* Ссылки в выпадающем меню */
+.dropdown-content a {
+  color: #333;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Показывать меню при наведении на контейнер */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Можно стилизовать кнопку при наведении */
+.dropdown:hover .dropbtn {
+  color: #4caf50;
 }

@@ -19,42 +19,61 @@
   </head>
 
   <body>
-   <header class="header">
-  <div class="header-container">
-    <div class="logo">
-      <%= link_to "Flowers Store", root_path %>
+    <!-- Верхняя информационная строка -->
+    <div class="top-info-bar">
+      <div>Работаем с 10:00 до 21:00</div>
+      <div>
+        <%= link_to 'Главная', root_path %>
+        <%= link_to 'О нас', about_path %>
+        <%= link_to 'Доставка и оплата', delivery_path %>
+        <%= link_to 'Контакты', contacts_path %>
+      </div>
     </div>
 
-    <div class="user-links">
-      <% if user_signed_in? %>
-        <%= link_to '🛒 Корзина', order_path, class: "cart-link" %>
-        <%= link_to 'Мои заказы', orders_path %>
+    <header class="header">
+      <div class="header-container">
+        <div class="logo">
+          <%= link_to "Тюльпаново", root_path %>
+        </div>
+<div class="search-bar">
+        <%= form_with url: catalog_path, method: :get, local: true, class: "search-form" do |form| %>
+          <%= form.text_field :query, placeholder: "Поиск по продуктам", value: params[:query], class: "search-input" %>
+          <%= form.submit "Поиск", class: "search-button" %>
+        <% end %>
+      </div>
+        <div class="user-links">
+          <% if user_signed_in? %>
 
-        <%= link_to 'Выйти', destroy_user_session_path, method: :delete %>
-      <% else %>
-        <%= link_to 'Войти', new_user_session_path %> |
-        <%= link_to 'Регистрация', new_user_registration_path %>
-      <% end %>
+            <%= link_to 'Мой аккаунт', '#' %>
+                        <%= link_to '🛒 Корзина', order_path, class: "cart-link" %>
+<%= link_to 'Выйти', destroy_user_session_path, data: { "turbo-method": :delete } %>
+          <% else %>
+            <%= link_to 'Войти', new_user_session_path %>
+            <%= link_to 'Регистрация', new_user_registration_path %>
+          <% end %>
+        </div>
+      </div>
+
+<nav class="nav-categories">
+  <div class="dropdown">
+    <button class="dropbtn">Букеты ▼</button>
+    <div class="dropdown-content">
+      <%= link_to "Все букеты", catalog_path(type: "Bouquet") %>
+      <%= link_to "Розы", catalog_path(type: "Bouquet", bouquet_type: "rose") %>
+      <%= link_to "Свадебные", catalog_path(type: "Bouquet", bouquet_type: "wedding") %>
+      <%= link_to "Подарочные", catalog_path(type: "Bouquet", bouquet_type: "gift") %>
+      <%= link_to "Круглые", catalog_path(type: "Bouquet", bouquet_type: "round") %>
     </div>
   </div>
 
-  <nav class="nav-categories">
-    <strong>Категории:</strong>
-    <%= link_to "Цветы", catalog_path(type: "Flower") %> |
-    <%= link_to "Букеты", catalog_path(type: "Bouquet") %> |
-    <%= link_to "Игрушки", catalog_path(type: "Toy") %> |
-    <%= link_to "Вазы", catalog_path(type: "Vase") %>
-  </nav>
+  <%= link_to "Цветы", catalog_path(type: "Flower") %>
+  <%= link_to "Игрушки", catalog_path(type: "Toy") %>
+  <%= link_to "Вазы", catalog_path(type: "Vase") %>
+  <%= link_to "Акции", '#' %>
+</nav>
 
-  <!-- Search Bar -->
-  <div class="search-bar">
-    <%= form_with url: catalog_path, method: :get, local: true, class: "search-form" do |form| %>
-      <%= form.text_field :query, placeholder: "Поиск по продуктам", value: params[:query], class: "search-input" %>
-      <%= form.submit "Поиск", class: "search-button" %>
-    <% end %>
-  </div>
-</header>
-
+      
+    </header>
 
     <%= yield %>
   </body>

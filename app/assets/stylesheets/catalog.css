@@ -1,70 +1,91 @@
-/* Catalog Page Styles */
-.catalog-title {
-  text-align: center;
-  font-size: 36px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
+.catalog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: #fff;
 }
 
 .catalog-list {
-  list-style-type: none;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
   padding: 0;
+  margin: 0;
 }
+
+@media (max-width: 1024px) {
+  .catalog-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .catalog-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .catalog-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 .catalog-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fafafa;
-  padding: 10px 20px;
-  margin: 10px 0;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 20px;
+  padding: 16px;
+  text-align: center;
+  transition: background-color 0.3s;
 }
 
-.product-info {
-  display: flex;
-  flex-direction: column;
+.catalog-item:hover {
+  background-color: #e7fafa;
+}
+
+.product-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 12px;
 }
 
 .product-name {
-  font-size: 18px;
-  font-weight: bold;
-  color: #3498db;
-  text-decoration: none;
-  margin-bottom: 5px;
-}
-
-.product-name:hover {
-  text-decoration: underline;
+  font-size: 16px;
+  margin-bottom: 4px;
 }
 
 .product-price {
-  font-size: 16px;
-  color: #27ae60;
-}
-
-.product-type {
-  font-size: 14px;
-  color: #7f8c8d;
+  color: #00bfa5;
+  font-weight: 500;
+  margin-bottom: 12px;
 }
 
 .add-to-order-btn {
-  background-color: #3498db;
+  background-color: #00bfa5;
   color: white;
   border: none;
-  padding: 8px 20px;
+  padding: 8px 16px;
   font-size: 14px;
+  border-radius: 20px;
   cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
 .add-to-order-btn:hover {
-  background-color: #2980b9;
+  background-color: #009f8a;
 }
 
-.add-to-order-btn:active {
-  background-color: #21618c;
+.product-name a {
+  text-decoration: none; /* убирает подчеркивание */
+  color: black;          /* делает текст чёрным */
 }
+
+.product-name a:hover {
+  text-decoration: none;
+  color: black;
+}
+

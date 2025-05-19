@@ -1,6 +1,17 @@
 Rails.application.routes.draw do
+  get "pages/about"
+  get "pages/delivery"
+  get "pages/contacts"
+get 'about', to: 'pages#about', as: :about
+get 'delivery', to: 'pages#delivery', as: :delivery
+get 'contacts', to: 'pages#contacts', as: :contacts
   devise_for :users
-root "catalog#index"
+root to: "pages#home"   # если хочешь, чтобы главная страница была home
+
+# или явно дать имя маршруту:
+get 'home', to: 'pages#home', as: 'home'
+
+
   get "catalog/index"
   get "catalog/show"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

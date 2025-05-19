@@ -1,17 +1,100 @@
-<h1>Корзина</h1>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Корзина</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  
+  <%= stylesheet_link_tag 'order.css', "data-turbo-track": "reload" %>
+</head>
+<body>
+  <h1 class="cart-title">Корзина</h1>
+  <div style="position: sticky; top: 0; background: white; z-index: 1000; padding: 20px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <div class="cart-page-container">
+      <div class="cart-main-wrapper">
+        <div class="cart-content">
 
-<% if @product_in_orders.any? %>
-  <ul>
-    <% @product_in_orders.each do |item| %>
-      <li>
-        <%= item.product.name %> — <%= item.quantity %> шт.
-        <%= button_to 'Удалить', remove_item_order_path(product_id: item.product.id), method: :delete %>
+          <% if @product_in_orders.any? %>
+            <% total_price = 0 %>
+            <% @product_in_orders.each do |item| %>
+              <% item_total = item.product.price * item.quantity %>
+              <% total_price += item_total %>
 
-      </li>
-    <% end %>
-  </ul>
+              <div class="cart-item">
+                <% if item.product.image.attached? %>
+                  <div class="cart-image-wrapper">
+                    <%= link_to catalog_product_path(item.product) do %>
+                      <%= image_tag item.product.image, class: "cart-product-image" %>
+                    <% end %>
+                  </div>
+                <% end %>
 
-<%= button_to 'Оформить заказ', confirm_order_path, method: :post %>
-<% else %>
-  <p>Ваша корзина пуста</p>
-<% end %>
+                <div class="cart-details">
+                  <h2 class="cart-product-name"><%= item.product.name %></h2>
+                  <p><strong>Количество:</strong> <%= item.quantity %> шт.</p>
+                  <p><strong>Цена за штуку:</strong> <%= number_to_currency(item.product.price, unit: "BYN ") %></p>
+                  <p><strong>Итого:</strong> <%= number_to_currency(item_total, unit: "BYN ") %></p>
+                  <%= button_to 'Удалить', remove_item_order_path(product_id: item.product.id), method: :delete, class: "remove-button" %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="empty-cart-message">Ваша корзина пуста</p>
+          <% end %>
+        </div>
+
+        <% if @product_in_orders.any? %>
+          <div class="cart-summary">
+            <h3>Итоговая сумма</h3>
+            <p class="total-price"><%= number_to_currency(total_price, unit: "BYN ") %></p>
+
+            <%= form_with url: confirm_order_path, method: :post, local: true do |f| %>
+              <div class="form-group">
+                <label for="delivery_method">Способ доставки:</label><br>
+                <%= f.radio_button :delivery_method, 'pickup', id: 'pickup' %>
+                <%= f.label :delivery_method_pickup, 'Самовывоз' %><br>
+                <%= f.radio_button :delivery_method, 'delivery', id: 'delivery' %>
+                <%= f.label :delivery_method_delivery, 'Доставка по адресу' %>
+              </div>
+
+              <div class="form-group" id="address-field" style="display: none;">
+                <label for="delivery_address">Адрес доставки:</label>
+                <%= f.text_field :delivery_address, class: "input" %>
+              </div>
+
+              <div class="form-group">
+                <label for="ready_date">Когда товар должен быть готов:</label>
+                <%= f.datetime_local_field :ready_date, class: "input" %>
+              </div>
+
+              <%= f.submit 'Подтвердить заказ', class: "confirm-button" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const pickup = document.getElementById("pickup");
+      const delivery = document.getElementById("delivery");
+      const addressField = document.getElementById("address-field");
+
+      function toggleAddress() {
+        if (delivery.checked) {
+          addressField.style.display = "block";
+        } else {
+          addressField.style.display = "none";
+        }
+      }
+
+      pickup.addEventListener("change", toggleAddress);
+      delivery.addEventListener("change", toggleAddress);
+
+      toggleAddress(); // при загрузке страницы
+    });
+  </script>
+</body>
+</html>

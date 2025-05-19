@@ -1,24 +1,63 @@
-<h1><%= @product.name %></h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= @product.name %> - Flowers Store</title>
 
-<p>Type: <%= @product.product_type %></p>
-<p>Price: <%= number_to_currency(@product.price) %></p>
+  <%= stylesheet_link_tag 'product', "data-turbo-track": "reload" %>
 
-<% if @specific.present? %>
-  <h3>Details:</h3>
-  <ul>
-    <% @specific.attributes.except("id", "created_at", "updated_at", "price").each do |key, value| %>
-      <li><strong><%= key.humanize %>:</strong> <%= value %></li>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+</head>
+<body>
+
+ <main class="product-card-container">
+
+  <div class="product-card-flex">
+    <% if @product.image.attached? %>
+      <div class="product-image-container">
+        <%= image_tag @product.image, class: "product-image" %>
+      </div>
     <% end %>
-  </ul>
-<% end %>
-<% if @product.product_type == "Букет" %>
-  <h2>Состав букета:</h2>
-  <ul>
-    <% @flowers_in_bouquet.each do |item| %>
-      <li><strong><%= item.flower.name %></strong> — <%= item.quantity %> шт.</li>
-    <% end %>
-  </ul>
-<% end %>
-<%= button_to 'Добавить в заказ', add_item_order_path(product_id: @product.id), method: :post %>
 
-<%= link_to "Back to catalog", catalog_path %>
+    <div class="product-info">
+      <h1 class="product-name"><%= @product.name %></h1>
+
+      <p class="product-type"><strong>Type:</strong> <%= @product.product_type %></p>
+      <p class="product-price"><strong>Price:</strong> <%= number_to_currency(@product.price, unit: "Br", separator: ",") %></p>
+
+      <% if @specific.present? %>
+        <h3 class="details-title">Details:</h3>
+        <ul class="details-list">
+          <% @specific.attributes.except("id", "created_at", "updated_at", "price").each do |key, value| %>
+            <li><strong><%= key.humanize %>:</strong> <%= value %></li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <% if @product.product_type == "Букет" %>
+        <h2 class="composition-title">Состав букета:</h2>
+        <ul class="composition-list">
+          <% @flowers_in_bouquet.each do |item| %>
+            <li><strong><%= item.flower.name %></strong> — <%= item.quantity %> шт.</li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <%= button_to 'Добавить в заказ', add_item_order_path(product_id: @product.id), method: :post, class: 'add-to-order-btn' %>
+
+      <div class="back-link">
+        <%= link_to "Back to catalog", catalog_path %>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+
+  <footer>
+    <!-- Футер -->
+  </footer>
+</body>
+</html>

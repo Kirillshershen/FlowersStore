@@ -1,0 +1,90 @@
+.product-card-flex {
+  display: flex;
+  gap: 30px; /* расстояние между фото и текстом */
+  align-items: flex-start; /* выравнивание по верхнему краю */
+  margin: 20px 0;
+}
+
+.product-image-container {
+  max-width: 300px;
+  flex-shrink: 0; /* не сжимать картинку */
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.product-info {
+  flex-grow: 1; /* занимает всё оставшееся место */
+}
+
+.product-name {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 2rem;
+  color: #222;
+}
+
+.details-title,
+.composition-title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+.details-list,
+.composition-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0 0 20px 0;
+}
+
+.details-list li,
+.composition-list li {
+  margin-bottom: 6px;
+}
+
+.add-to-order-btn {
+  padding: 10px 18px;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-to-order-btn:hover {
+  background-color: #45a049;
+}
+
+.back-link {
+  margin-top: 25px;
+}
+
+.back-link a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.back-link a:hover {
+  text-decoration: underline;
+}
+.product-card-container {
+  display: flex;
+  justify-content: center; /* Центрирует содержимое по горизонтали */
+  padding: 40px 20px; /* Отступы сверху и снизу, по бокам */
+}
+
+.product-card-flex {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  max-width: 900px; /* Максимальная ширина карточки, чтобы не растягивалась на весь экран */
+  width: 100%; /* Чтобы адаптировалась под ширину экрана */
+}

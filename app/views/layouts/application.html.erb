@@ -43,8 +43,9 @@
       </div>
         <div class="user-links">
           <% if user_signed_in? %>
+<%= link_to 'Мой аккаунт', orders_path %>
 
-            <%= link_to 'Мой аккаунт', '#' %>
+
                         <%= link_to '🛒 Корзина', order_path, class: "cart-link" %>
 <%= link_to 'Выйти', destroy_user_session_path, data: { "turbo-method": :delete } %>
           <% else %>
@@ -58,19 +59,21 @@
   <div class="dropdown">
     <button class="dropbtn">Букеты ▼</button>
     <div class="dropdown-content">
-      <%= link_to "Все букеты", catalog_path(type: "Bouquet") %>
-      <%= link_to "Розы", catalog_path(type: "Bouquet", bouquet_type: "rose") %>
-      <%= link_to "Свадебные", catalog_path(type: "Bouquet", bouquet_type: "wedding") %>
-      <%= link_to "Подарочные", catalog_path(type: "Bouquet", bouquet_type: "gift") %>
-      <%= link_to "Круглые", catalog_path(type: "Bouquet", bouquet_type: "round") %>
+      <%= link_to "Все букеты", catalog_index_path(tab: "all_bouquets"), class: (params[:tab] == "all_bouquets" ? "active" : "") %>
+      <%= link_to "Розы", catalog_index_path(tab: "rose_bouquets"), class: (params[:tab] == "rose_bouquets" ? "active" : "") %>
+      <%= link_to "Свадебные", catalog_index_path(tab: "wedding_bouquets"), class: (params[:tab] == "wedding_bouquets" ? "active" : "") %>
+      <%= link_to "Подарочные", catalog_index_path(tab: "gift_bouquets"), class: (params[:tab] == "gift_bouquets" ? "active" : "") %>
+      <%= link_to "Круглые", catalog_index_path(tab: "round_bouquets"), class: (params[:tab] == "round_bouquets" ? "active" : "") %>
     </div>
   </div>
 
-  <%= link_to "Цветы", catalog_path(type: "Flower") %>
-  <%= link_to "Игрушки", catalog_path(type: "Toy") %>
-  <%= link_to "Вазы", catalog_path(type: "Vase") %>
+  <%= link_to "Цветы", catalog_index_path(tab: "flowers") %>
+  <%= link_to "Игрушки", catalog_index_path(tab: "toys") %>
+  <%= link_to "Вазы", catalog_index_path(tab: "vases") %>
   <%= link_to "Акции", '#' %>
 </nav>
+
+
 
       
     </header>

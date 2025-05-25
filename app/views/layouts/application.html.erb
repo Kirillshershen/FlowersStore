@@ -19,65 +19,78 @@
   </head>
 
   <body>
-    <!-- Верхняя информационная строка -->
-    <div class="top-info-bar">
-      <div>Работаем с 10:00 до 21:00</div>
-      <div>
-        <%= link_to 'Главная', root_path %>
-        <%= link_to 'О нас', about_path %>
-        <%= link_to 'Доставка и оплата', delivery_path %>
-        <%= link_to 'Контакты', contacts_path %>
-      </div>
-    </div>
-
-    <header class="header">
-      <div class="header-container">
-        <div class="logo">
-          <%= link_to "Тюльпаново", root_path %>
-        </div>
-<div class="search-bar">
-        <%= form_with url: catalog_path, method: :get, local: true, class: "search-form" do |form| %>
-          <%= form.text_field :query, placeholder: "Поиск по продуктам", value: params[:query], class: "search-input" %>
-          <%= form.submit "Поиск", class: "search-button" %>
-        <% end %>
-      </div>
-        <div class="user-links">
-          <% if user_signed_in? %>
-<%= link_to 'Мой аккаунт', orders_path %>
-
-
-                        <%= link_to '🛒 Корзина', order_path, class: "cart-link" %>
-<%= link_to 'Выйти', destroy_user_session_path, data: { "turbo-method": :delete } %>
-          <% else %>
-            <%= link_to 'Войти', new_user_session_path %>
-            <%= link_to 'Регистрация', new_user_registration_path %>
-          <% end %>
+    <div class="page-wrapper">
+      <!-- Верхняя панель и хедер -->
+      <div class="top-info-bar">
+        <div>Работаем с 10:00 до 21:00</div>
+        <div>
+          <%= link_to 'Главная', root_path %>
+          <%= link_to 'О нас', about_path %>
+          <%= link_to 'Доставка и оплата', delivery_path %>
+          <%= link_to 'Контакты', contacts_path %>
         </div>
       </div>
 
-<nav class="nav-categories">
-  <div class="dropdown">
-    <button class="dropbtn">Букеты ▼</button>
-    <div class="dropdown-content">
-      <%= link_to "Все букеты", catalog_index_path(tab: "all_bouquets"), class: (params[:tab] == "all_bouquets" ? "active" : "") %>
-      <%= link_to "Розы", catalog_index_path(tab: "rose_bouquets"), class: (params[:tab] == "rose_bouquets" ? "active" : "") %>
-      <%= link_to "Свадебные", catalog_index_path(tab: "wedding_bouquets"), class: (params[:tab] == "wedding_bouquets" ? "active" : "") %>
-      <%= link_to "Подарочные", catalog_index_path(tab: "gift_bouquets"), class: (params[:tab] == "gift_bouquets" ? "active" : "") %>
-      <%= link_to "Круглые", catalog_index_path(tab: "round_bouquets"), class: (params[:tab] == "round_bouquets" ? "active" : "") %>
+      <header class="header">
+        <div class="header-container">
+          <div class="logo">
+            <%= link_to "Тюльпаново", root_path %>
+          </div>
+
+          <div class="search-bar">
+            <%= form_with url: catalog_path, method: :get, local: true, class: "search-form" do |form| %>
+              <%= form.text_field :query, placeholder: "Поиск по продуктам", value: params[:query], class: "search-input" %>
+              <%= form.submit "Поиск", class: "search-button" %>
+            <% end %>
+          </div>
+
+          <div class="user-links">
+            <% if user_signed_in? %>
+              <%= link_to 'Мой аккаунт', orders_path %>
+              <%= link_to '🛒 Корзина', order_path, class: "cart-link" %>
+              <%= link_to 'Выйти', destroy_user_session_path, data: { "turbo-method": :delete } %>
+            <% else %>
+              <%= link_to 'Войти', new_user_session_path %>
+              <%= link_to 'Регистрация', new_user_registration_path %>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="nav-social-wrapper">
+          <nav class="nav-categories">
+            <div class="dropdown">
+              <button class="dropbtn">Букеты</button>
+              <div class="dropdown-content">
+                <%= link_to "Все букеты", catalog_index_path(tab: "all_bouquets"), class: (params[:tab] == "all_bouquets" ? "active" : "") %>
+                <%= link_to "Розы", catalog_index_path(tab: "rose_bouquets"), class: (params[:tab] == "rose_bouquets" ? "active" : "") %>
+                <%= link_to "Свадебные", catalog_index_path(tab: "wedding_bouquets"), class: (params[:tab] == "wedding_bouquets" ? "active" : "") %>
+                <%= link_to "Подарочные", catalog_index_path(tab: "gift_bouquets"), class: (params[:tab] == "gift_bouquets" ? "active" : "") %>
+                <%= link_to "Круглые", catalog_index_path(tab: "round_bouquets"), class: (params[:tab] == "round_bouquets" ? "active" : "") %>
+              </div>
+            </div>
+
+            <%= link_to "Цветы", catalog_index_path(tab: "flowers"), class: (params[:tab] == "flowers" ? "active" : "") %>
+            <%= link_to "Игрушки", catalog_index_path(tab: "toys"), class: (params[:tab] == "toys" ? "active" : "") %>
+            <%= link_to "Вазы", catalog_index_path(tab: "vases"), class: (params[:tab] == "vases" ? "active" : "") %>
+            <%= link_to "Акции", '#', class: "discounts-link" %>
+          </nav>
+
+          <div class="social-links">
+            <a href="https://t.me/viola_kondrat" target="_blank" aria-label="Telegram">
+              <%= image_tag 'telegram.png', alt: 'Telegram', class: 'social-icon' %>
+            </a>
+            <a href="https://www.instagram.com/viola__kondrat?igsh=bjUxZXdkemc1Mjlh" target="_blank" aria-label="Instagram">
+              <%= image_tag 'instagram.png', alt: 'Instagram', class: 'social-icon' %>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <%= yield %>
+      </main>
+
+      <%= render 'layouts/footer' %>
     </div>
-  </div>
-
-  <%= link_to "Цветы", catalog_index_path(tab: "flowers") %>
-  <%= link_to "Игрушки", catalog_index_path(tab: "toys") %>
-  <%= link_to "Вазы", catalog_index_path(tab: "vases") %>
-  <%= link_to "Акции", '#' %>
-</nav>
-
-
-
-      
-    </header>
-
-    <%= yield %>
   </body>
 </html>

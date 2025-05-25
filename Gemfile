@@ -64,3 +64,6 @@ end
 
 gem 'devise'
 
+
+
+gem 'ransack'

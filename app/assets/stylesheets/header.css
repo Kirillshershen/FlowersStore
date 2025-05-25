@@ -236,8 +236,7 @@ body {
   font-weight: 700;
 }
 
-
-/* Контейнер для мобильной адаптивности (если понадобится) */
+/* Контейнер для мобильной адаптивности */
 @media (max-width: 768px) {
   .header-container {
     flex-direction: column;
@@ -260,4 +259,69 @@ body {
   .dropdown-content {
     min-width: 140px;
   }
+}
+
+/* Обертка для соцсетей и навигации */
+.nav-social-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center; /* Центрируем содержимое */
+  align-items: center;
+  margin: 10px 0;
+}
+
+/* Иконки соцсетей */
+.social-links {
+  display: flex;
+  gap: 10px;
+}
+
+.social-icon {
+  width: 24px;
+  height: 24px;
+  filter: grayscale(100%);
+  transition: filter 0.3s;
+}
+
+.social-icon:hover {
+  filter: none;
+}
+
+/* Ссылка корзины с иконкой */
+.cart-link {
+  position: relative;
+  font-weight: 700;
+  color: #333;
+  text-decoration: none;
+  padding-left: 20px;
+}
+
+.cart-link::before {
+  content: "🛒";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Основной контент */
+.main-content {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 16px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgb(0 0 0 / 0.1);
+  min-height: 70vh;
+}
+
+/* Подвал - пример базового стиля для футера (если используете render 'layouts/footer') */
+footer {
+  background-color: #222;
+  color: #fff;
+  padding: 20px 16px;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 40px;
+  border-top: 1px solid #333;
 }

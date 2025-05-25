@@ -9,6 +9,10 @@ def index
   end
 
   @products = @products.order(:name)
+  respond_to do |format|
+    format.html 
+    format.json { render json: @products }
+  end
 end
 
   def show
@@ -28,7 +32,6 @@ private
 
 def filter_by_type_or_tab(type, bouquet_type, tab, products)
   if type.present? && type != "Bouquet"
-    products = Product.where(productable_type: type)
   elsif type == "Bouquet"
     if bouquet_type.present?
       bouquet_ids = Bouquet.joins(:bouquet_type)
@@ -57,9 +60,9 @@ def filter_by_type_or_tab(type, bouquet_type, tab, products)
     when "single_flowers", "flowers"
       products = Product.where(productable_type: "Flower")
     when "toys"
-      products = Product.where(productable_type: "Toy")
+      products = Product.where(product_type: "toys")
     when "vases"
-      products = Product.where(productable_type: "Vase")
+      products = Product.where(product_type: "vases")
     when "all_bouquets"
       products = Product.where(productable_type: "Bouquet")
     end

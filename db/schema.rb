@@ -91,14 +91,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_220150) do
   end
 
   create_table "orders", force: :cascade do |t|
+    t.integer "user_id", null: false
     t.decimal "price"
     t.string "payment_method"
     t.string "delivery_method"
+    t.string "delivery_address"
     t.datetime "ready_date"
+    t.string "status", default: "draft", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
-    t.string "status", default: "draft", null: false
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -115,9 +116,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_220150) do
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.decimal "price"
-    t.string "productable_type", null: false
-    t.integer "productable_id", null: false
+    t.string "productable_type"
+    t.integer "productable_id"
     t.string "product_type"
+    t.json "metadata"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["productable_type", "productable_id"], name: "index_products_on_productable"
@@ -126,16 +128,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_220150) do
   create_table "reviews", force: :cascade do |t|
     t.integer "rating"
     t.text "comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "toys", force: :cascade do |t|
-    t.string "name"
-    t.string "size"
-    t.string "material"
-    t.decimal "price"
-    t.decimal "discount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -150,17 +142,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_220150) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  end
-
-  create_table "vases", force: :cascade do |t|
-    t.string "name"
-    t.string "size"
-    t.string "material"
-    t.decimal "price"
-    t.decimal "discount"
-    t.decimal "diameter"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

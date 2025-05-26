@@ -1,73 +1,55 @@
 class CatalogController < ApplicationController
 def index
-  @products = Product.all
+  @q = Product.ransack(params[:q])
+  Rails.logger.debug("FILTER PARAMS: #{params[:q]}")
 
-  @products = filter_by_type_or_tab(params[:type], params[:bouquet_type], params[:tab], @products)
+  @products = @q.result(distinct: true)
+                .includes(image_attachment: :blob)
+                .order(Arel.sql("metadata->>'bouquet_type'"))
 
-  if params[:query].present?
-    @products = @products.where("name LIKE ?", "%#{params[:query]}%")
+  # Фильтрация по типу букета
+  if params.dig(:q, :metadata_bouquet_type_eq).present?
+    @products = @products.with_bouquet_type(params[:q][:metadata_bouquet_type_eq])
   end
 
+  # Фильтрация по типу растения
+  if params.dig(:q, :metadata_plant_type_eq).present?
+    @products = @products.where("metadata->>'plant_type' = ?", params[:q][:metadata_plant_type_eq])
+  end
+
+
   @products = @products.order(:name)
+
+  @bouquet_types = Product
+                    .where(product_type: 'bouquet')
+                    .pluck(Arel.sql("DISTINCT metadata->>'bouquet_type'"))
+                    .compact
+                    .map(&:strip)
+                    .sort_by(&:downcase)
+
   respond_to do |format|
-    format.html 
+    format.html
     format.json { render json: @products }
   end
 end
 
+
+
+
+
+
   def show
-    @product = Product.find(params[:id])
-    @specific = @product.productable
+  @product = Product.find(params[:id])
+  end
 
-    if @specific.is_a?(Bouquet)
-      @flowers_in_bouquet = @specific.flower_in_bouquets.includes(:flower)
+
+    def product_params
+      params.require(:product).permit(:name, :price, :product_type, :metadata, :description, :image)
     end
-  end
 
-  def product_params
-    params.require(:product).permit(:name, :price, :description, :product_type_id, :image)
-  end
 
-private
 
-def filter_by_type_or_tab(type, bouquet_type, tab, products)
-  if type.present? && type != "Bouquet"
-  elsif type == "Bouquet"
-    if bouquet_type.present?
-      bouquet_ids = Bouquet.joins(:bouquet_type)
-                           .where(bouquet_types: { name: bouquet_type.capitalize })
-                           .pluck(:id)
-      products = Product.where(productable_type: "Bouquet", productable_id: bouquet_ids)
-    else
-      products = Product.where(productable_type: "Bouquet")
-    end
-  end
 
-  if tab.present?
-    case tab
-    when "rose_bouquets"
-      bouquet_ids = Bouquet.joins(:bouquet_type).where(bouquet_types: { name: "Роза" }).pluck(:id)
-      products = Product.where(productable_type: "Bouquet", productable_id: bouquet_ids)
-    when "wedding_bouquets"
-      bouquet_ids = Bouquet.joins(:bouquet_type).where(bouquet_types: { name: "Свадебный" }).pluck(:id)
-      products = Product.where(productable_type: "Bouquet", productable_id: bouquet_ids)
-    when "gift_bouquets"
-      bouquet_ids = Bouquet.joins(:bouquet_type).where(bouquet_types: { name: "Подарочный" }).pluck(:id)
-      products = Product.where(productable_type: "Bouquet", productable_id: bouquet_ids)
-    when "round_bouquets"
-      bouquet_ids = Bouquet.joins(:bouquet_type).where(bouquet_types: { name: "Круглый" }).pluck(:id)
-      products = Product.where(productable_type: "Bouquet", productable_id: bouquet_ids)
-    when "single_flowers", "flowers"
-      products = Product.where(productable_type: "Flower")
-    when "toys"
-      products = Product.where(product_type: "toys")
-    when "vases"
-      products = Product.where(product_type: "vases")
-    when "all_bouquets"
-      products = Product.where(productable_type: "Bouquet")
-    end
-  end
 
-  products
-end
+
 end

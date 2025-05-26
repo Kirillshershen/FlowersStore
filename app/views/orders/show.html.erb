@@ -7,6 +7,9 @@
   <%= csp_meta_tag %>
   
   <%= stylesheet_link_tag 'order.css', "data-turbo-track": "reload" %>
+  
+  <!-- Подключаем jQuery, если еще не подключен -->
+  <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
 </head>
 <body>
   <h1 class="cart-title">Корзина</h1>
@@ -21,7 +24,7 @@
               <% item_total = item.product.price * item.quantity %>
               <% total_price += item_total %>
 
-              <div class="cart-item">
+              <div class="cart-item" id="order_item_<%= item.id %>">
                 <% if item.product.image.attached? %>
                   <div class="cart-image-wrapper">
                     <%= link_to catalog_product_path(item.product) do %>
@@ -32,16 +35,30 @@
 
                 <div class="cart-details">
                   <h2 class="cart-product-name"><%= item.product.name %></h2>
-                  <p><strong>Количество:</strong> <%= item.quantity %> шт.</p>
+                  <p>
+                    <strong>Количество:</strong> 
+                    <span id="quantity_<%= item.id %>"><%= item.quantity %></span> шт.
+
+                    <%= button_to increase_item_order_path(product_id: item.product.id), method: :post, remote: true, class: "quantity-button" do %>
+                      +
+                    <% end %>
+
+                    <%= button_to decrease_item_order_path(product_id: item.product.id), method: :post, remote: true, class: "quantity-button" do %>
+                      -
+                    <% end %>
+                  </p>
+
                   <p><strong>Цена за штуку:</strong> <%= number_to_currency(item.product.price, unit: "BYN ") %></p>
                   <p><strong>Итого:</strong> <%= number_to_currency(item_total, unit: "BYN ") %></p>
-                  <%= button_to 'Удалить', remove_item_order_path(product_id: item.product.id), method: :delete, class: "remove-button" %>
+
+                  <%= button_to 'Удалить', remove_item_order_path(product_id: item.product.id), method: :delete, data: { confirm: 'Вы уверены?' }, class: "remove-button" %>
                 </div>
               </div>
             <% end %>
           <% else %>
             <p class="empty-cart-message">Ваша корзина пуста</p>
           <% end %>
+
         </div>
 
         <% if @product_in_orders.any? %>
@@ -51,7 +68,7 @@
 
             <%= form_with url: confirm_order_path, method: :post, local: true do |f| %>
               <div class="form-group">
-                <label for="delivery_method">Способ доставки:</label><br>
+                <label>Способ доставки:</label><br>
                 <%= f.radio_button :delivery_method, 'pickup', id: 'pickup' %>
                 <%= f.label :delivery_method_pickup, 'Самовывоз' %><br>
                 <%= f.radio_button :delivery_method, 'delivery', id: 'delivery' %>
@@ -77,23 +94,18 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const pickup = document.getElementById("pickup");
-      const delivery = document.getElementById("delivery");
+    document.addEventListener("DOMContentLoaded", () => {
       const addressField = document.getElementById("address-field");
 
-      function toggleAddress() {
-        if (delivery.checked) {
-          addressField.style.display = "block";
-        } else {
-          addressField.style.display = "none";
-        }
-      }
+      document.querySelectorAll('input[name="order[delivery_method]"]').forEach(radio => {
+        radio.addEventListener("change", () => {
+          addressField.style.display = (radio.id === "delivery" && radio.checked) ? "block" : "none";
+        });
+      });
 
-      pickup.addEventListener("change", toggleAddress);
-      delivery.addEventListener("change", toggleAddress);
-
-      toggleAddress(); // при загрузке страницы
+      // Инициализация при загрузке страницы
+      const checked = document.querySelector('input[name="order[delivery_method]"]:checked');
+      addressField.style.display = (checked && checked.id === "delivery") ? "block" : "none";
     });
   </script>
 </body>

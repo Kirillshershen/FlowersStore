@@ -27,23 +27,52 @@
       <p class="product-type"><strong>Type:</strong> <%= @product.product_type %></p>
       <p class="product-price"><strong>Price:</strong> <%= number_to_currency(@product.price, unit: "Br", separator: ",") %></p>
 
-      <% if @specific.present? %>
-        <h3 class="details-title">Details:</h3>
-        <ul class="details-list">
-          <% @specific.attributes.except("id", "created_at", "updated_at", "price").each do |key, value| %>
-            <li><strong><%= key.humanize %>:</strong> <%= value %></li>
-          <% end %>
-        </ul>
-      <% end %>
+<% translations = {
+  "flower_type" => "Тип цветка",
+  "discount" => "Скидка",
+  "category" => "Категория",
+  "size" => "Размер",
+  "material" => "Материал",
+  "diameter" => "Диаметр",
+  "bouquet_type" => "Тип букета",
+  "packaging" => "Упаковка",
+  "flowers" => "Цветы"
+} %>
 
-      <% if @product.product_type == "Букет" %>
-        <h2 class="composition-title">Состав букета:</h2>
-        <ul class="composition-list">
-          <% @flowers_in_bouquet.each do |item| %>
-            <li><strong><%= item.flower.name %></strong> — <%= item.quantity %> шт.</li>
-          <% end %>
-        </ul>
+<% if @product.metadata.present? %>
+  <h3>Подробности:</h3>
+  <ul>
+    <% @product.metadata.each do |key, value| %>
+      <li>
+        <strong><%= translations[key] || key.humanize %>:</strong>
+<% if key == "flowers" && value.is_a?(Array) %>
+  <ul>
+    <% 
+      flower_ids = value.map { |f| f["product_id"] }
+      flowers = Product.where(id: flower_ids).index_by(&:id)
+    %>
+    <% value.each do |flower_info| %>
+      <% flower = flowers[flower_info["product_id"]] %>
+      <% if flower %>
+        <li>
+          <%= link_to flower.name, catalog_product_path(flower) %> — <%= flower_info["quantity"] %> шт.
+        </li>
+      <% else %>
+        <li>Неизвестный цветок (ID: <%= flower_info["product_id"] %>) — <%= flower_info["quantity"] %> шт.</li>
       <% end %>
+    <% end %>
+  </ul>
+
+        <% elsif value.is_a?(Array) || value.is_a?(Hash) %>
+          <pre><%= JSON.pretty_generate(value) %></pre>
+        <% else %>
+          <%= value %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
 
       <%= button_to 'Добавить в заказ', add_item_order_path(product_id: @product.id), method: :post, class: 'add-to-order-btn' %>
 
@@ -54,7 +83,6 @@
   </div>
 
 </main>
-
 
   <footer>
     <!-- Футер -->

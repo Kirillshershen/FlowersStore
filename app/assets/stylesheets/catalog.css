@@ -89,3 +89,39 @@
   color: black;
 }
 
+.category-with-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.bouquet-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  padding: 5px 0;
+  border: 1px solid #ccc;
+  z-index: 10;
+  min-width: 160px;
+}
+
+.category-with-dropdown:hover .bouquet-dropdown {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: black;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-item.selected {
+  font-weight: bold;
+  background-color: #e0e0e0;
+}

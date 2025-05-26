@@ -16,17 +16,28 @@ end
 
   end
   
+   def increase_item
+    @order = current_user.orders.find_or_create_by(status: 'draft')
+    product = Product.find(params[:product_id])
+    @item = @order.product_in_orders.find_or_initialize_by(product: product)
+    @item.quantity = (@item.quantity || 0) + 1
+    @item.save
+      redirect_to order_path
+   end
   def index
     @orders = current_user.orders.where(status: 'confirmed')
   end
 
-  def remove_item
-    @order = current_user.orders.find_or_create_by(status: 'draft')
-    item = @order.product_in_orders.find_by(product_id: params[:product_id])
-    item&.destroy
-    redirect_to order_path
-  end
+def remove_item
+  @order = current_user.orders.find_or_create_by(status: 'draft')
+  item = @order.product_in_orders.find_by(product_id: params[:product_id])
+  item&.destroy
+  redirect_to order_path, notice: 'Товар удалён из заказа.'
+end
 
+  def index
+    @orders = current_user.orders.where(status: 'confirmed')
+  end
   def confirm
     @order = current_user.orders.find_by(status: 'draft')
     if @order&.product_in_orders&.any?

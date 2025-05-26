@@ -1,11 +1,61 @@
-<!-- app/views/layouts/_footer.html.erb -->
-<footer class="footer">
-  <div class="footer-content">
-    <p>&copy; 2025 Тюльпаново. Все права защищены.</p>
-    <nav class="footer-nav">
-      <%= link_to 'Главная', root_path %> |
-      <%= link_to 'Контакты', contacts_path %> |
-      <%= link_to 'О нас', about_path %>
-    </nav>
-  </div>
-</footer>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Тюльпаново</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .footer {
+      background-color: #f8f8f8;
+      padding: 20px 0;
+      text-align: center;
+      border-top: 1px solid #ddd;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer-nav {
+      margin-top: 10px;
+    }
+
+    .footer-nav a {
+      color: #333;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    .footer-nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Контент страницы -->
+  <main>
+  </main>
+
+  <!-- Футер -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p>© <%= Time.current.year %> Тюльпаново. Все права защищены.</p>
+      <nav class="footer-nav">
+        <%= link_to 'Главная', root_path %> |
+        <%= link_to 'О нас', about_path %> |
+        <%= link_to 'Доставка и оплата', delivery_path %> |
+        <%= link_to 'Контакты', contacts_path %>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

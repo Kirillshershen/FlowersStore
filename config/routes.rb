@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+
+
   get "pages/about"
   get "pages/delivery"
   get "pages/contacts"
@@ -33,8 +35,11 @@ get 'home', to: 'pages#home', as: 'home'
 resource :order, only: [:show] do
   post 'add_item/:product_id', to: 'orders#add_item', as: :add_item
   delete 'remove_item/:product_id', to: 'orders#remove_item', as: :remove_item
+  post 'increase_item', to: 'orders#increase_item', as: :increase_item
+  post 'decrease_item', to: 'orders#decrease_item', as: :decrease_item
   post 'confirm', to: 'orders#confirm', as: :confirm
 end
+
 
 
 end

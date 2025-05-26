@@ -1,27 +1,19 @@
-# Очистка (правильный порядок)
-FlowerInBouquet.destroy_all
+# Очистка
 Order.destroy_all
 Product.destroy_all
 
-Bouquet.destroy_all
-Flower.destroy_all
-
-
-BouquetType.destroy_all
-BouquetPackaging.destroy_all
-FlowerType.destroy_all
 
 
 # === Типы ===
-rose = FlowerType.create!(name: "Роза")
-chrysanthemum = FlowerType.create!(name: "Хризантема")
-alstroemeria = FlowerType.create!(name: "Альстромерия")
-eustoma = FlowerType.create!(name: "Эустома")
-carnation = FlowerType.create!(name: "Гвоздика")
-hydrangea = FlowerType.create!(name: "Гортензия")
-filler = FlowerType.create!(name: "Филлер")
+rose = "Роза"
+chrysanthemum = "Хризантема"
+alstroemeria = "Альстромерия"
+eustoma = "Эустома"
+carnation = "Гвоздика"
+hydrangea = "Гортензия"
+filler =  "Филлер"
 
-# === Цветы ===
+# === Цветы (теперь только в Product) ===
 flower_data = [
   ["Хризантема Балтика", 9.50, chrysanthemum],
   ["Хризантема Радость", 9.50, chrysanthemum],
@@ -51,19 +43,17 @@ flower_data = [
   ["Хамелациум", 7.50, filler]
 ]
 
-flower_data.each do |name, price, type|
-  flower = Flower.create!(name: name, price: price, flower_type: type, discount: 0)
+flower_data.each_with_index do |(name, price, type), index|
   product = Product.create!(
-  name: name,
-  price: price,
-  productable: flower,
-  product_type: "Цветок",
-  metadata: {
-    flower_type: type.name,
-    category: "flower"
-  }
-)
-
+    name: name,
+    price: price,
+    product_type: "flower",
+    metadata: {
+      flower_type: type,
+      discount: 0,  
+      category: "flower"
+    }
+  )
 
   image_number = rand(1..7)
   image_path = Rails.root.join("app/assets/images/flower#{image_number}.jpg")
@@ -72,23 +62,24 @@ flower_data.each do |name, price, type|
     io: File.open(image_path),
     filename: "flower#{image_number}.jpg",
     content_type: "image/jpeg"
-    
   )
 end
 
 
+
+
+
+
+
 # === Упаковки и типы букетов ===
-# === Типы букетов ===
-round = BouquetType.create!(name: "Круглый")
-gift = BouquetType.create!(name: "Подарочный")
-wedding = BouquetType.create!(name: "Свадебный")
-mono = BouquetType.create!(name: "Моно букет")
-cascade = BouquetType.create!(name: "Каскадный")
-hand_tied = BouquetType.create!(name: "Букет в руках")
+round = "Круглый"
+gift = "Подарочный"
+wedding = "Свадебный"
+mono = "Моно букет"
+cascade = "Каскадный"
+hand_tied = "Букет в руках"
 
-pack = BouquetPackaging.create!(name: "Крафт", price: 2.0)
-
-
+pack ="Крафт"
 
 # === 10 Ваз ===
 10.times do |i|
@@ -99,9 +90,9 @@ pack = BouquetPackaging.create!(name: "Крафт", price: 2.0)
   price = rand(15.0..30.0).round(2)
 
   product = Product.create!(
-    name: "Ваза #{name}",
+    name: name,
     price: price,
-    product_type: "vases",
+    product_type: "vase",
     metadata: {
       size: size,
       material: material,
@@ -110,19 +101,13 @@ pack = BouquetPackaging.create!(name: "Крафт", price: 2.0)
     }
   )
 
-  image_number = i + 1
-  image_path = Rails.root.join("app/assets/images/vase#{image_number}.jpg")
-
+  image_path = Rails.root.join("app/assets/images/vase#{i + 1}.jpg")
   product.image.attach(
     io: File.open(image_path),
-    filename: "vase#{image_number}.jpg",
+    filename: "vase#{i + 1}.jpg",
     content_type: "image/jpeg"
   )
 end
-
-
-
-
 
 # === 10 Игрушек ===
 bear_names = [
@@ -139,7 +124,7 @@ bear_names = [
   product = Product.create!(
     name: name,
     price: price,
-    product_type: "toys",
+    product_type: "toy",
     metadata: {
       size: size,
       material: material,
@@ -147,19 +132,13 @@ bear_names = [
     }
   )
 
-  image_number = i + 1
-  image_path = Rails.root.join("app/assets/images/toy#{image_number}.jpg")
-
+  image_path = Rails.root.join("app/assets/images/toy#{i + 1}.jpg")
   product.image.attach(
     io: File.open(image_path),
-    filename: "toy#{image_number}.jpg",
+    filename: "toy#{i + 1}.jpg",
     content_type: "image/jpeg"
   )
 end
-
-
-
-
 
 # === 10 Букетов ===
 bouquet_names = [
@@ -168,47 +147,32 @@ bouquet_names = [
   "Малиновый звон", "Полевые цветы"
 ]
 
+all_flower_ids = Product.where(product_type: "flower").pluck(:id)
 
 10.times do |i|
-    name = bouquet_names.delete_at(rand(bouquet_names.length))
-  bouquet = Bouquet.create!(
+  name = bouquet_names.delete_at(rand(bouquet_names.length))
+  bouquet_type = [round, gift, wedding, mono, cascade, hand_tied].sample
+  price = rand(25.0..50.0).round(2)
+
+  flower_ids = all_flower_ids.sample(3)
+  flower_quantities = flower_ids.map { rand(3..7) }
+
+  product = Product.create!(
     name: name,
-    bouquet_type: [round, gift,wedding,mono,cascade,hand_tied ].sample,
-    bouquet_packaging: pack,
-    price: rand(25.0..50.0).round(2),
-    discount: 0
+    price: price,
+    product_type: "bouquet",
+    metadata: {
+      bouquet_type: bouquet_type,
+      packaging: pack,
+      flowers: flower_ids.zip(flower_quantities).map { |id, qty| { product_id: id, quantity: qty } },
+      category: "bouquet"
+    }
   )
 
-  # Случайные цветы для букета
-  Flower.order("RANDOM()").limit(3).each do |flower|
-    FlowerInBouquet.create!(
-      bouquet: bouquet,
-      flower: flower,
-      quantity: rand(3..7)
-    )
-  end
-
-product = Product.create!(
-  name: bouquet.name,
-  price: bouquet.price,
-  productable: bouquet,
-  product_type: "Букет",
-  metadata: {
-    bouquet_type: bouquet.bouquet_type.name,
-    packaging: bouquet.bouquet_packaging.name,
-    flower_ids: bouquet.flowers.pluck(:id),
-    category: "bouquet"
-  }
-)
-
-
-image_number = i + 1
-image_path = Rails.root.join("app/assets/images/bouquet#{image_number}.jpg")
-
-product.image.attach(
-  io: File.open(image_path),
-  filename: "bouquet#{image_number}.jpg",
-  content_type: "image/jpeg"
-)
-
+  image_path = Rails.root.join("app/assets/images/bouquet#{i + 1}.jpg")
+  product.image.attach(
+    io: File.open(image_path),
+    filename: "bouquet#{i + 1}.jpg",
+    content_type: "image/jpeg"
+  )
 end

@@ -162,3 +162,10 @@
 .cart-title {
   text-align: center;
 }
+.quantity-button {
+  padding: 2px 6px;
+  margin-left: 5px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+}

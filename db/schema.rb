@@ -39,57 +39,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_220150) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "bouquet_packagings", force: :cascade do |t|
-    t.string "name"
-    t.decimal "price"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "bouquet_types", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "bouquets", force: :cascade do |t|
-    t.string "name"
-    t.integer "bouquet_type_id", null: false
-    t.integer "bouquet_packaging_id", null: false
-    t.decimal "price"
-    t.decimal "discount"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bouquet_packaging_id"], name: "index_bouquets_on_bouquet_packaging_id"
-    t.index ["bouquet_type_id"], name: "index_bouquets_on_bouquet_type_id"
-  end
-
-  create_table "flower_in_bouquets", force: :cascade do |t|
-    t.integer "flower_id", null: false
-    t.integer "bouquet_id", null: false
-    t.integer "quantity"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bouquet_id"], name: "index_flower_in_bouquets_on_bouquet_id"
-    t.index ["flower_id"], name: "index_flower_in_bouquets_on_flower_id"
-  end
-
-  create_table "flower_types", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "flowers", force: :cascade do |t|
-    t.string "name"
-    t.integer "flower_type_id", null: false
-    t.decimal "price"
-    t.decimal "discount"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["flower_type_id"], name: "index_flowers_on_flower_type_id"
-  end
-
   create_table "orders", force: :cascade do |t|
     t.integer "user_id", null: false
     t.decimal "price"
@@ -116,13 +65,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_220150) do
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.decimal "price"
-    t.string "productable_type"
-    t.integer "productable_id"
     t.string "product_type"
     t.json "metadata"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["productable_type", "productable_id"], name: "index_products_on_productable"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -146,11 +92,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_220150) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "bouquets", "bouquet_packagings"
-  add_foreign_key "bouquets", "bouquet_types"
-  add_foreign_key "flower_in_bouquets", "bouquets"
-  add_foreign_key "flower_in_bouquets", "flowers"
-  add_foreign_key "flowers", "flower_types"
   add_foreign_key "orders", "users"
   add_foreign_key "product_in_orders", "orders"
   add_foreign_key "product_in_orders", "products"

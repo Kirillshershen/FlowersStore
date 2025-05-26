@@ -1,0 +1,48 @@
+<%= form_with(model: [:admin, @product], local: true, html: { multipart: true }) do |form| %>
+  <% if @product.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@product.errors.count, "error") %> запрещают сохранение продукта:</h2>
+      <ul>
+        <% @product.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :price %><br>
+    <%= form.number_field :price, step: 0.01 %>
+  </div>
+
+  <div>
+    <%= form.label :product_type %><br>
+    <%= form.text_field :product_type %>
+  </div>
+
+  <div>
+    <%= form.label :metadata_json, "Metadata (JSON)" %><br>
+    <%= form.text_area :metadata_json, rows: 10 %>
+  </div>
+
+  <div>
+    <%= form.label :image, "Картинка продукта" %><br>
+    <%= form.file_field :image %>
+  </div>
+
+  <% if @product.image.attached? %>
+    <div>
+      <p>Текущая картинка:</p>
+      <%= image_tag @product.image.variant(resize_to_limit: [150, 150]) %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+   def admin?
+    admin
+  end
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
     has_many :orders, dependent: :destroy

@@ -1,8 +1,13 @@
 # Очистка
 Order.destroy_all
 Product.destroy_all
-
-
+User.destroy_all
+User.create!(
+  email: "admin@example.com",
+  password: "111111",
+  password_confirmation: "111111",
+  admin: true
+)
 
 # === Типы ===
 rose = "Роза"

@@ -24,6 +24,9 @@
       <div class="top-info-bar">
         <div>Работаем с 10:00 до 21:00</div>
         <div>
+        <% if current_user&.admin? %>
+  <%= link_to "Админ панель", admin_products_path %>
+<% end %>
           <%= link_to 'Главная', root_path %>
           <%= link_to 'О нас', about_path %>
           <%= link_to 'Доставка и оплата', delivery_path %>

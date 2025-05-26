@@ -40,6 +40,11 @@ resource :order, only: [:show] do
   post 'confirm', to: 'orders#confirm', as: :confirm
 end
 
+namespace :admin do
+  root to: "products#index"
+  resources :products
+end
+
 
 
 end

@@ -1,0 +1,29 @@
+<h1>Все продукты</h1>
+
+<%= link_to 'Новый продукт', new_admin_product_path %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Название</th>
+      <th>Цена</th>
+      <th>Тип</th>
+      <th>Действия</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.name %></td>
+        <td><%= number_to_currency(product.price) %></td>
+        <td><%= product.product_type %></td>
+        <td>
+          <%= link_to 'Показать', admin_product_path(product) %> |
+          <%= link_to 'Редактировать', edit_admin_product_path(product) %> |
+          <%= link_to 'Удалить', admin_product_path(product), method: :delete, data: { confirm: 'Вы уверены?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

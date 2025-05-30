@@ -98,6 +98,7 @@ pack ="Крафт"
     name: name,
     price: price,
     product_type: "vase",
+    rating: rand(1..5),
     metadata: {
       size: size,
       material: material,
@@ -130,6 +131,7 @@ bear_names = [
     name: name,
     price: price,
     product_type: "toy",
+    rating: rand(1..5),
     metadata: {
       size: size,
       material: material,
@@ -166,6 +168,7 @@ all_flower_ids = Product.where(product_type: "flower").pluck(:id)
     name: name,
     price: price,
     product_type: "bouquet",
+    rating: rand(1..5),
     metadata: {
       bouquet_type: bouquet_type,
       packaging: pack,

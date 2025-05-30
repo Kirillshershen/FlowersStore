@@ -94,17 +94,7 @@
   display: inline-block;
 }
 
-.bouquet-dropdown {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: white;
-  padding: 5px 0;
-  border: 1px solid #ccc;
-  z-index: 10;
-  min-width: 160px;
-}
+
 
 .category-with-dropdown:hover .bouquet-dropdown {
   display: block;

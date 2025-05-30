@@ -65,6 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_220150) do
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.decimal "price"
+    t.decimal "rating"
     t.string "product_type"
     t.json "metadata"
     t.datetime "created_at", null: false

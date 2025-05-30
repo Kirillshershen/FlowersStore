@@ -1,0 +1,65 @@
+.map-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.map-container iframe {
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+/* Основные стили для Header */
+.header {
+  background-color: #f8f9fa;
+  padding: 20px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #343a40;
+}
+
+.nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.nav li {
+  margin-left: 20px;
+}
+
+.nav li:first-child {
+  margin-left: 0;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #007bff;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.nav a:hover {
+  color: #0056b3;
+}
+
+/* Стили для активной страницы (можно добавить для подсветки текущей страницы) */
+.nav a.active {
+  font-weight: bold;
+  color: #dc3545;
+}

@@ -64,7 +64,7 @@ end
 
 gem 'devise'
 
-gem 'ransack'
+  gem 'ransack'
 
 gem 'jquery-rails'
 

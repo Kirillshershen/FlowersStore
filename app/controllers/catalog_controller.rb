@@ -40,6 +40,12 @@ end
 
   def show
   @product = Product.find(params[:id])
+   @bouquet_types = Product
+                    .where(product_type: 'bouquet')
+                    .pluck(Arel.sql("DISTINCT metadata->>'bouquet_type'"))
+                    .compact
+                    .map(&:strip)
+                    .sort_by(&:downcase)
   end
 
 

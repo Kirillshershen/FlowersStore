@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= @product.name %> - Flowers Store</title>
 
-  <%= stylesheet_link_tag 'product', "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag 'product.css',"data-turbo-track": "reload" %>
 
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
@@ -26,7 +26,7 @@
 
       <p class="product-type"><strong>Type:</strong> <%= @product.product_type %></p>
       <p class="product-price"><strong>Price:</strong> <%= number_to_currency(@product.price, unit: "Br", separator: ",") %></p>
-
+      <p class="product-price"><strong>рейтинг:</strong> <%= @product.rating %></p>
 <% translations = {
   "flower_type" => "Тип цветка",
   "discount" => "Скидка",

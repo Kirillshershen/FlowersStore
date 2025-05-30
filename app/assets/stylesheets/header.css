@@ -277,3 +277,50 @@ body {
   align-items: center;
   margin-top: 10px;
 }
+.main-content {
+  background-color: #fff;      /* чисто белый фон */
+  padding: 20px;               /* внутренние отступы */
+  border-radius: 8px;          /* скруглённые углы для мягкости */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* лёгкая тень для объёма */
+  max-width: 1200px;           /* ограничим максимальную ширину */
+  margin: 20px auto;           /* по центру с внешними отступами */
+}
+.bouquet-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  padding: 5px 0;
+  border: 1px solid #ccc;
+  z-index: 10;
+  min-width: 160px;
+}
+
+
+.category-with-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+
+
+.category-with-dropdown:hover .bouquet-dropdown {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: black;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-item.selected {
+  font-weight: bold;
+  background-color: #e0e0e0;
+}

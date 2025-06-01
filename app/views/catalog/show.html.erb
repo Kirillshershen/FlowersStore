@@ -77,12 +77,33 @@
       <%= button_to 'Добавить в заказ', add_item_order_path(product_id: @product.id), method: :post, class: 'add-to-order-btn' %>
 
       <div class="back-link">
-        <%= link_to "Back to catalog", catalog_path %>
+        <%= link_to "Вернуться в каталог", catalog_path %>
       </div>
     </div>
   </div>
 
 </main>
+<% if @similar_products.any? %>
+  <section class="similar-products-container">
+    <h2>Похожие товары</h2>
+    <ul class="catalog-list similar-products-list">
+      <% @similar_products.each do |product| %>
+        <li class="catalog-item">
+          <% if product.image.attached? %>
+            <%= link_to image_tag(product.image, class: "product-image"), catalog_product_path(product) %>
+          <% end %>
+          <div class="product-name">
+            <%= link_to product.name, catalog_product_path(product) %>
+          </div>
+          <div class="product-price">
+            <%= number_to_currency(product.price, unit: "Br", separator: ",") %>
+          </div>
+          <%= button_to 'В корзину', add_item_order_path(product_id: product.id), method: :post, class: 'add-to-order-btn' %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+<% end %>
 
   <footer>
     <!-- Футер -->

@@ -5,7 +5,6 @@ def index
 
   @products = @q.result(distinct: true)
                 .includes(image_attachment: :blob)
-                .order(Arel.sql("metadata->>'bouquet_type'"))
 
   # Фильтрация по типу букета
   if params.dig(:q, :metadata_bouquet_type_eq).present?
@@ -16,8 +15,33 @@ def index
   if params.dig(:q, :metadata_plant_type_eq).present?
     @products = @products.where("metadata->>'plant_type' = ?", params[:q][:metadata_plant_type_eq])
   end
+  if params[:min_price].present?
+    @products = @products.where('price >= ?', params[:min_price])
+  end
 
-  @products = @products.order(:name).page(params[:page]).per(12) # ← здесь больше не нужен .result
+  if params[:max_price].present?
+    @products = @products.where('price <= ?', params[:max_price])
+  end
+
+  # Добавим сортировку
+  case params[:sort]
+  when 'newest'
+    @products = @products.order(created_at: :desc)
+  when 'oldest'
+    @products = @products.order(created_at: :asc)
+  when 'name_asc'
+    @products = @products.order(name: :asc)
+  when 'name_desc'
+    @products = @products.order(name: :desc)
+  when 'price_asc'
+    @products = @products.order(price: :asc)
+  when 'price_desc'
+    @products = @products.order(price: :desc)
+  else
+    @products = @products.order(:name)
+  end
+
+  @products = @products.page(params[:page]).per(12)
 
   @bouquet_types = Product
                     .where(product_type: 'bouquet')
@@ -38,15 +62,29 @@ end
 
 
 
-  def show
+
+def show
   @product = Product.find(params[:id])
-   @bouquet_types = Product
+
+  @bouquet_types = Product
                     .where(product_type: 'bouquet')
                     .pluck(Arel.sql("DISTINCT metadata->>'bouquet_type'"))
                     .compact
                     .map(&:strip)
                     .sort_by(&:downcase)
+
+  @similar_products = Product
+                        .where.not(id: @product.id)
+                        .where(product_type: @product.product_type)
+
+  # Если это букет, фильтруем ещё по типу букета
+  if @product.product_type == 'bouquet' && @product.metadata["bouquet_type"].present?
+    @similar_products = @similar_products.where("metadata->>'bouquet_type' = ?", @product.metadata["bouquet_type"])
   end
+
+  @similar_products = @similar_products.limit(10)
+end
+
 
 
     def product_params

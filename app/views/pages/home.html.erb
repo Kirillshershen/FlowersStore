@@ -9,25 +9,24 @@
   <%= stylesheet_link_tag 'glav.css', "data-turbo-track": "reload" %>
 </head>
 <body>
-
   <div class="categories-grid">
     <div class="category-column">
       <div class="category-card">
-        <%= link_to catalog_index_path(tab: "rose_bouquets"), class: ("active" if params[:tab] == "rose_bouquets") do %>
+        <%= link_to catalog_index_path(q: { product_type_eq: 'bouquet', metadata_bouquet_type_eq: 'Розы' }), class: ("active" if params.dig(:q, :metadata_bouquet_type_eq) == "Розы") do %>
           <%= image_tag "bouquet8.jpg", alt: "Букеты из роз", class: "category-image" %>
           <div class="category-title">Букеты из роз</div>
         <% end %>
       </div>
 
       <div class="category-card">
-        <%= link_to catalog_index_path(tab: "single_flowers"), class: ("active" if params[:tab] == "single_flowers") do %>
+        <%= link_to catalog_index_path(q: { product_type_eq: 'flower' }), class: ("active" if params.dig(:q, :product_type_eq) == "flower") do %>
           <%= image_tag "flower3.jpg", alt: "Цветы поштучно", class: "category-image" %>
           <div class="category-title">Цветы поштучно</div>
         <% end %>
       </div>
 
       <div class="category-card">
-        <%= link_to catalog_index_path(tab: "toys"), class: ("active" if params[:tab] == "toys") do %>
+        <%= link_to catalog_index_path(q: { product_type_eq: 'toy' }), class: ("active" if params.dig(:q, :product_type_eq) == "toy") do %>
           <%= image_tag "toy4.jpg", alt: "Игрушки", class: "category-image" %>
           <div class="category-title">Игрушки</div>
         <% end %>
@@ -36,21 +35,21 @@
 
     <div class="category-column">
       <div class="category-card">
-        <%= link_to catalog_index_path(tab: "vases"), class: ("active" if params[:tab] == "vases") do %>
+        <%= link_to catalog_index_path(q: { product_type_eq: 'vase' }), class: ("active" if params.dig(:q, :product_type_eq) == "vase") do %>
           <%= image_tag "vase3.jpg", alt: "Вазы", class: "category-image" %>
           <div class="category-title">Вазы</div>
         <% end %>
       </div>
 
       <div class="category-card">
-        <%= link_to catalog_index_path(tab: "wedding_bouquets"), class: ("active" if params[:tab] == "свадебный") do %>
+        <%= link_to catalog_index_path(q: { product_type_eq: 'bouquet', metadata_bouquet_type_eq: 'Свадебный' }), class: ("active" if params.dig(:q, :metadata_bouquet_type_eq) == "Свадебный") do %>
           <%= image_tag "bouquet3.jpg", alt: "Свадебные букеты", class: "category-image" %>
           <div class="category-title">Свадебные букеты</div>
         <% end %>
       </div>
 
       <div class="category-card">
-        <%= link_to catalog_index_path(tab: "gift_bouquets"), class: ("active" if params[:tab] == "gift_bouquets") do %>
+        <%= link_to catalog_index_path(q: { product_type_eq: 'bouquet', metadata_bouquet_type_eq: 'Подарочный' }), class: ("active" if params.dig(:q, :metadata_bouquet_type_eq) == "Подарочный") do %>
           <%= image_tag "bouquet9.jpg", alt: "Подарочные букеты", class: "category-image" %>
           <div class="category-title">Подарочные букеты</div>
         <% end %>

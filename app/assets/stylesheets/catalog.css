@@ -115,3 +115,35 @@
   font-weight: bold;
   background-color: #e0e0e0;
 }
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pagination a,
+.pagination span {
+  display: inline-block;
+  padding: 8px 14px;
+  background-color: #f4f4f4;
+  color: #333;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination a:hover {
+  background-color: #00bfa5;
+  color: white;
+}
+
+.pagination .current {
+  background-color: #00bfa5;
+  color: white;
+  font-weight: bold;
+}

@@ -13,34 +13,33 @@
   </head>
   <body>
 
-
-
-
     <div class="catalog-container">
 
-
-<ul class="catalog-list">
-  <% if @products.any? %>
-    <% @products.each do |product| %>
-      <li class="catalog-item">
-        <% if product.image.attached? %>
-          <%= link_to image_tag(product.image, class: "product-image"), catalog_product_path(product) %>
+      <ul class="catalog-list">
+        <% if @products.any? %>
+          <% @products.each do |product| %>
+            <li class="catalog-item">
+              <% if product.image.attached? %>
+                <%= link_to image_tag(product.image, class: "product-image"), catalog_product_path(product) %>
+              <% end %>
+              <div class="product-name">
+                <%= link_to product.name, catalog_product_path(product) %>
+              </div>
+              <div class="product-price">
+                <%= number_to_currency(product.price, unit: "Br", separator: ",") %>
+              </div>
+              <%= button_to 'В корзину', add_item_order_path(product_id: product.id), method: :post, class: 'add-to-order-btn' %>
+            </li>
+          <% end %>
+        <% else %>
+          <p class="no-results">По вашему запросу ничего не найдено.</p>
         <% end %>
-        <div class="product-name">
-          <%= link_to product.name, catalog_product_path(product) %>
-        </div>
-        <div class="product-price">
-          <%= number_to_currency(product.price, unit: "Br", separator: ",") %>
-        </div>
-        <%= button_to 'В корзину', add_item_order_path(product_id: product.id), method: :post, class: 'add-to-order-btn' %>
-      </li>
-    <% end %>
-  <% else %>
-    <p class="no-results">По вашему запросу ничего не найдено.</p>
-  <% end %>
-</ul>
+      </ul>
 
-
+      <!-- Пагинация -->
+      <div class="pagination">
+<%= paginate @products, params: request.query_parameters %>
+      </div>
 
     </div>
     

@@ -17,8 +17,7 @@ def index
     @products = @products.where("metadata->>'plant_type' = ?", params[:q][:metadata_plant_type_eq])
   end
 
-
-  @products = @products.order(:name)
+  @products = @products.order(:name).page(params[:page]).per(12) # ← здесь больше не нужен .result
 
   @bouquet_types = Product
                     .where(product_type: 'bouquet')
@@ -32,6 +31,7 @@ def index
     format.json { render json: @products }
   end
 end
+
 
 
 

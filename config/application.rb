@@ -11,6 +11,7 @@ module FlowersStore
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
     config.assets.enabled = true
+config.i18n.default_locale = :ru
 
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do

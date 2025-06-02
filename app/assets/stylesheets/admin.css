@@ -1,0 +1,94 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+thead {
+  background: #2980b9;
+  color: white;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {
+  background-color: #f1faff;
+}
+
+/* Кнопка "Новый продукт" */
+.new-product-link {
+  display: inline-block;
+  margin-bottom: 15px;
+  padding: 10px 18px;
+  background-color: #27ae60;
+  color: white;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.new-product-link:hover {
+  background-color: #219150;
+}
+table td img {
+  border-radius: 4px;
+  object-fit: cover;
+  width: 50px;
+  height: 50px;
+}
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pagination a, .pagination span {
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 0 3px;
+  color: #007bff;
+  text-decoration: none;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.pagination .current {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination a:hover {
+  background-color: #0056b3;
+  color: white;
+  border-color: #0056b3;
+}

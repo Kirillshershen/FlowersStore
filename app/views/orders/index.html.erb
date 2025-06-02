@@ -24,6 +24,11 @@
           </ul>
           <p><strong>Дата оформления:</strong> <%= order.ready_date.strftime('%d-%m-%Y %H:%M') %></p>
           <p><strong>Статус:</strong> <%= order.status.capitalize %></p>
+          <% unless order.status == 'отменен' || order.status == 'выполнен' %>
+<%= button_to 'Отменить заказ', cancel_order_path(order), method: :patch, data: { confirm: 'Вы уверены, что хотите отменить этот заказ?' } %>
+
+<% end %>
+
         </li>
       <% end %>
     </ul>

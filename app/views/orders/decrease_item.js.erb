@@ -1,5 +1,0 @@
-<% if @item.present? %>
-  $("#quantity_<%= @item.id %>").html("<%= @item.quantity %>");
-<% else %>
-  $("#order_item_<%= params[:product_id] %>").remove();
-<% end %>

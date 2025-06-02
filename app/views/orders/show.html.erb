@@ -35,18 +35,18 @@
 
                 <div class="cart-details">
                   <h2 class="cart-product-name"><%= item.product.name %></h2>
-                  <p>
-                    <strong>Количество:</strong> 
-                    <span id="quantity_<%= item.id %>"><%= item.quantity %></span> шт.
+<p>
+  <strong>Количество:</strong>
 
-                    <%= button_to increase_item_order_path(product_id: item.product.id), method: :post, remote: true, class: "quantity-button" do %>
-                      +
-                    <% end %>
+  <%= form_with url: update_quantity_order_path(product_id: item.product.id), method: :patch, remote: true, html: { class: "quantity-form", data: { item_id: item.id } } do |f| %>
+    
+    <%= button_tag "+", type: "button", class: "quantity-button increase", data: { item_id: item.id, product_id: item.product.id } %>
 
-                    <%= button_to decrease_item_order_path(product_id: item.product.id), method: :post, remote: true, class: "quantity-button" do %>
-                      -
-                    <% end %>
-                  </p>
+    <%= f.number_field :quantity, value: item.quantity, min: 1, class: "quantity-input", data: { item_id: item.id, product_id: item.product.id } %>
+
+    <%= button_tag "-", type: "button", class: "quantity-button decrease", data: { item_id: item.id, product_id: item.product.id } %>
+  <% end %>
+</p>
 
                   <p><strong>Цена за штуку:</strong> <%= number_to_currency(item.product.price, unit: "BYN ") %></p>
                   <p><strong>Итого:</strong> <%= number_to_currency(item_total, unit: "BYN ") %></p>
@@ -66,27 +66,37 @@
             <h3>Итоговая сумма</h3>
             <p class="total-price"><%= number_to_currency(total_price, unit: "BYN ") %></p>
 
-            <%= form_with url: confirm_order_path, method: :post, local: true do |f| %>
-              <div class="form-group">
-                <label>Способ доставки:</label><br>
-                <%= f.radio_button :delivery_method, 'pickup', id: 'pickup' %>
-                <%= f.label :delivery_method_pickup, 'Самовывоз' %><br>
-                <%= f.radio_button :delivery_method, 'delivery', id: 'delivery' %>
-                <%= f.label :delivery_method_delivery, 'Доставка по адресу' %>
-              </div>
+<%= form_with url: confirm_order_path, method: :post, scope: :order, local: true do |f| %>
 
-              <div class="form-group" id="address-field" style="display: none;">
-                <label for="delivery_address">Адрес доставки:</label>
-                <%= f.text_field :delivery_address, class: "input" %>
-              </div>
+  <div class="form-group">
+    <label>Способ доставки:</label><br>
+    <%= f.radio_button :delivery_method, 'pickup', id: 'pickup' %>
+    <%= f.label :delivery_method_pickup, 'Самовывоз' %><br>
+    <%= f.radio_button :delivery_method, 'delivery', id: 'delivery' %>
+    <%= f.label :delivery_method_delivery, 'Доставка по адресу' %>
+  </div>
 
-              <div class="form-group">
-                <label for="ready_date">Когда товар должен быть готов:</label>
-                <%= f.datetime_local_field :ready_date, class: "input" %>
-              </div>
+  <div class="form-group" id="address-field" style="display: none;">
+    <label for="delivery_address">Адрес доставки:</label>
+    <%= f.text_field :delivery_address, class: "input" %>
+  </div>
 
-              <%= f.submit 'Подтвердить заказ', class: "confirm-button" %>
-            <% end %>
+  <div class="form-group">
+    <label for="ready_date">Когда товар должен быть готов:</label>
+    <%= f.datetime_local_field :ready_date, class: "input" %>
+  </div>
+
+  <div class="form-group">
+    <label for="comment">Комментарий:</label>
+    <%= f.text_area :comment, rows: 3, class: "input" %>
+  </div>
+
+  <%# Итоговая цена (скроем поле, если считаешь правильнее считать на сервере) %>
+  <%= f.hidden_field :price, value: total_price %>
+
+  <%= f.submit 'Подтвердить заказ', class: "confirm-button" %>
+<% end %>
+
           </div>
         <% end %>
       </div>
@@ -94,19 +104,129 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const addressField = document.getElementById("address-field");
+document.addEventListener("DOMContentLoaded", () => {
+  function submitQuantityForm(itemId) {
+    const form = document.querySelector(`.quantity-form[data-item-id='${itemId}']`);
+    if (form) {
+      form.requestSubmit();
+    }
+  }
 
-      document.querySelectorAll('input[name="order[delivery_method]"]').forEach(radio => {
-        radio.addEventListener("change", () => {
-          addressField.style.display = (radio.id === "delivery" && radio.checked) ? "block" : "none";
-        });
-      });
-
-      // Инициализация при загрузке страницы
-      const checked = document.querySelector('input[name="order[delivery_method]"]:checked');
-      addressField.style.display = (checked && checked.id === "delivery") ? "block" : "none";
+  document.querySelectorAll('.quantity-button.increase').forEach(button => {
+    button.addEventListener('click', () => {
+      const itemId = button.dataset.itemId;
+      const input = document.querySelector(`.quantity-input[data-item-id='${itemId}']`);
+      if (input) {
+        let currentVal = parseInt(input.value) || 1;
+        input.value = currentVal + 1;
+        submitQuantityForm(itemId);
+      }
     });
+  });
+
+  document.querySelectorAll('.quantity-button.decrease').forEach(button => {
+    button.addEventListener('click', () => {
+      const itemId = button.dataset.itemId;
+      const input = document.querySelector(`.quantity-input[data-item-id='${itemId}']`);
+      if (input) {
+        let currentVal = parseInt(input.value) || 1;
+        if (currentVal > 1) {
+          input.value = currentVal - 1;
+          submitQuantityForm(itemId);
+        }
+      }
+    });
+  });
+
+document.querySelectorAll('.quantity-input').forEach(input => {
+  input.addEventListener('blur', () => {
+    if (input.value < 1 || isNaN(input.value)) {
+      input.value = 1;
+    }
+    submitQuantityForm(input.dataset.itemId);
+  });
+});
+
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const pickupRadio = document.getElementById('pickup');
+  const deliveryRadio = document.getElementById('delivery');
+  const addressField = document.getElementById('address-field');
+
+  function toggleAddressField() {
+    if (deliveryRadio.checked) {
+      addressField.style.display = 'block';
+    } else {
+      addressField.style.display = 'none';
+    }
+  }
+
+  pickupRadio.addEventListener('change', toggleAddressField);
+  deliveryRadio.addEventListener('change', toggleAddressField);
+
+  // При загрузке страницы проверить состояние и отобразить поле, если delivery выбран
+  toggleAddressField();
+  document.addEventListener("DOMContentLoaded", () => {
+  const pickupRadio = document.getElementById('pickup');
+  const deliveryRadio = document.getElementById('delivery');
+  const addressField = document.getElementById('address-field');
+  const addressInput = document.querySelector('input[name="order[delivery_address]"]');
+  const readyDateInput = document.querySelector('input[name="order[ready_date]"]');
+
+  function toggleAddressField() {
+    if (deliveryRadio.checked) {
+      addressField.style.display = 'block';
+    } else {
+      addressField.style.display = 'none';
+    }
+  }
+
+  // Восстановление значений из localStorage
+  function restoreFormValues() {
+    const deliveryMethod = localStorage.getItem('delivery_method');
+    const deliveryAddress = localStorage.getItem('delivery_address');
+    const readyDate = localStorage.getItem('ready_date');
+
+    if (deliveryMethod === 'pickup') {
+      pickupRadio.checked = true;
+    } else if (deliveryMethod === 'delivery') {
+      deliveryRadio.checked = true;
+    }
+    toggleAddressField();
+
+    if (deliveryAddress !== null && addressInput) {
+      addressInput.value = deliveryAddress;
+    }
+    if (readyDate !== null && readyDateInput) {
+      readyDateInput.value = readyDate;
+    }
+  }
+
+  // Сохраняем в localStorage при изменениях
+  pickupRadio.addEventListener('change', () => {
+    localStorage.setItem('delivery_method', 'pickup');
+    toggleAddressField();
+  });
+  deliveryRadio.addEventListener('change', () => {
+    localStorage.setItem('delivery_method', 'delivery');
+    toggleAddressField();
+  });
+  if (addressInput) {
+    addressInput.addEventListener('input', () => {
+      localStorage.setItem('delivery_address', addressInput.value);
+    });
+  }
+  if (readyDateInput) {
+    readyDateInput.addEventListener('input', () => {
+      localStorage.setItem('ready_date', readyDateInput.value);
+    });
+  }
+
+  restoreFormValues();
+});
+
+});
+
   </script>
 </body>
 </html>

@@ -1,0 +1,27 @@
+<h1>Заказы</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Пользователь</th>
+      <th>Цена</th>
+      <th>Статус</th>
+      <th>Дата создания</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.id %></td>
+        <td><%= order.user.email %></td>
+        <td><%= number_to_currency(order.price, unit: "Br") %></td>
+        <td><%= order.status %></td>
+        <td><%= order.created_at.strftime("%d.%m.%Y %H:%M") %></td>
+        <td><%= link_to "Просмотр", admin_order_path(order) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

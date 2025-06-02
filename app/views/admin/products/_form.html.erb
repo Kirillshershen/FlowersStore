@@ -1,7 +1,7 @@
 <%= form_with(model: [:admin, @product], local: true, html: { multipart: true }) do |form| %>
   <% if @product.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@product.errors.count, "error") %> запрещают сохранение продукта:</h2>
+      <h2><%= pluralize(@product.errors.count, "ошибка") %> запрещают сохранение продукта:</h2>
       <ul>
         <% @product.errors.full_messages.each do |message| %>
           <li><%= message %></li>
@@ -19,16 +19,93 @@
     <%= form.label :price %><br>
     <%= form.number_field :price, step: 0.01 %>
   </div>
+<div>
+  <%= form.label :product_type, "Тип продукта" %><br>
+  <%= form.select :product_type, options_for_select(["Цветок", "Ваза", "Игрушка", "Букет"], @product.product_type), prompt: "Выберите тип продукта" %>
+</div>
 
-  <div>
-    <%= form.label :product_type %><br>
-    <%= form.text_field :product_type %>
+
+
+
+
+
+  <hr>
+
+  <!-- Flower -->
+  <div class="metadata-block" data-type="Цветок" style="display: none; margin-bottom: 20px;">
+    <h3>Данные для Цветка</h3>
+    <div>
+      <%= form.label :flower_type, "Тип цветка" %><br>
+      <%= text_field_tag "product[metadata][flower_type]", @product.metadata&.dig("flower_type") || "" %>
+    </div>
+    <div>
+      <%= form.label :discount, "Скидка (%)" %><br>
+      <%= number_field_tag "product[metadata][discount]", @product.metadata&.dig("discount") || 0, min: 0, max: 100 %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :metadata_json, "Metadata (JSON)" %><br>
-    <%= form.text_area :metadata_json, rows: 10 %>
+  <!-- Vase -->
+  <div class="metadata-block" data-type="Ваза" style="display: none; margin-bottom: 20px;">
+    <h3>Данные для Вазы</h3>
+    <div>
+      <%= form.label :size, "Размер" %><br>
+      <%= text_field_tag "product[metadata][size]", @product.metadata&.dig("size") || "" %>
+    </div>
+    <div>
+      <%= form.label :material, "Материал" %><br>
+      <%= text_field_tag "product[metadata][material]", @product.metadata&.dig("material") || "" %>
+    </div>
+    <div>
+      <%= form.label :diameter, "Диаметр" %><br>
+      <%= number_field_tag "product[metadata][diameter]", @product.metadata&.dig("diameter") || "", step: 0.1 %>
+    </div>
   </div>
+
+  <!-- Toy -->
+  <div class="metadata-block" data-type="Игрушка" style="display: none; margin-bottom: 20px;">
+    <h3>Данные для Игрушки</h3>
+    <div>
+      <%= form.label :size, "Размер" %><br>
+      <%= text_field_tag "product[metadata][size]", @product.metadata&.dig("size") || "" %>
+    </div>
+    <div>
+      <%= form.label :material, "Материал" %><br>
+      <%= text_field_tag "product[metadata][material]", @product.metadata&.dig("material") || "" %>
+    </div>
+  </div>
+
+  <!-- Bouquet -->
+  <div class="metadata-block" data-type="Букет" style="display: none; margin-bottom: 20px;">
+    <h3>Данные для Букета</h3>
+    <div>
+      <%= form.label :bouquet_type, "Тип букета" %><br>
+      <%= text_field_tag "product[metadata][bouquet_type]", @product.metadata&.dig("bouquet_type") || "" %>
+    </div>
+    <div>
+      <%= form.label :packaging, "Упаковка" %><br>
+      <%= text_field_tag "product[metadata][packaging]", @product.metadata&.dig("packaging") || "" %>
+    </div>
+
+    <h4>Цветы в букете</h4>
+    <div id="flowers">
+      <% flowers = @product.metadata&.dig("flowers") || [] %>
+      <% flowers.each_with_index do |flower, index| %>
+        <div class="flower-item" data-index="<%= index %>">
+          <select name="product[metadata][flowers][<%= index %>][product_id]">
+            <option value=""></option>
+            <% Product.where(product_type: "Цветок").each do |flower_option| %>
+              <option value="<%= flower_option.id %>" <%= "selected" if flower_option.id == flower["product_id"] %>><%= flower_option.name %></option>
+            <% end %>
+          </select>
+          <input type="number" name="product[metadata][flowers][<%= index %>][quantity]" min="1" value="<%= flower["quantity"] %>" />
+          <button type="button" class="remove-flower">Удалить</button>
+        </div>
+      <% end %>
+    </div>
+    <button type="button" id="add-flower">Добавить цветок</button>
+  </div>
+
+  <hr>
 
   <div>
     <%= form.label :image, "Картинка продукта" %><br>
@@ -46,3 +123,51 @@
     <%= form.submit %>
   </div>
 <% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const typeSelect = document.querySelector('select[name="product[product_type]"]');
+    const metadataBlocks = document.querySelectorAll('.metadata-block');
+
+    function updateMetadataVisibility() {
+      const selectedType = typeSelect.value;
+      metadataBlocks.forEach(block => {
+        block.style.display = (block.dataset.type === selectedType) ? 'block' : 'none';
+      });
+    }
+
+    typeSelect.addEventListener("change", updateMetadataVisibility);
+    updateMetadataVisibility();
+
+    // Логика добавления цветов для букета
+    const flowersContainer = document.getElementById("flowers");
+    const addFlowerBtn = document.getElementById("add-flower");
+
+    addFlowerBtn?.addEventListener("click", () => {
+      const index = flowersContainer.children.length;
+
+      let options = `<option value=""></option>`;
+      <% Product.where(product_type: "Цветок").each do |flower| %>
+        options += `<option value="<%= flower.id %>"><%= flower.name %></option>`;
+      <% end %>
+
+      const newFlowerDiv = document.createElement("div");
+      newFlowerDiv.classList.add("flower-item");
+      newFlowerDiv.dataset.index = index;
+
+      newFlowerDiv.innerHTML = `
+        <select name="product[metadata][flowers][${index}][product_id]">${options}</select>
+        <input type="number" name="product[metadata][flowers][${index}][quantity]" min="1" value="1" />
+        <button type="button" class="remove-flower">Удалить</button>
+      `;
+
+      flowersContainer.appendChild(newFlowerDiv);
+    });
+
+    flowersContainer?.addEventListener("click", (e) => {
+      if (e.target.classList.contains("remove-flower")) {
+        e.target.closest(".flower-item").remove();
+      }
+    });
+  });
+</script>

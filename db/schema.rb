@@ -46,7 +46,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_220150) do
     t.string "delivery_method"
     t.string "delivery_address"
     t.datetime "ready_date"
-    t.string "status", default: "draft", null: false
+    t.string "status", default: "", null: false
+    t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_orders_on_user_id"

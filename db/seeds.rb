@@ -9,7 +9,7 @@ User.create!(
   admin: true
 )
 
-# === Типы ===
+# === Типы цветов ===
 rose = "Роза"
 chrysanthemum = "Хризантема"
 alstroemeria = "Альстромерия"
@@ -52,11 +52,10 @@ flower_data.each_with_index do |(name, price, type), index|
   product = Product.create!(
     name: name,
     price: price,
-    product_type: "flower",
+    product_type: "Цветок",   # <-- изменено на русское значение
     metadata: {
       flower_type: type,
       discount: 0,  
-      category: "flower"
     }
   )
 
@@ -70,12 +69,6 @@ flower_data.each_with_index do |(name, price, type), index|
   )
 end
 
-
-
-
-
-
-
 # === Упаковки и типы букетов ===
 round = "Круглый"
 gift = "Подарочный"
@@ -84,7 +77,7 @@ mono = "Моно букет"
 cascade = "Каскадный"
 hand_tied = "Букет в руках"
 
-pack ="Крафт"
+pack = "Крафт"
 
 # === 10 Ваз ===
 10.times do |i|
@@ -97,13 +90,12 @@ pack ="Крафт"
   product = Product.create!(
     name: name,
     price: price,
-    product_type: "vase",
+    product_type: "Ваза",   # <-- изменено
     rating: rand(1..5),
     metadata: {
       size: size,
       material: material,
       diameter: diameter,
-      category: "vase"
     }
   )
 
@@ -130,12 +122,11 @@ bear_names = [
   product = Product.create!(
     name: name,
     price: price,
-    product_type: "toy",
+    product_type: "Игрушка",   # <-- изменено
     rating: rand(1..5),
     metadata: {
       size: size,
       material: material,
-      category: "toy"
     }
   )
 
@@ -154,28 +145,32 @@ bouquet_names = [
   "Малиновый звон", "Полевые цветы"
 ]
 
-all_flower_ids = Product.where(product_type: "flower").pluck(:id)
+all_flower_ids = Product.where(product_type: "Цветок").pluck(:id)  # <-- изменено
 
 10.times do |i|
   name = bouquet_names.delete_at(rand(bouquet_names.length))
   bouquet_type = [round, gift, wedding, mono, cascade, hand_tied].sample
   price = rand(25.0..50.0).round(2)
 
-  flower_ids = all_flower_ids.sample(3)
-  flower_quantities = flower_ids.map { rand(3..7) }
+flower_ids = all_flower_ids.sample(3)
+flower_quantities = flower_ids.map { rand(3..7) }
 
-  product = Product.create!(
-    name: name,
-    price: price,
-    product_type: "bouquet",
-    rating: rand(1..5),
-    metadata: {
-      bouquet_type: bouquet_type,
-      packaging: pack,
-      flowers: flower_ids.zip(flower_quantities).map { |id, qty| { product_id: id, quantity: qty } },
-      category: "bouquet"
-    }
-  )
+flowers_hash = flower_ids.zip(flower_quantities).each_with_index.with_object({}) do |((id, qty), index), hash|
+  hash[index.to_s] = { product_id: id, quantity: qty }
+end
+
+product = Product.create!(
+  name: name,
+  price: price,
+  product_type: "Букет",
+  rating: rand(1..5),
+  metadata: {
+    bouquet_type: bouquet_type,
+    packaging: pack,
+    flowers: flowers_hash,
+  }
+)
+
 
   image_path = Rails.root.join("app/assets/images/bouquet#{i + 1}.jpg")
   product.image.attach(
@@ -184,3 +179,4 @@ all_flower_ids = Product.where(product_type: "flower").pluck(:id)
     content_type: "image/jpeg"
   )
 end
+

@@ -7,7 +7,8 @@ class CreateOrders < ActiveRecord::Migration[8.0]
       t.string :delivery_method
       t.string :delivery_address
       t.datetime :ready_date
-      t.string :status, null: false, default: 'draft'
+      t.string :status, null: false, default: ''
+      t.text :comment 
 
       t.timestamps
     end

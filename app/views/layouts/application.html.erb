@@ -26,6 +26,8 @@
         <div>Работаем с 10:00 до 21:00</div>
         <div>
         <% if current_user&.admin? %>
+        <%= link_to "Заказы", admin_orders_path %>
+
   <%= link_to "Админ панель", admin_products_path %>
 <% end %>
           <%= link_to 'Главная', root_path %>
@@ -62,10 +64,10 @@
           <nav class="nav-categories">
             <div class="category-buttons">
               <% categories = [
-                ['Букеты', 'bouquet'],
-                ['Растения', 'plant'],
-                ['Вазы', 'vase'],
-                ['Игрушки', 'toy']
+                ['Букеты', 'Букет'],
+                ['Растения', 'Растение'],
+                ['Вазы', 'Ваза'],
+                ['Игрушки', 'Игрушка']
               ] %>
 
               <% plant_types = ['Комнатные', 'Дачные'] %>
@@ -73,29 +75,29 @@
               <% categories.each do |name, value| %>
                 <% params_for_link = { q: { product_type_eq: value } } %>
 
-                <% if value == 'bouquet' && params.dig(:q, :metadata_bouquet_type_eq).present? %>
+                <% if value == 'Букет' && params.dig(:q, :metadata_bouquet_type_eq).present? %>
                   <% params_for_link[:q][:metadata_bouquet_type_eq] = params.dig(:q, :metadata_bouquet_type_eq) %>
                 <% end %>
 
-                <% if value == 'plant' && params.dig(:q, :metadata_plant_type_eq).present? %>
+                <% if value == 'Растение' && params.dig(:q, :metadata_plant_type_eq).present? %>
                   <% params_for_link[:q][:metadata_plant_type_eq] = params.dig(:q, :metadata_plant_type_eq) %>
                 <% end %>
 
-                <% if value == 'bouquet' %>
+                <% if value == 'Букет' %>
                   <div class="category-with-dropdown">
                     <%= link_to name, catalog_index_path(params_for_link), class: "category-button #{'active' if params.dig(:q, :product_type_eq) == value}" %>
 
                     <div class="bouquet-dropdown">
-                      <%= link_to "Цветы поштучно", catalog_index_path(q: { product_type_eq: 'flower' }), class: "dropdown-item #{'selected' if params.dig(:q, :product_type_eq) == 'flower'}" %>
+                      <%= link_to "Цветы поштучно", catalog_index_path(q: { product_type_eq: 'Цветок' }), class: "dropdown-item #{'selected' if params.dig(:q, :product_type_eq) == 'цветы'}" %>
 
                       <% @bouquet_types.each do |bt| %>
-                        <%= link_to bt, catalog_index_path(q: { product_type_eq: 'bouquet', metadata_bouquet_type_eq: bt }), class: "dropdown-item #{'selected' if params.dig(:q, :metadata_bouquet_type_eq) == bt}" %>
+                        <%= link_to bt, catalog_index_path(q: { product_type_eq: 'Букет', metadata_bouquet_type_eq: bt }), class: "dropdown-item #{'selected' if params.dig(:q, :metadata_bouquet_type_eq) == bt}" %>
                       <% end %>
         
                     </div>
                   </div>
 
-                <% elsif value == 'plant' %>
+                <% elsif value == 'Растение' %>
                   <div class="category-with-dropdown">
                     <%= link_to name, catalog_index_path(params_for_link), class: "category-button #{'active' if params.dig(:q, :product_type_eq) == value}" %>
 

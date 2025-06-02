@@ -1,0 +1,30 @@
+// app/views/orders/update_quantity.js.erb
+
+$("#order_container").html("<%= j render 'order_contents', product_in_orders: @product_in_orders %>");
+
+// Восстановим значения из localStorage (тут вставляй функцию, аналогичную restoreFormValues)
+function restoreFormValues() {
+  const deliveryMethod = localStorage.getItem('delivery_method');
+  const deliveryAddress = localStorage.getItem('delivery_address');
+  const readyDate = localStorage.getItem('ready_date');
+
+  if (deliveryMethod === 'pickup') {
+    $("#pickup").prop('checked', true);
+  } else if (deliveryMethod === 'delivery') {
+    $("#delivery").prop('checked', true);
+  }
+  if (deliveryMethod === 'delivery') {
+    $("#address-field").show();
+  } else {
+    $("#address-field").hide();
+  }
+
+  if (deliveryAddress !== null) {
+    $('input[name="order[delivery_address]"]').val(deliveryAddress);
+  }
+  if (readyDate !== null) {
+    $('input[name="order[ready_date]"]').val(readyDate);
+  }
+}
+
+restoreFormValues();

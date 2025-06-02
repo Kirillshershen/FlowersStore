@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "custom_bouquets/new"
+  get "custom_bouquets/create"
   namespace :admin do
     get "orders/index"
     get "orders/show"
@@ -54,10 +56,15 @@ end
 namespace :admin do
   root to: "products#index"
   resources :products
-    resources :orders
+    resources :orders do
+    member do
+      patch :update_status
+    end
+  end
 end
   resources :order, only: [:update]
 
+resources :custom_bouquets, only: [:new, :create]
 
 
 end

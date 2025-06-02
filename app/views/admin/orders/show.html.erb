@@ -6,5 +6,48 @@
 <p><strong>Метод доставки:</strong> <%= @order.delivery_method %></p>
 <p><strong>Адрес доставки:</strong> <%= @order.delivery_address %></p>
 <p><strong>Дата готовности:</strong> <%= @order.ready_date&.strftime("%d.%m.%Y %H:%M") %></p>
-<p><strong>Статус:</strong> <%= @order.status %></p>
+
+<p><strong>Статус:</strong> <%= @order.status.capitalize %></p>
+
+<%= form_with url: update_status_admin_order_path(@order), method: :patch, local: true do |f| %>
+  <div>
+    <%= label_tag :status, "Изменить статус заказа:" %>
+    <%= select_tag :status, options_for_select(Admin::OrdersController::STATUS_OPTIONS.map { |s| [s.capitalize, s] }, @order.status), include_blank: "Выберите статус" %>
+    <%= f.submit "Обновить", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
 <p><strong>Комментарий:</strong> <%= @order.comment.presence || "Нет" %></p>
+
+<hr>
+
+<h2>Товары в заказе:</h2>
+<ul>
+  <% @order.product_in_orders.includes(:product).each do |item| %>
+    <% product = item.product %>
+    <li>
+      <strong>
+        <%= link_to product.name, catalog_product_path(product) %>
+      </strong>
+      (<%= product.product_type %>) —
+      <%= number_to_currency(product.price, unit: "Br") %> × <%= item.quantity %> шт.
+
+      <% if product.product_type == "Букет" && product.metadata["flowers"].present? %>
+        <br>
+        <em>Состав букета:</em>
+        <ul>
+          <% product.metadata["flowers"].each do |_index, flower_info| %>
+            <% flower = Product.find_by(id: flower_info["product_id"]) %>
+            <% if flower %>
+              <li>
+                <%= link_to flower.name, catalog_product_path(flower) %> — <%= flower_info["quantity"] %> шт.
+              </li>
+            <% else %>
+              <li>Неизвестный цветок (ID: <%= flower_info["product_id"] %>)</li>
+            <% end %>
+          <% end %>
+        </ul>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

@@ -1,0 +1,99 @@
+<h1>Собери свой букет</h1>
+
+<%= form_with url: custom_bouquets_path, method: :post, local: true do |form| %>
+  <div id="bouquet-builder">
+    <h3>Вы выбрали:</h3>
+    <ul id="selected-flowers-list" style="list-style: none; padding: 0;"></ul>
+    <input type="hidden" name="bouquet[flowers]" id="bouquet_flowers_json" />
+
+    <%= form.label :packaging, "Упаковка" %>
+    <%= form.text_field :packaging %>
+
+    <%= form.label :bouquet_type, "Тип букета" %>
+    <%= form.text_field :bouquet_type %>
+
+    <%= form.submit "Создать букет", class: "btn btn-success" %>
+  </div>
+<% end %>
+
+<hr>
+
+<h2>Цветы</h2>
+<ul id="available-flowers">
+  <% Product.where(product_type: "Цветок").each do |flower| %>
+    <li data-id="<%= flower.id %>" data-name="<%= flower.name %>">
+      <strong><%= flower.name %></strong> — <%= number_to_currency(flower.price) %>
+      <button type="button" class="add-flower">Добавить</button>
+    </li>
+  <% end %>
+</ul>
+
+<script>
+  const selectedFlowers = {};
+  const selectedList = document.getElementById("selected-flowers-list");
+  const flowersInput = document.getElementById("bouquet_flowers_json");
+
+  document.querySelectorAll(".add-flower").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const li = btn.closest("li");
+      const id = li.dataset.id;
+      const name = li.dataset.name;
+
+      if (selectedFlowers[id]) {
+        selectedFlowers[id].quantity += 1;
+      } else {
+        selectedFlowers[id] = { product_id: id, quantity: 1, name: name };
+      }
+
+      renderSelectedFlowers();
+    });
+  });
+
+  function renderSelectedFlowers() {
+    selectedList.innerHTML = "";
+
+    Object.values(selectedFlowers).forEach(flower => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        ${flower.name} — <strong>${flower.quantity}</strong> шт.
+        <button type="button" class="btn-minus" data-id="${flower.product_id}">−</button>
+        <button type="button" class="btn-plus" data-id="${flower.product_id}">+</button>
+        <button type="button" class="btn-remove" data-id="${flower.product_id}">Удалить</button>
+      `;
+      selectedList.appendChild(li);
+    });
+
+    flowersInput.value = JSON.stringify(selectedFlowers);
+
+    document.querySelectorAll(".btn-minus").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        if (selectedFlowers[id]) {
+          selectedFlowers[id].quantity -= 1;
+          if (selectedFlowers[id].quantity <= 0) {
+            delete selectedFlowers[id];
+          }
+          renderSelectedFlowers();
+        }
+      });
+    });
+
+    document.querySelectorAll(".btn-plus").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        if (selectedFlowers[id]) {
+          selectedFlowers[id].quantity += 1;
+          renderSelectedFlowers();
+        }
+      });
+    });
+
+    document.querySelectorAll(".btn-remove").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        delete selectedFlowers[id];
+        renderSelectedFlowers();
+      });
+    });
+  }
+</script>

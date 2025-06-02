@@ -1,15 +1,20 @@
 class CatalogController < ApplicationController
-  def index
-    @q = Product.ransack(params[:q])
-    Rails.logger.debug("ПАРАМЕТРЫ ФИЛЬТРА: #{params[:q]}")
+def index
+  @q = Product.ransack(params[:q])
+  Rails.logger.debug("ПАРАМЕТРЫ ФИЛЬТРА: #{params[:q]}")
 
-    @products = @q.result(distinct: true)
-                  .includes(image_attachment: :blob)
+  @products = @q.result(distinct: true)
+                .includes(image_attachment: :blob)
 
-    # Фильтрация по типу букета
-if params.dig(:q, :metadata_bouquet_type_eq).present?
-  @products = @products.where("metadata->>'bouquet_type' = ?", params[:q][:metadata_bouquet_type_eq])
-end
+  # Исключаем пользовательские букеты (custom: true)
+  @products = @products.where("metadata->>'custom' IS NULL OR metadata->>'custom' = 'false'")
+
+  # Фильтрация по типу букета
+  if params.dig(:q, :metadata_bouquet_type_eq).present?
+    @products = @products.where("metadata->>'bouquet_type' = ?", params[:q][:metadata_bouquet_type_eq])
+  end
+
+
 
     # Фильтрация по типу растения
     if params.dig(:q, :metadata_plant_type_eq).present?

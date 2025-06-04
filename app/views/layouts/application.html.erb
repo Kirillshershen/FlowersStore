@@ -39,9 +39,13 @@
 
       <header class="header">
         <div class="header-container">
-          <div class="logo">
-            <%= link_to "Тюльпаново", root_path %>
-          </div>
+<div class="logo">
+  <%= link_to root_path, class: "logo-link" do %>
+    <span class="store-name">Тюльпаново</span>
+  <% end %>
+  <span class="store-address">Гродно, ул. Лиможа, 41</span>
+</div>
+
 
           <%= search_form_for @q, url: catalog_path, method: :get, html: {class: "search-form"} do |f| %>
             <%= f.search_field :name_cont, placeholder: "Поиск по продуктам", class: "search-input" %>
@@ -116,6 +120,7 @@
           </nav>
 
           <div class="social-links">
+          <a href="tel:+375298937145" class="phone-link">+375 29 893 7145</a>
             <a href="https://t.me/viola_kondrat" target="_blank" aria-label="Telegram">
               <%= image_tag 'telegram.jpg', alt: 'Telegram', class: 'social-icon' %>
             </a>

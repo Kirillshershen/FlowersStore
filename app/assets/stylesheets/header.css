@@ -42,7 +42,7 @@ body {
 }
 
 .logo a:hover {
-  color: #4caf50;
+  color: #00bfa5;
 }
 
 /* Поисковая строка */
@@ -67,7 +67,7 @@ body {
 }
 
 .search-input:focus {
-  border-color: #4caf50;
+  border-color: #00bfa5;
 }
 
 /* Кнопка поиска */
@@ -84,7 +84,7 @@ body {
 }
 
 .search-button:hover {
-  background-color: #4caf50;
+  background-color: #00bfa5;
   color: white;
 }
 
@@ -107,7 +107,7 @@ body {
 }
 
 .user-links a:hover {
-  background-color: #4caf50;
+  background-color: #00bfa5;
   color: white;
 }
 
@@ -139,9 +139,9 @@ body {
 
 /* Ховер эффект */
 .nav-categories a:hover {
-  background-color: #4caf50;
+  background-color: #00bfa5;
   color: white;
-  border-color: #4caf50;
+  border-color: #00bfa5;
 }
 
 /* Активная ссылка */
@@ -208,9 +208,9 @@ body {
 
 /* Наведение на кнопку */
 .dropdown:hover .dropbtn {
-  background-color: #4caf50;
+  background-color: #00bfa5;
   color: white;
-  border-color: #4caf50;
+  border-color: #00bfa5;
 }
 
 /* Ссылки в меню */
@@ -225,7 +225,7 @@ body {
 }
 
 .dropdown-content a:hover {
-  background-color: #4caf50;
+  background-color: #00bfa5;
   color: white;
 }
 
@@ -323,4 +323,43 @@ body {
 .dropdown-item.selected {
   font-weight: bold;
   background-color: #e0e0e0;
+}
+.phone-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  margin-right: 12px;
+  transition: color 0.3s;
+}
+
+.phone-link:hover {
+  color: #00bfa5;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* расстояние между названием и адресом */
+  min-width: 200px; /* можно подкорректировать под ваш дизайн */
+}
+
+.logo-link {
+  font-family: 'Cursive', sans-serif;
+  font-size: 24px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.3s;
+  white-space: nowrap; /* чтобы название не переносилось */
+}
+
+.logo-link:hover {
+  color: #00bfa5;
+}
+
+.store-address {
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap; /* чтобы адрес не переносился */
 }

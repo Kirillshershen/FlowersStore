@@ -49,9 +49,8 @@ def index
       @products = @products.order(:name)
     end
 
-    @products = @products.page(params[:page]).per(12)
+    @products = @products.page(params[:page]).per(16)
 
-    # Получаем уникальные типы букетов — теперь с русским названием продукта 'букет'
     @bouquet_types = Product
                       .where(product_type: 'Букет')
                       .pluck(Arel.sql("DISTINCT metadata->>'bouquet_type'"))

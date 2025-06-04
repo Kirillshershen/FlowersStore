@@ -1,0 +1,2 @@
+class Packaging < ApplicationRecord
+end

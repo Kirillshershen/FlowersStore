@@ -80,7 +80,7 @@ hand_tied = "Букет в руках"
 pack = "Крафт"
 
 # === 10 Ваз ===
-10.times do |i|
+60.times do |i|
   name = "Ваза №#{i + 1}"
   size = "Средняя"
   material = "Стекло"
@@ -99,10 +99,10 @@ pack = "Крафт"
     }
   )
 
-  image_path = Rails.root.join("app/assets/images/vase#{i + 1}.jpg")
+  image_path = Rails.root.join("app/assets/images/vase#{1}.jpg")
   product.image.attach(
     io: File.open(image_path),
-    filename: "vase#{i + 1}.jpg",
+    filename: "vase#{1}.jpg",
     content_type: "image/jpeg"
   )
 end
@@ -144,7 +144,12 @@ bouquet_names = [
   "Ванильное небо", "Осенняя пора", "Зимняя сказка", "Летний бриз",
   "Малиновый звон", "Полевые цветы"
 ]
-
+Packaging.create!(
+  [
+    { name: "Крафтовая коробка", material: "Картон", price: 3.50 },
+    { name: "Прозрачный пакет", material: "Полиэтилен", price: 1.20 }
+  ]
+)
 all_flower_ids = Product.where(product_type: "Цветок").pluck(:id)  # <-- изменено
 
 10.times do |i|
@@ -166,7 +171,7 @@ product = Product.create!(
   rating: rand(1..5),
   metadata: {
     bouquet_type: bouquet_type,
-    packaging: pack,
+    packaging: Packaging.all.sample.id,
     flowers: flowers_hash,
   }
 )

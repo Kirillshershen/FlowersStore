@@ -1,99 +1,384 @@
-<h1>Собери свой букет</h1>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Собери свой букет</title>
 
-<%= form_with url: custom_bouquets_path, method: :post, local: true do |form| %>
-  <div id="bouquet-builder">
-    <h3>Вы выбрали:</h3>
-    <ul id="selected-flowers-list" style="list-style: none; padding: 0;"></ul>
-    <input type="hidden" name="bouquet[flowers]" id="bouquet_flowers_json" />
+<style>
+  /* Общие стили */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+  }
 
-    <%= form.label :packaging, "Упаковка" %>
-    <%= form.text_field :packaging %>
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+  }
 
-    <%= form.label :bouquet_type, "Тип букета" %>
-    <%= form.text_field :bouquet_type %>
+  hr {
+    margin: 40px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+  }
 
-    <%= form.submit "Создать букет", class: "btn btn-success" %>
-  </div>
-<% end %>
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #34495e;
+    border-bottom: 2px solid #00bfa5;
+    padding-bottom: 5px;
+    width: max-content;
+  }
 
-<hr>
+  /* Форма сборки букета */
+  .bouquet-form {
+    max-width: 700px;
+    margin: 0 auto;
+    background: white;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgb(0 0 0 / 0.1);
+  }
 
-<h2>Цветы</h2>
-<ul id="available-flowers">
+  .bouquet-builder h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #00bfa5;
+    border-bottom: 1px solid #00bfa5;
+    padding-bottom: 5px;
+  }
+
+#selected-flowers-list {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+  #selected-flowers-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    font-size: 1rem;
+    color: #2c3e50;
+  }
+
+  #selected-flowers-list img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 5px;
+    background: #f0f0f0;
+  }
+
+  #selected-flowers-list button {
+    background: transparent;
+    border: none;
+    color: #00bfa5;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 5px;
+    font-size: 1.1rem;
+    padding: 0 6px;
+    transition: color 0.2s;
+  }
+  #selected-flowers-list button:hover {
+    color: #008e7f;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #34495e;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 25px;
+    transition: border-color 0.3s;
+  }
+  .form-input:focus {
+    border-color: #00bfa5;
+    outline: none;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: background-color 0.3s;
+    user-select: none;
+  }
+
+  .btn-success,
+  .create-bouquet-btn {
+    background-color: #00bfa5;
+    color: white;
+  }
+  .btn-success:hover,
+  .create-bouquet-btn:hover {
+    background-color: #008e7f;
+  }
+
+  /* Секция с цветами */
+  #flower-search {
+    width: 100%;
+    max-width: 700px;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1.5px solid #ccc;
+    margin: 0 auto 25px auto;
+    display: block;
+    box-sizing: border-box;
+  }
+  #flower-search:focus {
+    border-color: #00bfa5;
+    outline: none;
+  }
+
+  .available-flowers-list {
+    max-width: 700px;
+    margin: 0 auto;
+    padding-left: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+    gap: 20px;
+  }
+
+  .flower-item {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.1);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.3s;
+  }
+  .flower-item:hover {
+    box-shadow: 0 5px 15px rgb(0 0 0 / 0.2);
+  }
+
+  .flower-image {
+    max-width: 120px;
+    max-height: 120px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    border-radius: 7px;
+    background: #f0f0f0;
+    box-shadow: inset 0 0 8px #ddd;
+  }
+
+  .flower-info {
+    text-align: center;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .flower-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    display: block;
+    margin-bottom: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .flower-price {
+    color: #00bfa5;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .btn-add-flower {
+    background-color: #00bfa5;
+    color: white;
+    padding: 8px 15px;
+    font-size: 1rem;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    user-select: none;
+    width: 100%;
+  }
+  .btn-add-flower:hover {
+    background-color: #008e7f;
+  }
+</style>
+
+</head>
+<body>
+
+  <h1 class="page-title">Собери свой букет</h1>
+
+  <%= form_with url: custom_bouquets_path, method: :post, local: true, html: {class: 'bouquet-form'} do |form| %>
+    <div id="bouquet-builder" class="bouquet-builder">
+      <h3>Вы выбрали:</h3>
+
+
+<ul id="selected-flowers-list" class="selected-flowers-list"></ul>
+
+<div id="total-price" style="font-weight: 700; font-size: 1.2rem; text-align: right; margin-bottom: 20px; color: #00bfa5;">
+  Общая цена букета: 0 Br
+</div>
+
+      <input type="hidden" name="bouquet[flowers]" id="bouquet_flowers_json" />
+
+<%= form.label :packaging, "Упаковка", class: "form-label" %>
+<%= form.select :packaging, Packaging.all.pluck(:name, :id), { prompt: "Выберите упаковку" }, class: "form-input" %>
+
+
+      <%= form.submit "Создать букет", class: "btn create-bouquet-btn" %>
+    </div>
+  <% end %>
+
+  <hr />
+
+<h2 class="section-title">Цветы</h2>
+
+<input type="text" id="flower-search" placeholder="Поиск цветов по названию..." class="search-input" autocomplete="off" />
+
+<ul id="available-flowers" class="available-flowers-list">
   <% Product.where(product_type: "Цветок").each do |flower| %>
-    <li data-id="<%= flower.id %>" data-name="<%= flower.name %>">
-      <strong><%= flower.name %></strong> — <%= number_to_currency(flower.price) %>
-      <button type="button" class="add-flower">Добавить</button>
+    <li class="flower-item" data-id="<%= flower.id %>" data-name="<%= flower.name.downcase %>" data-price="<%= flower.price %>">
+      <% if flower.image.attached? %>
+        <img src="<%= url_for(flower.image) %>" alt="<%= flower.name %>" class="flower-image" />
+      <% else %>
+        <div class="flower-image" style="display:flex;align-items:center;justify-content:center;color:#bbb;font-size:0.9rem;">Нет фото</div>
+      <% end %>
+      <div class="flower-info">
+        <strong class="flower-name"><%= flower.name %></strong>
+        <span class="flower-price"><%= number_to_currency(flower.price, unit: "Br", separator: ",") %></span>
+      </div>
+      <button type="button" class="btn btn-add-flower">Добавить</button>
     </li>
   <% end %>
 </ul>
 
 <script>
-  const selectedFlowers = {};
-  const selectedList = document.getElementById("selected-flowers-list");
-  const flowersInput = document.getElementById("bouquet_flowers_json");
+  document.addEventListener('DOMContentLoaded', function () {
+    const selectedList = document.getElementById('selected-flowers-list');
+    const hiddenInput = document.getElementById('bouquet_flowers_json');
+    const totalPriceEl = document.getElementById('total-price');
+    const addButtons = document.querySelectorAll('.btn-add-flower');
+    const flowers = {};
+    const flowerSearchInput = document.getElementById('flower-search');
+    const flowerItems = document.querySelectorAll('.flower-item');
 
-  document.querySelectorAll(".add-flower").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const li = btn.closest("li");
-      const id = li.dataset.id;
-      const name = li.dataset.name;
+    function formatPrice(num) {
+      return num.toFixed(2).replace('.', ',') + ' Br';
+    }
 
-      if (selectedFlowers[id]) {
-        selectedFlowers[id].quantity += 1;
-      } else {
-        selectedFlowers[id] = { product_id: id, quantity: 1, name: name };
+    function updateHiddenInput() {
+      hiddenInput.value = JSON.stringify(flowers);
+    }
+
+    function renderSelectedFlowers() {
+      selectedList.innerHTML = '';
+      let totalPrice = 0;
+
+      for (const [id, quantity] of Object.entries(flowers)) {
+        const flowerItem = document.querySelector(`.flower-item[data-id="${id}"]`);
+        if (!flowerItem) continue;
+
+        const name = flowerItem.dataset.name;
+        const imageEl = flowerItem.querySelector('img');
+        const imageUrl = imageEl ? imageEl.src : null;
+        const pricePerUnit = parseFloat(flowerItem.dataset.price);
+        const totalFlowerPrice = pricePerUnit * quantity;
+        totalPrice += totalFlowerPrice;
+
+        const li = document.createElement('li');
+        li.className = 'selected-flower';
+        li.dataset.id = id;
+
+        li.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px;">
+            ${imageUrl ? `<img src="${imageUrl}" alt="${name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;" />` : ''}
+            <div style="flex-grow: 1;">
+              <span style="display:block;margin-bottom:4px;font-weight:bold;text-transform: capitalize;">${name}</span>
+              <div style="font-size: 0.9rem; color: #27ae60; margin-bottom: 6px;">
+                Цена за шт: ${formatPrice(pricePerUnit)}<br/>
+                Итог: ${formatPrice(totalFlowerPrice)}
+              </div>
+              <div class="quantity-controls" style="display:flex;gap:5px;align-items:center;">
+                <button type="button" class="decrease-quantity">−</button>
+                <input type="number" min="1" value="${quantity}" class="flower-quantity-input" style="width: 50px; text-align: center;" />
+                <button type="button" class="increase-quantity">+</button>
+                <button type="button" class="btn btn-remove-flower" style="margin-left:10px;">Удалить</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        selectedList.appendChild(li);
       }
 
-      renderSelectedFlowers();
-    });
-  });
+      totalPriceEl.textContent = 'Общая цена букета: ' + formatPrice(totalPrice);
 
-  function renderSelectedFlowers() {
-    selectedList.innerHTML = "";
+      updateHiddenInput();
+    }
 
-    Object.values(selectedFlowers).forEach(flower => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        ${flower.name} — <strong>${flower.quantity}</strong> шт.
-        <button type="button" class="btn-minus" data-id="${flower.product_id}">−</button>
-        <button type="button" class="btn-plus" data-id="${flower.product_id}">+</button>
-        <button type="button" class="btn-remove" data-id="${flower.product_id}">Удалить</button>
-      `;
-      selectedList.appendChild(li);
-    });
-
-    flowersInput.value = JSON.stringify(selectedFlowers);
-
-    document.querySelectorAll(".btn-minus").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.dataset.id;
-        if (selectedFlowers[id]) {
-          selectedFlowers[id].quantity -= 1;
-          if (selectedFlowers[id].quantity <= 0) {
-            delete selectedFlowers[id];
-          }
-          renderSelectedFlowers();
+    addButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const flowerId = this.closest('.flower-item').dataset.id;
+        if (flowers[flowerId]) {
+          flowers[flowerId]++;
+        } else {
+          flowers[flowerId] = 1;
         }
-      });
-    });
-
-    document.querySelectorAll(".btn-plus").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.dataset.id;
-        if (selectedFlowers[id]) {
-          selectedFlowers[id].quantity += 1;
-          renderSelectedFlowers();
-        }
-      });
-    });
-
-    document.querySelectorAll(".btn-remove").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.dataset.id;
-        delete selectedFlowers[id];
         renderSelectedFlowers();
       });
     });
-  }
+
+    flowerSearchInput.addEventListener('input', function () {
+      const searchTerm = this.value.toLowerCase();
+      
+      flowerItems.forEach(item => {
+        const flowerName = item.dataset.name;
+        if (flowerName.includes(searchTerm)) {
+          item.style.display = ''; 
+        } else {
+          item.style.display = 'none'; /
+        }
+      });
+    });
+  });
 </script>
+</body>
+
+</html>

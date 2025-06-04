@@ -44,6 +44,36 @@
 }
 
 a.active .category-title {
-  color: #4caf50; /* цвет для активной категории */
+  color: #008e7f; /* цвет для активной категории */
   font-weight: 700;
+}
+.create-bouquet-btn {
+  display: inline-block;
+  background-color: #4caf50; /* зеленый цвет, сочетается с акцентом */
+  color: white;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  margin: 20px auto; /* отступ сверху и снизу, центрирование по горизонтали */
+  display: block;
+  max-width: 220px;
+}
+
+.create-bouquet-btn:hover,
+.create-bouquet-btn:focus {
+  background-color: #00bfa5;
+  box-shadow: 0 6px 15px rgba(56, 142, 60, 0.6);
+  transform: scale(1.05);
+}
+
+.create-bouquet-btn:active {
+  background-color: #008e7f;
+  box-shadow: 0 3px 7px rgba(46, 125, 50, 0.8);
+  transform: scale(0.98);
 }

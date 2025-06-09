@@ -6,12 +6,12 @@ class ApplicationController < ActionController::Base
     @q = Product.ransack(params[:q])
   end
     def set_bouquet_types
-  @bouquet_types = Product
-                    .where(product_type: 'bouquet')
-                    .pluck(Arel.sql("DISTINCT metadata->>'bouquet_type'"))
-                    .compact
-                    .map(&:strip)
-                    .sort_by(&:downcase)
+    @bouquet_types = Product
+                      .where(product_type: 'Букет')
+                      .pluck(Arel.sql("DISTINCT metadata->>'bouquet_type'"))
+                      .compact
+                      .map(&:strip)
+                      .sort_by(&:downcase)
   end
 
 end

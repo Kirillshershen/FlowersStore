@@ -69,3 +69,6 @@ gem 'kaminari'
 
 gem 'jquery-rails'
 
+
+
+

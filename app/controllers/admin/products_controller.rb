@@ -2,7 +2,7 @@ class Admin::ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   def index
-    @products = Product.page(params[:page]).per(30) # по 30 продуктов на страницу
+    @products = Product.page(params[:page]).per(30) 
   end
 
   def show

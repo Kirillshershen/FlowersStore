@@ -17,7 +17,7 @@
   <div class="categories-grid">
     <div class="category-column">
       <div class="category-card">
-        <%= link_to catalog_index_path(q: { product_type_eq: 'Букет', metadata_bouquet_type_eq: 'Розы' }), class: ("active" if params.dig(:q, :metadata_bouquet_type_eq) == "Розы") do %>
+        <%= link_to catalog_index_path(q: { product_type_eq: 'Букет', metadata_bouquet_type_eq: 'Из роз' }), class: ("active" if params.dig(:q, :metadata_bouquet_type_eq) == "Розы") do %>
           <%= image_tag "bouquet8.jpg", alt: "Букеты из роз", class: "category-image" %>
           <div class="category-title">Букеты из роз</div>
         <% end %>

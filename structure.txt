@@ -1,0 +1,506 @@
+.
+├── app
+│   ├── assets
+│   │   ├── builds
+│   │   │   ├── application.css
+│   │   │   ├── .keep
+│   │   │   └── rails_admin.css
+│   │   ├── config
+│   │   ├── images
+│   │   │   ├── bouquet10.jpg
+│   │   │   ├── bouquet1.jpg
+│   │   │   ├── bouquet2.jpg
+│   │   │   ├── bouquet3.jpg
+│   │   │   ├── bouquet4.jpg
+│   │   │   ├── bouquet5.jpg
+│   │   │   ├── bouquet6.jpg
+│   │   │   ├── bouquet7.jpg
+│   │   │   ├── bouquet8.jpg
+│   │   │   ├── bouquet9.jpg
+│   │   │   ├── castom.png
+│   │   │   ├── flower1.jpg
+│   │   │   ├── flower2.jpg
+│   │   │   ├── flower3.jpg
+│   │   │   ├── flower4.jpg
+│   │   │   ├── flower5.jpg
+│   │   │   ├── flower6.jpg
+│   │   │   ├── flower7.jpg
+│   │   │   ├── image.png
+│   │   │   ├── instagram.jpg
+│   │   │   ├── .keep
+│   │   │   ├── plant_garden
+│   │   │   │   ├── 1.jpg
+│   │   │   │   ├── 2.jpg
+│   │   │   │   ├── 3.jpg
+│   │   │   │   ├── 4.jpg
+│   │   │   │   └── 5.jpg
+│   │   │   ├── plant_indoor
+│   │   │   │   ├── 1.jpg
+│   │   │   │   ├── 2.jpg
+│   │   │   │   ├── 3.jpg
+│   │   │   │   ├── 4.jpg
+│   │   │   │   └── 5.jpg
+│   │   │   ├── telegram.jpg
+│   │   │   ├── toy10.jpg
+│   │   │   ├── toy1.jpg
+│   │   │   ├── toy2.jpg
+│   │   │   ├── toy3.jpg
+│   │   │   ├── toy4.jpg
+│   │   │   ├── toy5.jpg
+│   │   │   ├── toy6.jpg
+│   │   │   ├── toy7.jpg
+│   │   │   ├── toy8.jpg
+│   │   │   ├── toy9.jpg
+│   │   │   ├── vase10.jpg
+│   │   │   ├── vase1.jpg
+│   │   │   ├── vase2.jpg
+│   │   │   ├── vase3.jpg
+│   │   │   ├── vase4.jpg
+│   │   │   ├── vase5.jpg
+│   │   │   ├── vase6.jpg
+│   │   │   ├── vase7.jpg
+│   │   │   ├── vase8.jpg
+│   │   │   └── vase9.jpg
+│   │   ├── javascripts
+│   │   └── stylesheets
+│   │       ├── about.css
+│   │       ├── admin.css
+│   │       ├── admin_show.css
+│   │       ├── catalog.css
+│   │       ├── glav.css
+│   │       ├── header.css
+│   │       ├── home.css
+│   │       ├── order.css
+│   │       ├── orders.css
+│   │       ├── product.css
+│   │       └── styles.css
+│   ├── controllers
+│   │   ├── admin
+│   │   │   ├── orders_controller.rb
+│   │   │   └── products_controller.rb
+│   │   ├── application_controller.rb
+│   │   ├── catalog_controller.rb
+│   │   ├── concerns
+│   │   │   └── .keep
+│   │   ├── custom_bouquets_controller.rb
+│   │   ├── orders_controller.rb
+│   │   └── pages_controller.rb
+│   ├── dashboards
+│   ├── helpers
+│   │   ├── admin
+│   │   │   ├── orders_helper.rb
+│   │   │   └── products_helper.rb
+│   │   ├── application_helper.rb
+│   │   ├── catalog_helper.rb
+│   │   ├── custom_bouquets_helper.rb
+│   │   ├── orders_helper.rb
+│   │   └── pages_helper.rb
+│   ├── javascript
+│   │   ├── application.js
+│   │   ├── controllers
+│   │   │   ├── application.js
+│   │   │   ├── hello_controller.js
+│   │   │   └── index.js
+│   │   ├── packs
+│   │   └── rails_admin.js
+│   ├── jobs
+│   │   └── application_job.rb
+│   ├── mailers
+│   │   └── application_mailer.rb
+│   ├── models
+│   │   ├── application_record.rb
+│   │   ├── concerns
+│   │   │   └── .keep
+│   │   ├── order.rb
+│   │   ├── packaging.rb
+│   │   ├── product_in_order.rb
+│   │   ├── product_promotion.rb
+│   │   ├── product.rb
+│   │   ├── promotion.rb
+│   │   ├── review.rb
+│   │   ├── toy.rb
+│   │   ├── user.rb
+│   │   └── vase.rb
+│   └── views
+│       ├── admin
+│       │   ├── orders
+│       │   │   ├── index.html.erb
+│       │   │   └── show.html.erb
+│       │   └── products
+│       │       ├── edit.html.erb
+│       │       ├── _form.html.erb
+│       │       ├── index.html.erb
+│       │       ├── new.html.erb
+│       │       └── show.html.erb
+│       ├── catalog
+│       │   ├── index.html.erb
+│       │   └── show.html.erb
+│       ├── custom_bouquets
+│       │   ├── create.html.erb
+│       │   └── new.html.erb
+│       ├── devise
+│       │   ├── confirmations
+│       │   │   └── new.html.erb
+│       │   ├── mailer
+│       │   │   ├── confirmation_instructions.html.erb
+│       │   │   ├── email_changed.html.erb
+│       │   │   ├── password_change.html.erb
+│       │   │   ├── reset_password_instructions.html.erb
+│       │   │   └── unlock_instructions.html.erb
+│       │   ├── passwords
+│       │   │   ├── edit.html.erb
+│       │   │   └── new.html.erb
+│       │   ├── registrations
+│       │   │   ├── edit.html.erb
+│       │   │   └── new.html.erb
+│       │   ├── sessions
+│       │   │   └── new.html.erb
+│       │   ├── shared
+│       │   │   ├── _error_messages.html.erb
+│       │   │   └── _links.html.erb
+│       │   └── unlocks
+│       │       └── new.html.erb
+│       ├── layouts
+│       │   ├── application.html.erb
+│       │   ├── _footer.html.erb
+│       │   ├── mailer.html.erb
+│       │   └── mailer.text.erb
+│       ├── orders
+│       │   ├── details.html.erb
+│       │   ├── index.html.erb
+│       │   ├── show.html.erb
+│       │   └── update_quantity.js.erb
+│       ├── pages
+│       │   ├── about.html.erb
+│       │   ├── contacts.html.erb
+│       │   ├── delivery.html.erb
+│       │   └── home.html.erb
+│       └── pwa
+│           ├── manifest.json.erb
+│           └── service-worker.js
+├── bin
+│   ├── brakeman
+│   ├── bundle
+│   ├── dev
+│   ├── docker-entrypoint
+│   ├── importmap
+│   ├── jobs
+│   ├── kamal
+│   ├── rails
+│   ├── rake
+│   ├── rubocop
+│   ├── setup
+│   └── thrust
+├── config
+│   ├── application.rb
+│   ├── boot.rb
+│   ├── cable.yml
+│   ├── cache.yml
+│   ├── credentials.yml.enc
+│   ├── database.yml
+│   ├── deploy.yml
+│   ├── environment.rb
+│   ├── environments
+│   │   ├── development.rb
+│   │   ├── production.rb
+│   │   └── test.rb
+│   ├── importmap.rails_admin.rb
+│   ├── importmap.rb
+│   ├── initializers
+│   │   ├── assets.rb
+│   │   ├── content_security_policy.rb
+│   │   ├── devise.rb
+│   │   ├── filter_parameter_logging.rb
+│   │   └── inflections.rb
+│   ├── locales
+│   │   ├── devise.en.yml
+│   │   ├── en.yml
+│   │   └── kaminari.ru.yml
+│   ├── master.key
+│   ├── puma.rb
+│   ├── queue.yml
+│   ├── recurring.yml
+│   ├── routes.rb
+│   └── storage.yml
+├── config.ru
+├── db
+│   ├── cable_schema.rb
+│   ├── cache_schema.rb
+│   ├── migrate
+│   │   ├── 20250514112658_create_orders.rb
+│   │   ├── 20250514112659_create_products.rb
+│   │   ├── 20250514112707_create_reviews.rb
+│   │   ├── 20250514112709_create_product_in_orders.rb
+│   │   ├── 20250514115253_devise_create_users.rb
+│   │   ├── 20250514135355_add_quantity_to_product_in_orders.rb
+│   │   ├── 20250518220150_create_active_storage_tables.active_storage.rb
+│   │   ├── 20250602080358_add_custom_to_products.rb
+│   │   ├── 20250604080523_create_packagings.rb
+│   │   ├── 20250608183153_create_promotions.rb
+│   │   └── 20250608183158_create_product_promotions.rb
+│   ├── queue_schema.rb
+│   ├── schema.rb
+│   └── seeds.rb
+├── Dockerfile
+├── .dockerignore
+├── Gemfile
+├── Gemfile.lock
+├── .git
+│   ├── branches
+│   ├── COMMIT_EDITMSG
+│   ├── config
+│   ├── description
+│   ├── FETCH_HEAD
+│   ├── HEAD
+│   ├── hooks
+│   │   ├── applypatch-msg.sample
+│   │   ├── commit-msg.sample
+│   │   ├── fsmonitor-watchman.sample
+│   │   ├── post-update.sample
+│   │   ├── pre-applypatch.sample
+│   │   ├── pre-commit.sample
+│   │   ├── pre-merge-commit.sample
+│   │   ├── prepare-commit-msg.sample
+│   │   ├── pre-push.sample
+│   │   ├── pre-rebase.sample
+│   │   ├── pre-receive.sample
+│   │   ├── push-to-checkout.sample
+│   │   ├── sendemail-validate.sample
+│   │   └── update.sample
+│   ├── index
+│   ├── info
+│   │   └── exclude
+│   ├── logs
+│   │   ├── HEAD
+│   │   └── refs
+│   │       ├── heads
+│   │       │   ├── main
+│   │       │   └── шапка
+│   │       ├── remotes
+│   │       │   └── origin
+│   │       │       ├── dependabot
+│   │       │       │   └── bundler
+│   │       │       │       ├── bootsnap-1.18.6
+│   │       │       │       ├── kamal-2.6.1
+│   │       │       │       ├── selenium-webdriver-4.33.0
+│   │       │       │       └── turbo-rails-2.0.16
+│   │       │       ├── HEAD
+│   │       │       ├── main
+│   │       │       ├── изменение
+│   │       │       └── шапка
+│   │       └── stash
+│   ├── ORIG_HEAD
+│   └── refs
+│       ├── heads
+│       │   ├── main
+│       │   └── шапка
+│       ├── remotes
+│       │   └── origin
+│       │       ├── dependabot
+│       │       │   └── bundler
+│       │       │       ├── bootsnap-1.18.6
+│       │       │       ├── kamal-2.6.1
+│       │       │       ├── selenium-webdriver-4.33.0
+│       │       │       └── turbo-rails-2.0.16
+│       │       ├── HEAD
+│       │       ├── main
+│       │       ├── изменение
+│       │       └── шапка
+│       ├── stash
+│       └── tags
+├── .gitattributes
+├── .github
+│   ├── dependabot.yml
+│   └── workflows
+│       └── ci.yml
+├── .gitignore
+├── .kamal
+│   ├── hooks
+│   │   ├── docker-setup.sample
+│   │   ├── post-app-boot.sample
+│   │   ├── post-deploy.sample
+│   │   ├── post-proxy-reboot.sample
+│   │   ├── pre-app-boot.sample
+│   │   ├── pre-build.sample
+│   │   ├── pre-connect.sample
+│   │   ├── pre-deploy.sample
+│   │   └── pre-proxy-reboot.sample
+│   └── secrets
+├── lib
+│   └── tasks
+│       └── .keep
+├── package.json
+├── Procfile.dev
+├── public
+│   ├── 400.html
+│   ├── 404.html
+│   ├── 406-unsupported-browser.html
+│   ├── 422.html
+│   ├── 500.html
+│   ├── assets
+│   │   ├── about-8550b26b.css
+│   │   ├── action_cable-5212cfee.js
+│   │   ├── actioncable-ac25813f.js
+│   │   ├── actioncable.esm-e0ec9819.js
+│   │   ├── actiontext-a4ee937e.js
+│   │   ├── actiontext.esm-f1c04d34.js
+│   │   ├── activestorage-32201f68.js
+│   │   ├── activestorage.esm-f2909226.js
+│   │   ├── admin-0c57eb3b.css
+│   │   ├── admin-86c6b829.css
+│   │   ├── admin-fcabeab4.css
+│   │   ├── admin_show-8888a1b9.css
+│   │   ├── application-231c63cf.css
+│   │   ├── application-fe09bafa.js
+│   │   ├── bouquet10-1edfbcdd.jpg
+│   │   ├── bouquet1-feef734c.jpg
+│   │   ├── bouquet2-0a49037a.jpg
+│   │   ├── bouquet3-9cd8b548.jpg
+│   │   ├── bouquet4-c4d09e6f.jpg
+│   │   ├── bouquet5-974416de.jpg
+│   │   ├── bouquet6-8277769a.jpg
+│   │   ├── bouquet7-eca74654.jpg
+│   │   ├── bouquet8-c912c05c.jpg
+│   │   ├── bouquet9-157dc110.jpg
+│   │   ├── castom-cdb086b1.png
+│   │   ├── catalog-4c8eac43.css
+│   │   ├── catalog-979d90b5.css
+│   │   ├── catalog-98011d98.css
+│   │   ├── catalog-b88ca20d.css
+│   │   ├── catalog-bdf03368.css
+│   │   ├── catalog-d6a26fc6.css
+│   │   ├── catalog-dcf5b1fe.css
+│   │   ├── controllers
+│   │   │   ├── application-3affb389.js
+│   │   │   ├── hello_controller-708796bd.js
+│   │   │   └── index-ee64e1f1.js
+│   │   ├── fa-brands-400-24099ddc.ttf
+│   │   ├── fa-brands-400-c1dca0e4.woff2
+│   │   ├── fa-regular-400-0ee0d1e9.woff2
+│   │   ├── fa-regular-400-727dcf37.ttf
+│   │   ├── fa-solid-900-64d74b77.woff2
+│   │   ├── fa-solid-900-7c036e8f.ttf
+│   │   ├── fa-v4compatibility-490c14f9.ttf
+│   │   ├── fa-v4compatibility-afce1f50.woff2
+│   │   ├── flower1-361f4ae3.jpg
+│   │   ├── flower2-8c04dd09.jpg
+│   │   ├── flower3-81b4d561.jpg
+│   │   ├── flower4-6f817016.jpg
+│   │   ├── flower5-2b99007d.jpg
+│   │   ├── flower6-99124566.jpg
+│   │   ├── flower7-ab0e6f27.jpg
+│   │   ├── glav-51432f2b.css
+│   │   ├── glav-ae56afa5.css
+│   │   ├── glav-bcddb5dc.css
+│   │   ├── glav-c20a565e.css
+│   │   ├── glav-f1677b12.css
+│   │   ├── header-16169e39.css
+│   │   ├── header-277ef111.css
+│   │   ├── header-48abef13.css
+│   │   ├── header-6728745e.css
+│   │   ├── header-89c0c419.css
+│   │   ├── header-95a041a4.css
+│   │   ├── header-aec26179.css
+│   │   ├── header-b0fed783.css
+│   │   ├── header-b73a9bef.css
+│   │   ├── header-ba60bea8.css
+│   │   ├── header-c2795c51.css
+│   │   ├── header-da995399.css
+│   │   ├── header-e9918e79.css
+│   │   ├── home-3eb40a02.css
+│   │   ├── home-7974a604.css
+│   │   ├── image-2c78073f.png
+│   │   ├── instagram-55bd9172.jpg
+│   │   ├── jquery2-44186c7f.min.map
+│   │   ├── jquery2-d8a0a478.js
+│   │   ├── jquery2.min-5c0f18d3.js
+│   │   ├── jquery3-252eaeb0.min.map
+│   │   ├── jquery3-2ea485e5.js
+│   │   ├── jquery3.min-91df45f7.js
+│   │   ├── jquery-43d0ab6a.min.map
+│   │   ├── jquery-fbee4808.js
+│   │   ├── jquery.min-cc61f2ef.js
+│   │   ├── jquery_ujs-4a343d57.js
+│   │   ├── .manifest.json
+│   │   ├── order-4153f971.css
+│   │   ├── orders-d0944533.css
+│   │   ├── plant_garden
+│   │   │   ├── 1-0e5d2777.jpg
+│   │   │   ├── 2-f7919312.jpg
+│   │   │   ├── 3-5808d590.jpg
+│   │   │   ├── 4-e0a62094.jpg
+│   │   │   └── 5-6b4a04d5.jpg
+│   │   ├── plant_indoor
+│   │   │   ├── 1-16886e89.jpg
+│   │   │   ├── 2-f5f2bc01.jpg
+│   │   │   ├── 3-362541a9.jpg
+│   │   │   ├── 4-e0ab97f8.jpg
+│   │   │   └── 5-97cd6eb5.jpg
+│   │   ├── product-14b0c999.css
+│   │   ├── product-2b8ca258.css
+│   │   ├── product-3caa2f68.css
+│   │   ├── product-4d814a66.css
+│   │   ├── product-6ec2d253.css
+│   │   ├── product-6f3d9baa.css
+│   │   ├── product-a6a7f0d4.css
+│   │   ├── product-d4770696.css
+│   │   ├── product-f2d61864.css
+│   │   ├── rails_admin-0736be6b.js
+│   │   ├── rails_admin-1a494d27.css
+│   │   ├── rails-ujs-20eaf715.js
+│   │   ├── rails-ujs.esm-e925103b.js
+│   │   ├── stimulus-autoloader-9d447422.js
+│   │   ├── stimulus-d59b3b7f.js
+│   │   ├── stimulus-importmap-autoloader-64cc03e1.js
+│   │   ├── stimulus-loading-1fc53fe7.js
+│   │   ├── stimulus.min-2395e199.js.map
+│   │   ├── stimulus.min-4b1e420e.js
+│   │   ├── styles-71637a39.css
+│   │   ├── telegram-c2592251.jpg
+│   │   ├── toy10-5ca8235c.jpg
+│   │   ├── toy1-a6d2caed.jpg
+│   │   ├── toy2-8e0aff99.jpg
+│   │   ├── toy3-4ed44404.jpg
+│   │   ├── toy4-705691d6.jpg
+│   │   ├── toy5-90add009.jpg
+│   │   ├── toy6-18da1843.jpg
+│   │   ├── toy7-2d4ae7aa.jpg
+│   │   ├── toy8-0541f6fb.jpg
+│   │   ├── toy9-b0e719b0.jpg
+│   │   ├── trix-4b540cb5.js
+│   │   ├── trix-65afdb1d.css
+│   │   ├── turbo-765c2e69.js
+│   │   ├── turbo.min-02fd5b81.js.map
+│   │   ├── turbo.min-1262d735.js
+│   │   ├── vase10-3d87079c.jpg
+│   │   ├── vase1-f8bfc852.jpg
+│   │   ├── vase2-69659382.jpg
+│   │   ├── vase3-69659382.jpg
+│   │   ├── vase4-9ba69a2f.jpg
+│   │   ├── vase5-e0ed5f1c.jpg
+│   │   ├── vase6-491f5c4e.jpg
+│   │   ├── vase7-761475f4.jpg
+│   │   ├── vase8-82b35c83.jpg
+│   │   └── vase9-708fdba5.jpg
+│   ├── icon.png
+│   ├── icon.svg
+│   └── robots.txt
+├── Rakefile
+├── README.md
+├── .rubocop.yml
+├── .ruby-version
+├── script
+│   └── .keep
+├── structure.txt
+├── test
+│   ├── application_system_test_case.rb
+│   ├── controllers
+│   │   ├── admin
+│   │   │   ├── orders_controller_test.rb
+│   │   │   └── products_controller_test.rb
+│   │   ├── catalog_controller_test.rb
+│   │   ├── custom_bouquets_controller_test.rb
+│   │   ├── .keep
+│   │   ├── orders_controller_test.rb
+│   │   └── pages_controller_test.rb
+

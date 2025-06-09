@@ -21,7 +21,8 @@
           <% if @product_in_orders.any? %>
             <% total_price = 0 %>
             <% @product_in_orders.each do |item| %>
-              <% item_total = item.product.price * item.quantity %>
+              <% item_total = (item.product.active_promotion ? item.product.final_price : item.product.price) * item.quantity %>
+
               <% total_price += item_total %>
 
               <div class="cart-item" id="order_item_<%= item.id %>">
@@ -48,7 +49,19 @@
   <% end %>
 </p>
 
-                  <p><strong>Цена за штуку:</strong> <%= number_to_currency(item.product.price, unit: "BYN ") %></p>
+                  <p><strong>Цена за штуку:</strong>
+  <% if item.product.active_promotion %>
+    <span style="text-decoration: line-through; color: grey;">
+      <%= number_to_currency(item.product.price, unit: "BYN ") %>
+    </span>
+    <span style="color: red; font-weight: bold; margin-left: 5px;">
+      <%= number_to_currency(item.product.final_price, unit: "BYN ") %>
+    </span>
+  <% else %>
+    <%= number_to_currency(item.product.price, unit: "BYN ") %>
+  <% end %>
+</p>
+
                   <p><strong>Итого:</strong> <%= number_to_currency(item_total, unit: "BYN ") %></p>
 
                   <%= button_to 'Удалить', remove_item_order_path(product_id: item.product.id), method: :delete, data: { confirm: 'Вы уверены?' }, class: "remove-button" %>
@@ -67,24 +80,35 @@
             <p class="total-price"><%= number_to_currency(total_price, unit: "BYN ") %></p>
 
 <%= form_with url: confirm_order_path, method: :post, scope: :order, local: true do |f| %>
-
-  <div class="form-group">
-    <label>Способ доставки:</label><br>
-    <%= f.radio_button :delivery_method, 'pickup', id: 'pickup' %>
-    <%= f.label :delivery_method_pickup, 'Самовывоз' %><br>
-    <%= f.radio_button :delivery_method, 'delivery', id: 'delivery' %>
-    <%= f.label :delivery_method_delivery, 'Доставка по адресу' %>
+<% if @order.errors.any? %>
+  <div class="errors">
+    <h2><%= pluralize(@order.errors.count, "ошибка") %>:</h2>
+    <ul>
+      <% @order.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
   </div>
+<% end %>
 
-  <div class="form-group" id="address-field" style="display: none;">
-    <label for="delivery_address">Адрес доставки:</label>
-    <%= f.text_field :delivery_address, class: "input" %>
-  </div>
+<div class="form-group">
+  <label>Способ доставки:</label><br>
+  <%= f.radio_button :delivery_method, 'pickup', id: 'pickup', required: true %>
+  <%= f.label :delivery_method_pickup, 'Самовывоз' %><br>
+  <%= f.radio_button :delivery_method, 'delivery', id: 'delivery', required: true %>
+  <%= f.label :delivery_method_delivery, 'Доставка по адресу' %>
+</div>
 
-  <div class="form-group">
-    <label for="ready_date">Когда товар должен быть готов:</label>
-    <%= f.datetime_local_field :ready_date, class: "input" %>
-  </div>
+<div class="form-group" id="address-field" style="display: none;">
+  <label for="delivery_address">Адрес доставки:</label>
+  <%= f.text_field :delivery_address, class: "input", id: "delivery_address_field" %>
+</div>
+
+<div class="form-group">
+  <label for="ready_date">Когда товар должен быть готов:</label>
+<%= f.datetime_local_field :ready_date, class: "input", min: (1.hour.from_now).strftime("%Y-%m-%dT%H:%M") %>
+
+</div>
 
   <div class="form-group">
     <label for="comment">Комментарий:</label>

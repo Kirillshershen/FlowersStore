@@ -14,17 +14,13 @@
         <li class="order-item">
           <strong>Заказ №<%= order.id %></strong>
           <ul class="order-products">
-            <% order.product_in_orders.each do |item| %>
-              <li class="order-product-item">
-                <%= item.product.name %> 
-                (<span class="quantity">Количество: <%= item.quantity %></span>) - 
-                <span class="price">Цена: <%= number_to_currency(item.product.price * item.quantity, unit: "руб.") %></span>
-              </li>
-            <% end %>
+            <!-- Здесь можно вывести краткий список товаров -->
           </ul>
-<p><strong>Дата оформления:</strong> <%= order.ready_date ? order.ready_date.strftime('%d-%m-%Y %H:%M') : 'Дата не указана' %></p>
 
+          <p><strong>Дата готовности заказа:</strong> <%= order.ready_date ? order.ready_date.strftime('%d-%m-%Y %H:%M') : 'Дата не указана' %></p>
           <p><strong>Статус:</strong> <%= order.status.capitalize %></p>
+
+          <%= link_to 'Подробнее о заказе', details_order_path(order), class: 'btn btn-info' %>
 
           <% unless ['отменен', 'выполнен'].include?(order.status) %>
             <%= button_to 'Отменить заказ', cancel_order_path(order), method: :patch, data: { confirm: 'Вы уверены, что хотите отменить этот заказ?' } %>

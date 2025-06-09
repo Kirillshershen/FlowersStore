@@ -50,6 +50,7 @@ end
 resources :orders do
   member do
     patch :cancel
+    get :details 
   end
 end
 

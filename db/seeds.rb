@@ -155,27 +155,34 @@ all_flower_ids = Product.where(product_type: "Цветок").pluck(:id)  # <-- �
 10.times do |i|
   name = bouquet_names.delete_at(rand(bouquet_names.length))
   bouquet_type = [round, gift, wedding, mono, cascade, hand_tied].sample
-  price = rand(25.0..50.0).round(2)
 
-flower_ids = all_flower_ids.sample(3)
-flower_quantities = flower_ids.map { rand(3..7) }
+  flower_ids = all_flower_ids.sample(3)
+  flower_quantities = flower_ids.map { rand(3..7) }
 
-flowers_hash = flower_ids.zip(flower_quantities).each_with_index.with_object({}) do |((id, qty), index), hash|
-  hash[index.to_s] = { product_id: id, quantity: qty }
-end
+  flowers_hash = flower_ids.zip(flower_quantities).each_with_index.with_object({}) do |((id, qty), index), hash|
+    hash[index.to_s] = { product_id: id, quantity: qty }
+  end
 
-product = Product.create!(
-  name: name,
-  price: price,
-  product_type: "Букет",
-  rating: rand(1..5),
-  metadata: {
-    bouquet_type: bouquet_type,
-    packaging: Packaging.all.sample.id,
-    flowers: flowers_hash,
-  }
-)
+  flowers = Product.where(id: flower_ids)
+  total_price = 0
+  flower_ids.each_with_index do |fid, idx|
+    flower = flowers.find { |f| f.id == fid }
+    qty = flower_quantities[idx]
+    total_price += flower.price * qty if flower
+  end
+  total_price = total_price.round(2)
 
+  product = Product.create!(
+    name: name,
+    price: total_price,
+    product_type: "Букет",
+    rating: rand(1..5),
+    metadata: {
+      bouquet_type: bouquet_type,
+      packaging: Packaging.all.sample.id,
+      flowers: flowers_hash,
+    }
+  )
 
   image_path = Rails.root.join("app/assets/images/bouquet#{i + 1}.jpg")
   product.image.attach(
@@ -184,4 +191,5 @@ product = Product.create!(
     content_type: "image/jpeg"
   )
 end
+
 

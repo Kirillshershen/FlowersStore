@@ -91,14 +91,16 @@
       <% flowers = @product.metadata&.dig("flowers") || [] %>
       <% flowers.each_with_index do |flower, index| %>
         <div class="flower-item" data-index="<%= index %>">
-          <select name="product[metadata][flowers][<%= index %>][product_id]">
-            <option value=""></option>
-            <% Product.where(product_type: "Цветок").each do |flower_option| %>
-              <option value="<%= flower_option.id %>" <%= "selected" if flower_option.id == flower["product_id"] %>><%= flower_option.name %></option>
-            <% end %>
-          </select>
-          <input type="number" name="product[metadata][flowers][<%= index %>][quantity]" min="1" value="<%= flower["quantity"] %>" />
-          <button type="button" class="remove-flower">Удалить</button>
+         <% @product.metadata["flowers"].each do |index, flower| %>
+  <select name="product[metadata][flowers][<%= index %>][product_id]">
+    <option value=""></option>
+    <% Product.where(product_type: "Цветок").each do |flower_option| %>
+      <option value="<%= flower_option.id %>" <%= "selected" if flower_option.id == flower["product_id"] %>><%= flower_option.name %></option>
+    <% end %>
+  </select>
+  <input type="number" name="product[metadata][flowers][<%= index %>][quantity]" min="1" value="<%= flower["quantity"] %>" />
+<% end %>
+
         </div>
       <% end %>
     </div>

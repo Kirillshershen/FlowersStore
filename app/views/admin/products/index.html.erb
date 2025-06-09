@@ -25,7 +25,7 @@
       <% @products.each do |product| %>
         <tr>
           <td><%= product.name %></td>
-          <td><%= number_to_currency(product.price) %></td>
+          <td><%= number_to_currency(product.price, unit: "Br") %></td>
           <td><%= product.product_type %></td>
           <td>
             <%= link_to 'Показать', admin_product_path(product) %> |

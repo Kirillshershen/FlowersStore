@@ -42,7 +42,7 @@ end
       redirect_to order_path
    end
 def index
-  @orders = current_user.orders.where.not(status: 'Draft')
+  @orders = current_user.orders.where.not(status: 'draft')
 
   status_priority = {
     "готов" => 0,
@@ -66,27 +66,10 @@ def remove_item
   redirect_to order_path, notice: 'Товар удалён из заказа.'
 end
 
-def index
-  # Фильтр по статусу из параметров (если нужен)
-  @status_filter = params[:status]
-
-  orders = current_user.orders
-
-  # Если выбран фильтр, то фильтруем
-  orders = orders.where(status: @status_filter) if @status_filter.present?
-
-  # Сортируем заказы в нужном порядке статусов:
-  # Сначала "готовые" (ready), потом "подтвержденные" (confirmed), потом "завершённые" (completed)
-  # Другие статусы — в конце.
-  order_priority = {
-    "ready" => 0,
-    "confirmed" => 1,
-    "completed" => 2
-  }
-
-  # Присваиваем приоритет статусам, если статус отсутствует в хеше — ставим большой приоритет (например, 99)
-  @orders = orders.sort_by { |order| order_priority.fetch(order.status, 99) }
+def details
+  @order = current_user.orders.find(params[:id])
 end
+
 
   
 def confirm

@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
   def home
-    @products = Product.all  # или другая логика получения продуктов
+    @banners = Banner.all
   end
   def about
   end

@@ -8,6 +8,42 @@ User.create!(
   password_confirmation: "111111",
   admin: true
 )
+require 'open-uri'
+
+Banner.destroy_all
+
+banners = [
+  {
+    title: "Весеннее настроение",
+    subtitle: "Свежие тюльпаны и ромашки со скидкой 20%",
+    link: "/products?season=spring",
+    image_file: "spring_banner.jpg"
+  },
+  {
+    title: "Свадебные букеты",
+    subtitle: "Идеальный букет на ваш важный день",
+    link: "/catalog/index?q[metadata_bouquet_type_eq]=Свадебный&q[product_type_eq]=Букет",
+    image_file: "wedding_flowers.jpg"
+  },
+  {
+    title: "Скидка на игрушки",
+    subtitle: "Добавь милую игрушку к букету",
+    link: "/products?type=Toy",
+    image_file: "promo_discount.jpg"
+  }
+]
+
+banners.each do |data|
+  banner = Banner.create!(
+    title: data[:title],
+    subtitle: data[:subtitle],
+    link: data[:link]
+  )
+  image_path = Rails.root.join("app/assets/images/Banners/#{data[:image_file]}")
+  banner.image.attach(io: File.open(image_path), filename: data[:image_file])
+end
+
+puts "✅ Баннеры успешно созданы: #{Banner.count}"
 
 # === Типы цветов ===
 rose = "Роза"
@@ -52,7 +88,7 @@ flower_data.each_with_index do |(name, price, type), index|
   product = Product.create!(
     name: name,
     price: price,
-    product_type: "Цветок",   # <-- изменено на русское значение
+    product_type: "Цветок",  
     metadata: {
       flower_type: type,
       discount: 0,  
@@ -90,7 +126,7 @@ pack = "Крафт"
   product = Product.create!(
     name: name,
     price: price,
-    product_type: "Ваза",   # <-- изменено
+    product_type: "Ваза", 
     rating: rand(1..5),
     metadata: {
       size: size,
@@ -122,7 +158,7 @@ bear_names = [
   product = Product.create!(
     name: name,
     price: price,
-    product_type: "Игрушка",   # <-- изменено
+    product_type: "Игрушка",  
     rating: rand(1..5),
     metadata: {
       size: size,
@@ -150,7 +186,7 @@ Packaging.create!(
     { name: "Прозрачный пакет", material: "Полиэтилен", price: 1.20 }
   ]
 )
-all_flower_ids = Product.where(product_type: "Цветок").pluck(:id)  # <-- изменено
+all_flower_ids = Product.where(product_type: "Цветок").pluck(:id)  #
 
 # Создание букетов
 10.times do |i|

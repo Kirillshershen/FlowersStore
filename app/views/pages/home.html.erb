@@ -9,6 +9,30 @@
   <%= stylesheet_link_tag 'glav.css', "data-turbo-track": "reload" %>
 </head>
 <body>
+<div class="banners-container">
+  <div class="banners-scroll">
+    <% @banners.each do |banner| %>
+<div class="banner-card">
+  <% if banner.image.attached? %>
+    <div class="banner-image-wrapper">
+      <%= image_tag banner.image, class: "banner-image" %>
+      
+      <div class="banner-text">
+        <h2><%= banner.title %></h2>
+        <p><%= banner.subtitle %></p>
+        <%= link_to "Подробнее", banner.link, class: "banner-link" %>
+      </div>
+      
+    </div>
+  <% end %>
+</div>
+
+
+    <% end %>
+  </div>
+</div>
+
+
 <%= link_to 'Создать свой букет', new_custom_bouquet_path, class: 'create-bouquet-btn' %>
 
 

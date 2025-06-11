@@ -152,6 +152,7 @@ Packaging.create!(
 )
 all_flower_ids = Product.where(product_type: "Цветок").pluck(:id)  # <-- изменено
 
+# Создание букетов
 10.times do |i|
   name = bouquet_names.delete_at(rand(bouquet_names.length))
   bouquet_type = [round, gift, wedding, mono, cascade, hand_tied].sample
@@ -163,6 +164,7 @@ all_flower_ids = Product.where(product_type: "Цветок").pluck(:id)  # <-- �
     hash[index.to_s] = { product_id: id, quantity: qty }
   end
 
+  # Изначально просто считаем сумму цен цветов без скидок
   flowers = Product.where(id: flower_ids)
   total_price = 0
   flower_ids.each_with_index do |fid, idx|
@@ -192,4 +194,64 @@ all_flower_ids = Product.where(product_type: "Цветок").pluck(:id)  # <-- �
   )
 end
 
+# Создание акций и привязка
+Promotion.destroy_all
+ProductPromotion.destroy_all
 
+promo1 = Promotion.create!(
+  name: "Весеннее предложение",
+  discount_type: "fixed", # или 'percent' если так принято в коде
+  discount_value: 10,
+  starts_at: Time.current - 1.day,
+  ends_at: Time.current + 14.days,
+  active: true
+)
+
+promo2 = Promotion.create!(
+  name: "Скидка на вазы",
+  discount_type: "fixed",
+  discount_value: 5.00,
+  starts_at: Time.current,
+  ends_at: Time.current + 10.days,
+  active: true
+)
+
+promo3 = Promotion.create!(
+  name: "Счастливые игрушки",
+  discount_type: "fixed",
+  discount_value: 15,
+  starts_at: Time.current,
+  ends_at: Time.current + 7.days,
+  active: true
+)
+
+promo4 = Promotion.create!(
+  name: "Цветочная нежность",
+  discount_type: "fixed",
+  discount_value: 12,
+  starts_at: Time.current,
+  ends_at: Time.current + 10.days,
+  active: true
+)
+
+Product.where(product_type: "Цветок").sample(5).each do |product|
+  ProductPromotion.create!(product: product, promotion: promo4)
+end
+
+Product.where(product_type: "Букет").sample(5).each do |product|
+  ProductPromotion.create!(product: product, promotion: promo1)
+end
+
+Product.where(product_type: "Ваза").sample(5).each do |product|
+  ProductPromotion.create!(product: product, promotion: promo2)
+end
+
+Product.where(product_type: "Игрушка").sample(5).each do |product|
+  ProductPromotion.create!(product: product, promotion: promo3)
+end
+
+# После создания всех промо — пересчитываем цену букетов с учётом скидок на цветы и на букеты
+Product.where(product_type: "Букет").find_each do |bouquet|
+  new_price = bouquet.calculated_bouquet_price
+  bouquet.update(price: new_price)
+end

@@ -128,6 +128,10 @@
           </nav>
 
           <div class="social-links">
+          <% if current_user %>
+  <%= link_to "Привязать Telegram", "https://t.me/flowers_shop_notifier_bot?start=#{current_user.telegram_link_token}", target: "_blank" %>
+<% end %>
+
           <a href="tel:+375298937145" class="phone-link">+375 29 893 7145</a>
             <a href="https://t.me/viola_kondrat" target="_blank" aria-label="Telegram">
               <%= image_tag 'telegram.jpg', alt: 'Telegram', class: 'social-icon' %>

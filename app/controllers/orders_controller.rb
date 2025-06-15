@@ -75,27 +75,39 @@ end
 def confirm
   @order = current_user.orders.find_by(status: 'draft')
   if @order&.product_in_orders&.any?
-    # Принять параметры из формы
-update_params = params.require(:order).permit(:delivery_method, :delivery_address, :ready_date, :comment)
-# игнорируем total_price из params
+    update_params = params.require(:order).permit(:delivery_method, :delivery_address, :ready_date, :comment)
 
-# подсчёт цены, если нужно (у вас есть @order.product_in_orders)
-total_price = @order.product_in_orders.sum { |item| item.product.price * item.quantity }
+    # Сохраняем снимки продуктов
+    @order.product_in_orders.each do |item|
+      product = item.product
+      product_snapshot = {
+        name: product.name,
+        price: product.price,
+        product_type: product.product_type,
+        rating: product.try(:rating),
+        metadata: product.metadata,
+        image_url: product.image.attached? ? url_for(product.image) : nil
+      }
+      item.update(metadata: product_snapshot)
+    end
 
-@order.update(
-  status: 'подтвержден',
-  ready_date: update_params[:ready_date].presence || Time.current,
-  delivery_method: update_params[:delivery_method],
-  delivery_address: update_params[:delivery_address],
-  comment: update_params[:comment],
-  price: total_price  # сюда можно записать итоговую цену, если в базе есть поле price
-)
+    total_price = @order.product_in_orders.sum { |item| item.product.price * item.quantity }
+
+    @order.update(
+      status: 'подтвержден',
+      ready_date: update_params[:ready_date].presence || Time.current,
+      delivery_method: update_params[:delivery_method],
+      delivery_address: update_params[:delivery_address],
+      comment: update_params[:comment],
+      price: total_price
+    )
 
     redirect_to root_path, notice: 'Заказ оформлен!'
   else
     redirect_to order_path, alert: 'Нельзя оформить пустой заказ.'
   end
 end
+
 
 
   def update_quantity

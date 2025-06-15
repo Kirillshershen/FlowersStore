@@ -7,6 +7,7 @@
   <%= stylesheet_link_tag 'admin', "data-turbo-track": "reload" %>
 </head>
 <body>
+<%= render "admin/shared/nav" %>
   <h1>Все продукты</h1>
 
   <%= link_to 'Новый продукт', new_admin_product_path, class: "new-product-link" %>

@@ -75,16 +75,16 @@
   </div>
 
   <!-- Bouquet -->
-  <div class="metadata-block" data-type="Букет" style="display: none; margin-bottom: 20px;">
-    <h3>Данные для Букета</h3>
-    <div>
-      <%= form.label :bouquet_type, "Тип букета" %><br>
-      <%= text_field_tag "product[metadata][bouquet_type]", @product.metadata&.dig("bouquet_type") || "" %>
-    </div>
-    <div>
-      <%= form.label :packaging, "Упаковка" %><br>
-      <%= text_field_tag "product[metadata][packaging]", @product.metadata&.dig("packaging") || "" %>
-    </div>
+<div class="metadata-block" data-type="Букет" style="display: none; margin-bottom: 20px;">
+  <h3>Данные для Букета</h3>
+  <div>
+    <%= form.label :bouquet_type, "Тип букета" %><br>
+    <%= text_field_tag "product[metadata][bouquet_type]", @product.metadata&.dig("bouquet_type") || "" %>
+  </div>
+  <div>
+    <%= form.label :packaging, "Упаковка" %><br>
+    <%= select_tag "product[metadata][packaging]", options_from_collection_for_select(Packaging.all, :id, :name, @product.metadata&.dig("packaging")), prompt: "Выберите упаковку" %>
+  </div>
 
     <h4>Цветы в букете</h4>
     <div id="flowers">

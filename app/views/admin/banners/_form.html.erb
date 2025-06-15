@@ -1,0 +1,28 @@
+<%= form_with model: [:admin, @banner], local: true do |f| %>
+  <div>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div>
+    <%= f.label :subtitle %>
+    <%= f.text_field :subtitle %>
+  </div>
+
+  <div>
+    <%= f.label :link %>
+    <%= f.text_field :link %>
+  </div>
+
+  <div>
+    <%= f.label :image %>
+    <%= f.file_field :image %>
+    <% if @banner.image.attached? %>
+      <div>
+        Текущее изображение: <%= image_tag @banner.image.variant(resize_to_limit: [100, 100]) %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= f.submit %>
+<% end %>

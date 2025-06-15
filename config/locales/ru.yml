@@ -1,0 +1,12 @@
+ru:
+  hello: "Привет мир"
+  date:
+    order:
+      - day
+      - month
+      - year
+    formats:
+      default: "%d.%m.%Y"
+  time:
+    formats:
+      default: "%d.%m.%Y %H:%M"

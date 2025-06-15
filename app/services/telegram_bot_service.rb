@@ -29,11 +29,10 @@ def self.handle_message(bot, message)
 
     if user
       if user.telegram_chat_id == message.chat.id
-        # Уже привязан, не шлём повторно приветствие
-        bot.api.send_message(chat_id: message.chat.id, text: 'Вы уже подключены к Telegram.')
+        bot.api.send_message(chat_id: message.chat.id, text: 'Вы уже подк123лючены к Telegram.')
       else
         user.update(telegram_chat_id: message.chat.id)
-        bot.api.send_message(chat_id: message.chat.id, text: 'Привет! Telegram успешно подключён.')
+        bot.api.send_message(chat_id: message.chat.id, text: 'Привет! Tele1111gram успешно подключён.')
 
       end
     else

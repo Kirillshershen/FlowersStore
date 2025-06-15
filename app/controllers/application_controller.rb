@@ -13,5 +13,7 @@ class ApplicationController < ActionController::Base
                       .map(&:strip)
                       .sort_by(&:downcase)
   end
-
+  def after_sign_out_path_for(resource_or_scope)
+    root_path
+  end
 end

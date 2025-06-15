@@ -62,9 +62,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_11_234947) do
   end
 
   create_table "packagings", force: :cascade do |t|
-    t.string "name"
-    t.string "material"
-    t.decimal "price"
+    t.string "name", null: false
+    t.decimal "price", precision: 8, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -72,6 +71,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_11_234947) do
   create_table "product_in_orders", force: :cascade do |t|
     t.integer "order_id", null: false
     t.integer "product_id", null: false
+    t.json "metadata"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "quantity"

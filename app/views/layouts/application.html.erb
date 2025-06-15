@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<%= csrf_meta_tags %>
+<%= csp_meta_tag %>
+
 
     <%= yield :head %>
 
@@ -26,7 +27,7 @@
         <div>Работаем с 10:00 до 21:00</div>
         <div>
         <% if current_user&.admin? %>
-        <%= link_to "Заказы", admin_orders_path %>
+
 
   <%= link_to "Админ панель", admin_products_path %>
 <% end %>
@@ -56,7 +57,9 @@
             <% if user_signed_in? %>
               <%= link_to 'Мой аккаунт', orders_path %>
               <%= link_to '🛒 Корзина', order_path, class: "cart-link" %>
-              <%= link_to 'Выйти', destroy_user_session_path, data: { turbo_method: :delete } %>
+<%= link_to 'Выйти', destroy_user_session_path %>
+
+
             <% else %>
               <%= link_to 'Войти', new_user_session_path %>
               <%= link_to 'Регистрация', new_user_registration_path %>

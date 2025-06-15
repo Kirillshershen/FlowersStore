@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   get "custom_bouquets/new"
   get "custom_bouquets/create"
   namespace :admin do
+    resources :packagings
+    resources :banners
+    resources :products
+    resources :promotions
     get "orders/index"
     get "orders/show"
   end

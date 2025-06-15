@@ -182,8 +182,8 @@ bouquet_names = [
 ]
 Packaging.create!(
   [
-    { name: "Крафтовая коробка", material: "Картон", price: 3.50 },
-    { name: "Прозрачный пакет", material: "Полиэтилен", price: 1.20 }
+    { name: "Крафтовая коробка", price: 3.50 },
+    { name: "Прозрачный пакет", price: 1.20 }
   ]
 )
 all_flower_ids = Product.where(product_type: "Цветок").pluck(:id)  #

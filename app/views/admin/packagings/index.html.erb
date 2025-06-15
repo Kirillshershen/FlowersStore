@@ -1,0 +1,28 @@
+<%= render "admin/shared/nav" %>
+
+<h1>Упаковки</h1>
+
+<%= link_to "Новая упаковка", new_admin_packaging_path, class: "button" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Название</th>
+      <th>Цена</th>
+      <th>Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @packagings.each do |packaging| %>
+      <tr>
+        <td><%= packaging.name %></td>
+        <td><%= number_to_currency(packaging.price, unit: "BYN ") %></td>
+        <td>
+          <%= link_to "Изменить", edit_admin_packaging_path(packaging) %> |
+          <%= link_to "Удалить", admin_packaging_path(packaging), method: :delete, data: { confirm: "Уверены?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

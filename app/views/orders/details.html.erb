@@ -7,12 +7,50 @@
 <p><strong>Комментарий:</strong> <%= @order.comment || "нет" %></p>
 <p><strong>Сумма:</strong> <%= number_to_currency(@order.price || 0, unit: "BYN ", separator: ",", delimiter: " ") %></p>
 
+<% field_names = {
+  "bouquet_type" => "Тип букета",
+  "packaging" => "Упаковка"
+} %>
+
 <h2>Товары в заказе:</h2>
-<ul>
-  <% @order.product_in_orders.includes(:product).each do |item| %>
-    <li>
-      <%= item.product.name %> — <%= item.quantity %> шт. ×
-      <%= number_to_currency(item.product.price, unit: "BYN ", separator: ",", delimiter: " ") %>
-    </li>
-  <% end %>
-</ul>
+
+<% @order.product_in_orders.includes(:product).each do |item| %>
+  <div style="margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 20px;">
+    <% md = item.metadata %>
+    <% inner_md = md["metadata"] || {} %>
+    <h3><%= link_to md["name"], catalog_product_path(item.product) %></h3>
+
+    <% if md["image_url"].present? %>
+      <%= image_tag md["image_url"], width: 200 %>
+    <% end %>
+
+    <p><strong>Количество:</strong> <%= item.quantity %></p>
+    <p><strong>Цена за единицу:</strong> <%= number_to_currency(md["price"].to_f, unit: "BYN ", separator: ",", delimiter: " ") %></p>
+
+    <% if inner_md.present? %>
+      <p><strong>Дополнительные параметры:</strong></p>
+      <ul>
+        <% inner_md.each do |key, value| %>
+          <% next if key == "flowers" %>
+          <li><strong><%= key.tr('_', ' ').capitalize %>:</strong> <%= value %></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <% if inner_md["flowers"].present? %>
+      <p><strong>Состав букета:</strong></p>
+      <ul>
+        <% inner_md["flowers"].each do |_, flower_data| %>
+          <% flower_product = Product.find_by(id: flower_data["product_id"]) %>
+          <% if flower_product.present? %>
+            <li>
+              <%= link_to flower_product.name, catalog_product_path(flower_product) %> — <%= flower_data["quantity"] %> шт.
+            </li>
+          <% else %>
+            <li>Неизвестный цветок (ID <%= flower_data["product_id"] %>) — <%= flower_data["quantity"] %> шт.</li>
+          <% end %>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% end %>

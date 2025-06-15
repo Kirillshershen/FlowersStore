@@ -1,0 +1,117 @@
+<%= form_with model: [:admin, @promotion], local: true do |f| %>
+  <div>
+    <%= f.label :name, "Название" %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :discount_type, "Тип скидки (fixed/percent)" %>
+    <%= f.select :discount_type, [['Фиксированная', 'fixed'], ['Процентная', 'percent']], prompt: 'Выберите тип' %>
+  </div>
+
+  <div>
+    <%= f.label :discount_value, "Значение скидки" %>
+    <%= f.number_field :discount_value, step: 0.01 %>
+  </div>
+
+  <div>
+    <%= f.label :starts_at, "Начало" %>
+    <%= f.datetime_select :starts_at %>
+  </div>
+
+  <div>
+    <%= f.label :ends_at, "Окончание" %>
+    <%= f.datetime_select :ends_at %>
+  </div>
+
+  <div>
+    <%= f.label :active, "Активна?" %>
+    <%= f.check_box :active %>
+  </div>
+
+  <%= f.label :product_ids, "Товары, участвующие в акции" %><br>
+
+  <!-- Поиск и фильтрация -->
+  <div>
+    <label for="product-search">Поиск по названию:</label>
+    <input type="text" id="product-search" placeholder="Введите название">
+  </div>
+
+<div>
+  <label for="product-type-filter">Фильтр по типу:</label>
+  <select id="product-type-filter">
+    <option value="">Все типы</option>
+    <% ['Цветок', 'Игрушка', 'Ваза', 'Букет'].each do |type| %>
+      <option value="<%= type %>"><%= type %></option>
+    <% end %>
+  </select>
+</div>
+
+
+  <!-- Кнопки массового выбора -->
+  <div>
+    <button type="button" id="select-all">Выбрать все</button>
+    <button type="button" id="deselect-all">Убрать все</button>
+  </div>
+
+  <!-- Список товаров -->
+<div id="products-list">
+  <% Product.all.each do |product| %>
+    <div class="product-checkbox"
+         data-name="<%= product.name.downcase %>"
+         data-type="<%= product.product_type %>">
+      <%= check_box_tag "promotion[product_ids][]", product.id, @promotion.product_ids.include?(product.id), id: "product_#{product.id}" %>
+      <%= label_tag "product_#{product.id}", "#{product.name} (#{product.product_type})" %>
+    </div>
+  <% end %>
+</div>
+
+
+  <%= f.submit "Сохранить" %>
+<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("product-search");
+    const typeFilter = document.getElementById("product-type-filter");
+    const productCheckboxes = document.querySelectorAll("#products-list .product-checkbox");
+    const selectAllBtn = document.getElementById("select-all");
+    const deselectAllBtn = document.getElementById("deselect-all");
+
+    function filterProducts() {
+      const query = searchInput.value.toLowerCase();
+      const selectedType = typeFilter.value;
+
+      productCheckboxes.forEach(div => {
+        const name = div.dataset.name;
+        const type = div.dataset.type;
+
+        const matchesName = name.includes(query);
+        const matchesType = selectedType === "" || type === selectedType;
+
+        div.style.display = matchesName && matchesType ? "block" : "none";
+      });
+    }
+
+    searchInput.addEventListener("input", filterProducts);
+    typeFilter.addEventListener("change", filterProducts);
+
+    function getVisibleCheckboxes() {
+      return Array.from(productCheckboxes).filter(div => div.style.display !== "none");
+    }
+
+    selectAllBtn.addEventListener("click", function () {
+      getVisibleCheckboxes().forEach(div => {
+        const checkbox = div.querySelector("input[type='checkbox']");
+        if (checkbox) checkbox.checked = true;
+      });
+    });
+
+    deselectAllBtn.addEventListener("click", function () {
+      getVisibleCheckboxes().forEach(div => {
+        const checkbox = div.querySelector("input[type='checkbox']");
+        if (checkbox) checkbox.checked = false;
+      });
+    });
+  });
+</script>

@@ -1,0 +1,33 @@
+<%= render "admin/shared/nav" %>
+<h1>Баннеры</h1>
+<%= link_to "Добавить баннер", new_admin_banner_path %>
+<table>
+  <thead>
+    <tr>
+      <th>Изображение</th>
+      <th>Заголовок</th>
+      <th>Подзаголовок</th>
+
+      <th>Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @banners.each do |banner| %>
+      <tr>
+        <td>
+          <% if banner.image.attached? %>
+            <%= image_tag banner.image.variant(resize_to_limit: [100, 100]) %>
+          <% else %>
+            Нет изображения
+          <% end %>
+        </td>
+        <td><%= banner.title %></td>
+        <td><%= banner.subtitle %></td>
+        <td>
+          <%= link_to 'Редактировать', edit_admin_banner_path(banner) %> |
+          <%= link_to 'Удалить', admin_banner_path(banner), method: :delete, data: { confirm: 'Уверены?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

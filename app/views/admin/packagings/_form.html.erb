@@ -1,0 +1,17 @@
+<h1><%= @packaging.new_record? ? "Новая упаковка" : "Редактировать упаковку" %></h1>
+
+<%= form_with model: [:admin, @packaging] do |form| %>
+  <div>
+    <%= form.label :name, "Название" %><br>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :price, "Цена" %><br>
+    <%= form.number_field :price, step: 0.01 %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

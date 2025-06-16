@@ -10,7 +10,7 @@ skip_before_action :verify_authenticity_token, only: [:webhook]
     message = update["message"]
     return head :ok unless message.present?
 
-    chat_id = message["chat"]["id"]
+    chat_id = '8173550617:AAEHz6EBRS4yp3sWpzf7x4KpSS8sMUgiSwQ'
     text = message["text"]
 
     if text&.start_with?("/start ")

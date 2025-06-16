@@ -1,10 +1,4 @@
-Rails.application.config.after_initialize do
-  if defined?(Telegram)
-    Telegram.bots_config = {
-      default: {
-        token: ENV['TELEGRAM_BOT_TOKEN'],
-        username: ENV['TELEGRAM_BOT_USERNAME']
-      }
-    }
-  end
-end
+# config/initializers/telegram_bot.rb
+require 'telegram/bot'
+
+Rails.application.config.telegram_bot = Telegram::Bot::Client.new(ENV['TELEGRAM_BOT_TOKEN'])

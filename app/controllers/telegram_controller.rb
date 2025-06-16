@@ -14,7 +14,7 @@ skip_before_action :verify_authenticity_token, only: [:webhook]
 
     if text&.start_with?("/start ")
       token = text.split(" ").last
-      user = User.find_by(telegram_token: token)
+      user = User.find_by(telegram_link_token: token)
 
       if user
         user.update(telegram_chat_id: chat_id)

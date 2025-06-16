@@ -1,4 +1,5 @@
 class TelegramController < ApplicationController
+skip_before_action :verify_authenticity_token, only: [:your_action_name]
 
   def webhook
     update = params.to_unsafe_h

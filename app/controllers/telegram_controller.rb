@@ -2,26 +2,38 @@ class TelegramController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def webhook
-    bot_token = '8173550617:AAEHz6EBRS4yp3sWpzf7x4KpSS8sMUgiSwQ'
-    Telegram::Bot::Client.run(bot_token) do |bot|
-      update = Telegram::Bot::Types::Update.new(params[:update])
-      message = update.message
+    update = params.to_unsafe_h
 
-      if message
-        chat_id = message.chat.id
-        user_code = message.text
+    message = update["message"]
+    return head :ok unless message.present?
 
-        user = User.find_by(link_token: user_code)
+    chat_id = message["chat"]["id"]
+    text = message["text"]
 
-        if user
-          user.update(telegram_id: chat_id)
-          bot.api.send_message(chat_id: chat_id, text: "✅ Аккаунт успешно привязан!")
-        else
-          bot.api.send_message(chat_id: chat_id, text: "❌ Код не найден. Попробуй ещё раз.")
-        end
+    if text&.start_with?("/start ")
+      token = text.split(" ").last
+      user = User.find_by(telegram_token: token)
+
+      if user
+        user.update(telegram_chat_id: chat_id)
+        send_message(chat_id, "✅ Telegram привязан к вашему аккаунту.")
+      else
+        send_message(chat_id, "❌ Ошибка: токен не найден.")
       end
+    else
+      send_message(chat_id, "Привет! Отправьте /start <токен> для привязки.")
     end
 
     head :ok
+  rescue => e
+    Rails.logger.error "Telegram webhook error: #{e.class} — #{e.message}"
+    head :internal_server_error
+  end
+
+  private
+
+  def send_message(chat_id, text)
+    bot = Telegram::Bot::Client.new(ENV['TELEGRAM_BOT_TOKEN'])
+    bot.api.send_message(chat_id: chat_id, text: text)
   end
 end

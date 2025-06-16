@@ -3,7 +3,8 @@ skip_before_action :verify_authenticity_token, only: [:webhook]
 
 
   def webhook
-      Rails.logger.info "Telegram update: #{params.to_unsafe_h.inspect}"
+      Rails.logger.info "Telegram обновлениеууууууууууууу❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌ууууууууууу: #{params.to_unsafe_h.inspect}"
+
     update = params.to_unsafe_h
 
     message = update["message"]

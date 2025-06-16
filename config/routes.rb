@@ -10,7 +10,8 @@ Rails.application.routes.draw do
     get "orders/show"
   end
 
-post '/telegram_webhook', to: 'telegram#webhook'
+post '/telegram/webhook', to: 'telegram#webhook'
+
 
   get "pages/about"
   get "pages/delivery"

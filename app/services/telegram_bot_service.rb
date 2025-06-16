@@ -1,9 +1,5 @@
-# app/services/telegram_bot_service.rb
-require 'telegram/bot'
-
 class TelegramBotService
   def self.handle_message(bot, message)
-    puts "Received message: #{message.text.inspect} from chat_id=#{message.chat.id}"
     if message.text&.start_with?('/start')
       token = message.text.split(' ')[1]
       user = User.find_by(telegram_link_token: token)

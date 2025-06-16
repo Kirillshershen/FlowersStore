@@ -1,4 +1,3 @@
-# config/initializers/telegram_bot.rb
 require 'telegram/bot'
 
-Rails.application.config.telegram_bot = Telegram::Bot::Client.new(ENV['TELEGRAM_BOT_TOKEN'])
+TelegramBotService = Telegram::Bot::Client.new("8173550617:AAEHz6EBRS4yp3sWpzf7x4KpSS8sMUgiSwQ")

@@ -7,7 +7,8 @@ skip_before_action :verify_authenticity_token, only: [:webhook]
 
     update = params.to_unsafe_h
 
-    message = update["message"]
+message = Telegram::Bot::Types::Message.new(params[:message])
+
     return head :ok unless message.present?
 
     chat_id = message["chat"]["id"]

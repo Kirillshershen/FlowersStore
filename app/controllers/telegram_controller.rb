@@ -14,9 +14,9 @@ skip_before_action :verify_authenticity_token, only: [:webhook]
     text = message["text"]
 
     if text&.start_with?("/start ")
-      token = text.split(" ").last
+token = message.text.to_s.strip.split(' ')[1]
       user = User.find_by(telegram_link_token: token)
-
+      puts tocen
       if user
         user.update(telegram_chat_id: chat_id)
         send_message(chat_id, "✅ Telegram привязан к вашему аккаунту.")

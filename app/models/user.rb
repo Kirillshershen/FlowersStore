@@ -5,8 +5,8 @@ before_create :generate_telegram_link_token
   end
 
 
-def generate_telegram_link_token
-  self.telegram_link_token ||= SecureRandom.hex(10)
+def regenerate_telegram_link_token!
+  update!(telegram_link_token: SecureRandom.hex(10))
 end
 
   # Include default devise modules. Others available are:

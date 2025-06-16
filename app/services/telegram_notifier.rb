@@ -1,14 +1,10 @@
-class TelegramController < ApplicationController
-
-
-  def webhook
-    update = Telegram::Bot::Types::Update.new(params.to_unsafe_h)
-
-    # Обрабатываем только входящие сообщения
-    if update.message
-      TelegramBotService.handle_message(TelegramBotService.bot_client, update.message)
-    end
-
-    head :ok
+class TelegramNotifier
+  def self.send_message(chat_id, message)
+    return if chat_id.blank?
+    
+    Telegram::Bot::Client.new(ENV['TELEGRAM_BOT_TOKEN']).api.send_message(
+      chat_id: chat_id,
+      text: message
+    )
   end
 end

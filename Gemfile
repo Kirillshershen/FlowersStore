@@ -69,7 +69,6 @@ gem 'kaminari'
 
 gem 'jquery-rails'
 
-gem 'telegram-bot-ruby'
 gem 'dotenv-rails', groups: [:development, :test]
 
 

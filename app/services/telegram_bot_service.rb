@@ -9,7 +9,7 @@
     end
 
     def self.run
-      bot_client.listen do |message|
+  bot_client.listen do |message|
         case message
         when Telegram::Bot::Types::Message
           handle_message(bot_client, message)

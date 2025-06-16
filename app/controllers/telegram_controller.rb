@@ -10,7 +10,7 @@ skip_before_action :verify_authenticity_token, only: [:webhook]
     message = update["message"]
     return head :ok unless message.present?
 
-    chat_id = '8173550617:AAEHz6EBRS4yp3sWpzf7x4KpSS8sMUgiSwQ'
+    chat_id = message["chat"]["id"]
     text = message["text"]
 
     if text&.start_with?("/start ")
@@ -29,14 +29,16 @@ skip_before_action :verify_authenticity_token, only: [:webhook]
 
     head :ok
   rescue => e
-    Rails.logger.error "Telegram webhook error: #{e.class} — #{e.message}"
+    Rails.logger.error "❌❌❌❌❌❌❌Telegram ошибка: #{e.class} — #{e.message}"
     head :internal_server_error
   end
 
   private
 
-  def send_message(chat_id, text)
-    bot = Telegram::Bot::Client.new(ENV['TELEGRAM_BOT_TOKEN'])
+def send_message(chat_id, text)
+  Telegram::Bot::Client.run(ENV["TELEGRAM_BOT_TOKEN"]) do |bot|
     bot.api.send_message(chat_id: chat_id, text: text)
   end
+end
+
 end

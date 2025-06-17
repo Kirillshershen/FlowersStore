@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get "statistics/sales"
+  end
   # Маршруты для кастомных букетов
   get "custom_bouquets/new"
   get "custom_bouquets/create"

@@ -14,3 +14,60 @@ ru:
   time:
     formats:
       short: "%d.%m %H:%M"
+ru:
+  datetime:
+    distance_in_words:
+      half_a_minute: "полминуты"
+      less_than_x_seconds:
+        one:   "меньше секунды"
+        other: "меньше %{count} секунд"
+      x_seconds:
+        one:   "1 секунда"
+        few:   "%{count} секунды"
+        many:  "%{count} секунд"
+        other: "%{count} секунды"
+      less_than_x_minutes:
+        one:   "меньше минуты"
+        few:   "меньше %{count} минут"
+        many:  "меньше %{count} минут"
+        other: "меньше %{count} минут"
+      x_minutes:
+        one:   "1 минута"
+        few:   "%{count} минуты"
+        many:  "%{count} минут"
+        other: "%{count} минуты"
+      about_x_hours:
+        one:   "около часа"
+        few:   "около %{count} часов"
+        many:  "около %{count} часов"
+        other: "около %{count} часов"
+      x_days:
+        one:   "1 день"
+        few:   "%{count} дня"
+        many:  "%{count} дней"
+        other: "%{count} дня"
+      about_x_months:
+        one:   "около месяца"
+        few:   "около %{count} месяцев"
+        many:  "около %{count} месяцев"
+        other: "около %{count} месяцев"
+      x_months:
+        one:   "%{count} месяц"
+        few:   "%{count} месяца"
+        many:  "%{count} месяцев"
+        other: "%{count} месяца"
+      about_x_years:
+        one:   "около года"
+        few:   "около %{count} лет"
+        many:  "около %{count} лет"
+        other: "около %{count} лет"
+      over_x_years:
+        one:   "больше года"
+        few:   "больше %{count} лет"
+        many:  "больше %{count} лет"
+        other: "больше %{count} лет"
+      almost_x_years:
+        one:   "почти год"
+        few:   "почти %{count} лет"
+        many:  "почти %{count} лет"
+        other: "почти %{count} лет"

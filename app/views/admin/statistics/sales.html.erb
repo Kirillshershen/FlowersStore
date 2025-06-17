@@ -1,75 +1,44 @@
 <h1>Статистика продаж</h1>
 
 <h2>Общая сумма продаж: <%= number_to_currency(@total_revenue, unit: "BYN ") %></h2>
+<h2>Топ продаваемых цветов</h2>
 
-<h2>Топ продаваемых цветов в букетах</h2>
-<% if @top_flowers.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Название цветка</th>
-        <th>Тип</th>
-        <th>Продано штук</th>
-        <th>Цена за штуку</th>
-        <th>Общий доход от цветка</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @top_flowers.each do |entry| %>
-        <% flower = entry[:flower] %>
-        <% quantity = entry[:quantity_sold] %>
-        <tr>
-          <td><%= flower.name %></td>
-          <td><%= flower.metadata["flower_type"] %></td>
-          <td><%= quantity %></td>
-          <td><%= number_to_currency(flower.price, unit: "BYN ") %></td>
-          <td><%= number_to_currency(flower.price * quantity, unit: "BYN ") %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>Нет проданных цветов в букетах.</p>
-<% end %>
+<canvas id="flowersChart" width="600" height="400"></canvas>
+
+
+
 
 <hr>
 
-<!-- Текущая статистика заказов -->
-<% if @sales_data.any? %>
-  <% @sales_data.each do |sale| %>
-    <div class="order-summary">
-      <h3>Заказ №<%= sale[:order].id %> — <%= l(sale[:order].created_at, format: :short) %></h3>
-      <p>Доставка: <%= sale[:order].delivery_method %></p>
-      <p>Адрес: <%= sale[:order].delivery_address %></p>
-      <p>Комментарий: <%= sale[:order].comment %></p>
-      <p>Итоговая цена: <%= number_to_currency(sale[:order].price, unit: "BYN ") %></p>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Название</th>
-            <th>Тип</th>
-            <th>Цена</th>
-            <th>Количество</th>
-            <th>Сумма</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% sale[:items].each do |item| %>
-            <% snap = item[:snapshot] %>
-            <tr>
-              <td><%= snap["name"] %></td>
-              <td><%= snap["product_type"] %></td>
-              <td><%= number_to_currency(snap["price"], unit: "BYN ") %></td>
-              <td><%= item[:quantity] %></td>
-              <td><%= number_to_currency(snap["price"].to_f * item[:quantity], unit: "BYN ") %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-    <hr>
-  <% end %>
-<% else %>
-  <p>Пока нет завершённых заказов.</p>
-<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const ctx = document.getElementById('flowersChart').getContext('2d');
+
+    const flowerNames = <%= raw @top_flowers.map { |f| "'#{f[:flower].name}'" }.to_json %>;
+    const quantities = <%= raw @top_flowers.map { |f| f[:quantity_sold] }.to_json %>;
+
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: flowerNames,
+        datasets: [{
+          label: 'Продано штук',
+          data: quantities,
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            precision: 0
+          }
+        }
+      }
+    });
+  });
+</script>

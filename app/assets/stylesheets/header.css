@@ -363,3 +363,60 @@ body {
   color: #666;
   white-space: nowrap; /* чтобы адрес не переносился */
 }
+.notifications-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.notifications-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  position: relative;
+}
+
+#unread-count {
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.notifications-list {
+  position: absolute;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  width: 250px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+.notification-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.notification-item.unread {
+  background-color: #f0f8ff;
+}
+
+.notifications-link {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  border-top: 1px solid #ccc;
+  background-color: #fafafa;
+}

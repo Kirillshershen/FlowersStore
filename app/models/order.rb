@@ -2,7 +2,7 @@ class Order < ApplicationRecord
   belongs_to :user
   has_many :product_in_orders
   has_many :products, through: :product_in_orders
-
+ after_update :create_status_notification, if: :saved_change_to_status?
 
 
   validates :delivery_method, presence: true, unless: -> { status == 'draft' }
@@ -16,6 +16,15 @@ class Order < ApplicationRecord
     end 
   end
 
-
+ def create_status_notification
+    case status
+    when 'готов'
+    user.notifications.create(order: self, message: "Ваш заказ ##{id} завершен.", read: false)
+    when 'оформлен'
+    user.notifications.create(order: self, message: "Ваш заказ ##{id} завершен.", read: false)
+    when 'завершен'
+    user.notifications.create(order: self, message: "Ваш заказ ##{id} завершен.", read: false)
+    end
+  end
 
 end

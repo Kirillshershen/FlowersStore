@@ -6,6 +6,7 @@ class User < ApplicationRecord
   # Ассоциации
   has_many :orders, dependent: :destroy
 
+    has_many :notifications, dependent: :destroy
   # Метод для проверки администратора
   def admin?
     admin

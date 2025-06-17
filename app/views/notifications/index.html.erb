@@ -1,0 +1,45 @@
+<h2>Уведомления</h2>
+
+<% if @notifications.any? %>
+  <ul class="myapp-notifications-list">
+    <% @notifications.each do |notification| %>
+      <li class="myapp-notification-item <%= 'myapp-unread' unless notification.read %>">
+        <p><%= notification.message %></p>
+        <small class="myapp-notification-time">
+          <%= time_ago_in_words(notification.created_at) %> назад
+        </small>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>У вас нет уведомлений.</p>
+<% end %>
+
+<style>
+.myapp-notifications-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 300px; /* ограничим высоту блока */
+  overflow-y: auto;  /* если уведомлений много — появится прокрутка */
+}
+
+.myapp-notification-item {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  background-color: #f9f9f9;
+  font-size: 14px;
+}
+
+.myapp-notification-item.myapp-unread {
+  background-color: #e6f7ff; /* светло-голубой фон для новых */
+  font-weight: 600;
+}
+
+.myapp-notification-time {
+  display: block;
+  color: #888;
+  font-size: 12px;
+  margin-top: 5px;
+}
+</style>

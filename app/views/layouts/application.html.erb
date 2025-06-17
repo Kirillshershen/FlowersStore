@@ -8,7 +8,7 @@
 <%= csrf_meta_tags %>
 <%= csp_meta_tag %>
 
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <%= yield :head %>
 
     <link rel="icon" href="/icon.png" type="image/png">
@@ -55,6 +55,22 @@
 
           <div class="user-links">
             <% if user_signed_in? %>
+            <div id="notifications-dropdown" class="notifications-dropdown">
+  <button id="notifications-toggle" class="notifications-toggle">
+    🔔 <span id="unread-count"><%= @unread_count %></span>
+  </button>
+
+  <div id="notifications-list" class="notifications-list hidden">
+    <% @notifications.each do |notification| %>
+      <div class="notification-item <%= 'unread' unless notification.read %>">
+        <%= notification.message %>
+        <small><%= time_ago_in_words(notification.created_at) %> назад</small>
+      </div>
+    <% end %>
+    <%= link_to 'Все уведомления', notifications_path, class: 'notifications-link' %>
+  </div>
+</div>
+
               <%= link_to 'Мой аккаунт', orders_path %>
               <%= link_to '🛒 Корзина', order_path, class: "cart-link" %>
 <%= link_to 'Выйти', destroy_user_session_path %>
@@ -151,3 +167,20 @@
     </div>
   </body>
 </html>
+  <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const toggle = document.getElementById('notifications-toggle');
+  const list = document.getElementById('notifications-list');
+
+  toggle.addEventListener('click', () => {
+    list.classList.toggle('hidden');
+  });
+
+  // Чтобы закрывать уведомления при клике вне блока
+  document.addEventListener('click', (event) => {
+    if (!toggle.contains(event.target) && !list.contains(event.target)) {
+      list.classList.add('hidden');
+    }
+  });
+});
+  </script>

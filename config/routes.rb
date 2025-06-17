@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "notifications/index"
+  get "notifications/mark_as_read"
   namespace :admin do
     get "statistics/sales"
   end
@@ -72,6 +74,12 @@ patch '/orders/update_quantity', to: 'orders#update_quantity', as: :update_quant
       end
     end
   end
+    
+resources :notifications, only: [:index] do
+  member do
+    patch :mark_as_read
+  end
+end
 
   # Статус здоровья приложения
   get "up" => "rails/health#show", as: :rails_health_check

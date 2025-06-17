@@ -3,7 +3,7 @@ class Order < ApplicationRecord
   has_many :product_in_orders
   has_many :products, through: :product_in_orders
 
-  after_commit :notify_status_change, on: :update
+
 
   validates :delivery_method, presence: true, unless: -> { status == 'draft' }
   validates :ready_date, presence: true, unless: -> { status == 'draft' }
@@ -16,11 +16,6 @@ class Order < ApplicationRecord
     end 
   end
 
-  private
 
-def notify_status_change
-  message = "Статус вашего заказа ##{id} изменился на: #{status.capitalize}."
-  TelegramBotService.send_message(user.telegram_chat_id, message)
-end
 
 end

@@ -27,12 +27,7 @@
       <p class="product-type"><strong>Type:</strong> <%= @product.product_type %></p>
 <div class="product-price">
   <strong>Price:</strong>
-  <% if @product.active_promotion %>
-    <span class="old-price"><%= number_to_currency(@product.price, unit: "Br", separator: ",") %></span>
-    <span class="discounted-price"><%= number_to_currency(@product.final_price, unit: "Br", separator: ",") %></span>
-  <% else %>
     <span class="price"><%= number_to_currency(@product.price, unit: "Br", separator: ",") %></span>
-  <% end %>
 </div>
 
       <p class="product-price"><strong>рейтинг:</strong> <%= @product.rating %></p>
@@ -67,16 +62,8 @@
       <li>
         <%= link_to flower.name, catalog_product_path(flower) %> — <%= flower_info["quantity"] %> шт. —
         <%# Цена цветка с учетом скидки, если есть %>
-        <% if flower.active_promotion && flower.final_price < flower.price %>
-          <span class="old-price" style="text-decoration: line-through; color: gray;">
-            <%= number_to_currency(flower.price, unit: "Br", separator: ",") %>
-          </span>
-          <span class="discounted-price" style="color: red;">
-            <%= number_to_currency(flower.final_price, unit: "Br", separator: ",") %>
-          </span>
-        <% else %>
+  
           <span class="price"><%= number_to_currency(flower.price, unit: "Br", separator: ",") %></span>
-        <% end %>
       </li>
     <% else %>
       <li>Неизвестный цветок (ID: <%= flower_info["product_id"] %>) — <%= flower_info["quantity"] %> шт.</li>
@@ -96,16 +83,7 @@
               <% if flower %>
                 <li>
                   <%= link_to flower.name, catalog_product_path(flower) %> — <%= flower_info["quantity"] %> шт. —
-                  <% if flower.active_promotion && flower.final_price < flower.price %>
-                    <span class="old-price" style="text-decoration: line-through; color: gray;">
-                      <%= number_to_currency(flower.price, unit: "Br", separator: ",") %>
-                    </span>
-                    <span class="discounted-price" style="color: red;">
-                      <%= number_to_currency(flower.final_price, unit: "Br", separator: ",") %>
-                    </span>
-                  <% else %>
                     <span class="price"><%= number_to_currency(flower.price, unit: "Br", separator: ",") %></span>
-                  <% end %>
                 </li>
               <% else %>
                 <li>Неизвестный цветок (ID: <%= flower_info["product_id"] %>) — <%= flower_info["quantity"] %> шт.</li>
@@ -149,16 +127,9 @@
           </div>
 
           <div class="product-price">
-            <% if product.final_price < product.price %>
-              <span class="old-price" style="text-decoration: line-through; color: gray;">
-                <%= number_to_currency(product.price, unit: "Br", separator: ",") %>
-              </span>
-              <span class="discounted-price" style="color: red;">
-                <%= number_to_currency(product.final_price, unit: "Br", separator: ",") %>
-              </span>
-            <% else %>
+        
               <%= number_to_currency(product.price, unit: "Br", separator: ",") %>
-            <% end %>
+
           </div>
 
           <%= button_to 'В корзину', add_item_order_path(product_id: product.id), method: :post, class: 'add-to-order-btn' %>

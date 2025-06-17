@@ -275,7 +275,7 @@
 <ul id="available-flowers" class="available-flowers-list">
   <ul id="available-flowers" class="available-flowers-list">
   <% Product.where(product_type: "Цветок").each do |flower| %>
-    <li class="flower-item" data-id="<%= flower.id %>" data-name="<%= flower.name.downcase %>" data-price="<%= flower.final_price %>">
+    <li class="flower-item" data-id="<%= flower.id %>" data-name="<%= flower.name.downcase %>">
       <% if flower.image.attached? %>
         <img src="<%= url_for(flower.image) %>" alt="<%= flower.name %>" class="flower-image" />
       <% else %>
@@ -284,18 +284,11 @@
       <div class="flower-info">
         <strong class="flower-name"><%= flower.name %></strong>
         <div class="flower-price">
-          <% if flower.active_promotion && flower.final_price < flower.price %>
-            <span class="old-price" style="text-decoration: line-through; color: gray;">
-              <%= number_to_currency(flower.price, unit: "Br", separator: ",") %>
-            </span>
-            <span class="discounted-price" style="color: red;">
-              <%= number_to_currency(flower.final_price, unit: "Br", separator: ",") %>
-            </span>
-          <% else %>
+        
             <span class="price">
               <%= number_to_currency(flower.price, unit: "Br", separator: ",") %>
             </span>
-          <% end %>
+
         </div>
       </div>
       <button type="button" class="btn btn-add-flower">Добавить</button>

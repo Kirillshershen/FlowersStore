@@ -6,9 +6,10 @@ class Admin::PromotionsController < ApplicationController
     @promotions = Promotion.all
   end
 
-  def new
-    @promotion = Promotion.new
-  end
+ def new
+  @promotion = Promotion.new
+  @promotion.quantity_promotions.build
+end
 
 def create
   @promotion = Promotion.new(promotion_params)
@@ -41,7 +42,18 @@ end
   end
   
 def promotion_params
-  params.require(:promotion).permit(:name, :discount_type, :discount_value, :starts_at, :ends_at, :active, :image, product_ids: [])
+  params.require(:promotion).permit(
+    :name,
+    :discount_type,
+    :discount_value,
+    :starts_at,
+    :ends_at,
+    :active,
+    :image,
+    product_ids: [],
+    quantity_promotions_attributes: [:id, :min_quantity, :discount_value, :_destroy]
+  )
 end
+
 
 end

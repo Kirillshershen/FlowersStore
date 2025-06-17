@@ -285,9 +285,3 @@ end
 Product.where(product_type: "Игрушка").sample(5).each do |product|
   ProductPromotion.create!(product: product, promotion: promo3)
 end
-
-# После создания всех промо — пересчитываем цену букетов с учётом скидок на цветы и на букеты
-Product.where(product_type: "Букет").find_each do |bouquet|
-  new_price = bouquet.calculated_bouquet_price
-  bouquet.update(price: new_price)
-end

@@ -58,12 +58,8 @@
         </div>
 
         <div class="product-price">
-          <% if product.active_promotion %>
-            <span class="old-price"><%= number_to_currency(product.price, unit: "Br", separator: ",") %></span>
-            <span class="discounted-price"><%= number_to_currency(product.final_price, unit: "Br", separator: ",") %></span>
-          <% else %>
             <span class="price"><%= number_to_currency(product.price, unit: "Br", separator: ",") %></span>
-          <% end %>
+
         </div>
 
         <%= button_to 'В корзину', add_item_order_path(product_id: product.id), method: :post, class: 'add-to-order-btn' %>

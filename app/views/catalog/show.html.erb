@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= @product.name %> - Flowers Store</title>
 
-  <%= stylesheet_link_tag 'product.css',"data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag 'product.css', "data-turbo-track": "reload" %>
 
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 </head>
 <body>
 
- <main class="product-card-container">
+<main class="product-card-container">
 
   <div class="product-card-flex">
     <% if @product.image.attached? %>
@@ -22,88 +22,106 @@
     <% end %>
 
     <div class="product-info">
-      <h1 class="product-name"><%= @product.name %></h1>
+      <h1><%= @product.name %></h1>
 
-      <p class="product-type"><strong>Type:</strong> <%= @product.product_type %></p>
-<div class="product-price">
-  <strong>Price:</strong>
-    <span class="price"><%= number_to_currency(@product.price, unit: "Br", separator: ",") %></span>
-</div>
+      <div class="product-price">
+        <strong>Цена за штуку:</strong>
+        <span class="price">
+          <%= number_to_currency(@product.price, unit: "Br", separator: ",") %>
+        </span>
+      </div>
 
-      <p class="product-price"><strong>рейтинг:</strong> <%= @product.rating %></p>
-<% translations = {
-  "flower_type" => "Тип цветка",
-  "discount" => "Скидка",
-  "category" => "Категория",
-  "size" => "Размер",
-  "material" => "Материал",
-  "diameter" => "Диаметр",
-  "bouquet_type" => "Тип букета",
-  "packaging" => "Упаковка",
-  "flowers" => "Цветы"
-} %>
-
-<% if @product.metadata.present? %>
-  <h3>Подробности:</h3>
-  <ul>
-    <% @product.metadata.each do |key, value| %>
-      <li>
-        <strong><%= translations[key] || key.humanize %>:</strong>
-        
-        <% if key == "flowers" && value.is_a?(Hash) %>
-         <ul>
-  <% 
-    flower_ids = value.map { |_, f| f["product_id"].to_i }
-    flowers = Product.where(id: flower_ids).index_by(&:id)
-  %>
-  <% value.each do |_, flower_info| %>
-    <% flower = flowers[flower_info["product_id"].to_i] %>
-    <% if flower %>
-      <li>
-        <%= link_to flower.name, catalog_product_path(flower) %> — <%= flower_info["quantity"] %> шт. —
-        <%# Цена цветка с учетом скидки, если есть %>
-  
-          <span class="price"><%= number_to_currency(flower.price, unit: "Br", separator: ",") %></span>
-      </li>
-    <% else %>
-      <li>Неизвестный цветок (ID: <%= flower_info["product_id"] %>) — <%= flower_info["quantity"] %> шт.</li>
-    <% end %>
-  <% end %>
-</ul>
-
-
-        <% elsif key == "flowers" && value.is_a?(Array) %>
+      <% if @quantity_discounts.present? && @quantity_discounts.any? %>
+        <div class="quantity-discounts">
+          <h3>Скидки при покупке больших количеств:</h3>
           <ul>
-            <% 
-              flower_ids = value.map { |f| f["product_id"] }
-              flowers = Product.where(id: flower_ids).index_by(&:id)
-            %>
-            <% value.each do |flower_info| %>
-              <% flower = flowers[flower_info["product_id"]] %>
-              <% if flower %>
-                <li>
-                  <%= link_to flower.name, catalog_product_path(flower) %> — <%= flower_info["quantity"] %> шт. —
-                    <span class="price"><%= number_to_currency(flower.price, unit: "Br", separator: ",") %></span>
-                </li>
-              <% else %>
-                <li>Неизвестный цветок (ID: <%= flower_info["product_id"] %>) — <%= flower_info["quantity"] %> шт.</li>
-              <% end %>
+            <% @quantity_discounts.each do |discount| %>
+<li>При покупке от <%= discount.min_quantity %> штук скидка <%= discount.discount_value %>%</li>
+
             <% end %>
           </ul>
+        </div>
+      <% end %>
 
-        <% elsif value.is_a?(Array) || value.is_a?(Hash) %>
-          <pre><%= JSON.pretty_generate(value) %></pre>
-        <% else %>
-          <%= value %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
+      <% if @discount_info %>
+        <p style="color: red; font-weight: bold;"><%= @discount_info[:display_text] %></p>
+      <% end %>
 
+      <p class="product-price"><strong>Рейтинг:</strong> <%= @product.rating %></p>
 
+      <% translations = {
+        "flower_type" => "Тип цветка",
+        "category" => "Категория",
+        "size" => "Размер",
+        "material" => "Материал",
+        "diameter" => "Диаметр",
+        "bouquet_type" => "Тип букета",
+        "packaging" => "Упаковка",
+        "flowers" => "Цветы"
+      } %>
 
-      <%= button_to 'Добавить в заказ', add_item_order_path(product_id: @product.id), method: :post, class: 'add-to-order-btn' %>
+      <% if @product.metadata.present? %>
+        <h3>Подробности:</h3>
+        <ul>
+          <% @product.metadata.each do |key, value| %>
+            <li>
+              <strong><%= translations[key] || key.humanize %>:</strong>
+              <% if key == "flowers" && value.is_a?(Hash) %>
+                <ul>
+                  <% flower_ids = value.map { |_, f| f["product_id"].to_i } %>
+                  <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
+                  <% value.each do |_, flower_info| %>
+                    <% flower = flowers[flower_info["product_id"].to_i] %>
+                    <% if flower %>
+                      <li>
+                        <%= link_to flower.name, catalog_product_path(flower) %> — <%= flower_info["quantity"] %> шт. —
+                        <span class="price"><%= number_to_currency(flower.price, unit: "Br", separator: ",") %></span>
+                      </li>
+                    <% else %>
+                      <li>Неизвестный цветок (ID: <%= flower_info["product_id"] %>) — <%= flower_info["quantity"] %> шт.</li>
+                    <% end %>
+                  <% end %>
+                </ul>
+
+              <% elsif key == "flowers" && value.is_a?(Array) %>
+                <ul>
+                  <% flower_ids = value.map { |f| f["product_id"] } %>
+                  <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
+                  <% value.each do |flower_info| %>
+                    <% flower = flowers[flower_info["product_id"]] %>
+                    <% if flower %>
+                      <li>
+                        <%= link_to flower.name, catalog_product_path(flower) %> — <%= flower_info["quantity"] %> шт. —
+                        <span class="price"><%= number_to_currency(flower.price, unit: "Br", separator: ",") %></span>
+                      </li>
+                    <% else %>
+                      <li>Неизвестный цветок (ID: <%= flower_info["product_id"] %>) — <%= flower_info["quantity"] %> шт.</li>
+                    <% end %>
+                  <% end %>
+                </ul>
+
+              <% elsif value.is_a?(Array) || value.is_a?(Hash) %>
+                <pre><%= JSON.pretty_generate(value) %></pre>
+              <% else %>
+                <%= value %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <%= form_with url: add_item_order_path(product_id: @product.id), method: :post, local: true do |f| %>
+        <div class="quantity-selector">
+          <button type="button" class="qty-btn" id="decrement">–</button>
+          <%= number_field_tag :quantity, 1, min: 1, class: "quantity-input" %>
+          <button type="button" class="qty-btn" id="increment">+</button>
+        </div>
+        <%= hidden_field_tag :product_id, @product.id %>
+
+        <p>Итоговая цена: <span id="total-price"><%= number_to_currency(@product.price, unit: "Br") %></span></p>
+
+        <%= f.submit 'Добавить в заказ', class: 'add-to-order-btn' %>
+      <% end %>
 
       <div class="back-link">
         <%= link_to "Вернуться в каталог", catalog_path %>
@@ -112,6 +130,7 @@
   </div>
 
 </main>
+
 <% if @similar_products.any? %>
   <section class="similar-products-container">
     <h2>Похожие товары</h2>
@@ -127,9 +146,7 @@
           </div>
 
           <div class="product-price">
-        
-              <%= number_to_currency(product.price, unit: "Br", separator: ",") %>
-
+            <%= number_to_currency(product.price, unit: "Br", separator: ",") %>
           </div>
 
           <%= button_to 'В корзину', add_item_order_path(product_id: product.id), method: :post, class: 'add-to-order-btn' %>
@@ -139,7 +156,65 @@
   </section>
 <% end %>
 
-    <footer>
-    </footer>
-  </body>
-  </html>
+<script>
+  const productPrice = <%= @product.price.to_f %>;
+  const promotions = <%= raw @quantity_discounts.to_json %>;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const incrementBtn = document.getElementById("increment");
+    const decrementBtn = document.getElementById("decrement");
+    const quantityInput = document.querySelector(".quantity-input");
+    const totalPriceElem = document.getElementById("total-price");
+
+    function calculatePrice(quantity) {
+      let totalPrice = productPrice * quantity;
+
+      // Находим подходящую скидку по количеству (максимальную min_quantity <= quantity)
+      const applicable = promotions
+        .filter(p => quantity >= p.min_quantity)
+        .sort((a, b) => b.min_quantity - a.min_quantity)[0];
+
+if (applicable) {
+  // discount_value — процент скидки, например 10 = 10%
+  const discountPercent = applicable.discount_value;
+  totalPrice = totalPrice * (1 - discountPercent / 100);
+}
+
+      return totalPrice;
+    }
+
+    function updateTotal() {
+      let qty = parseInt(quantityInput.value);
+      if (isNaN(qty) || qty < 1) qty = 1;
+      quantityInput.value = qty;
+
+      const price = calculatePrice(qty);
+      totalPriceElem.textContent = price.toFixed(2) + " Br";
+    }
+
+    incrementBtn.addEventListener("click", () => {
+      quantityInput.value = parseInt(quantityInput.value) + 1;
+      updateTotal();
+    });
+
+    decrementBtn.addEventListener("click", () => {
+      let currentQty = parseInt(quantityInput.value);
+      if (currentQty > 1) {
+        quantityInput.value = currentQty - 1;
+        updateTotal();
+      }
+    });
+
+    quantityInput.addEventListener("input", () => {
+      let val = parseInt(quantityInput.value);
+      if (isNaN(val) || val < 1) val = 1;
+      quantityInput.value = val;
+      updateTotal();
+    });
+
+    updateTotal();
+  });
+</script>
+
+</body>
+</html>

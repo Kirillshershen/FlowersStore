@@ -24,7 +24,9 @@
         <td><%= promotion.active ? "Да" : "Нет" %></td>
         <td>
           <%= link_to 'Редактировать', edit_admin_promotion_path(promotion) %> |
-          <%= link_to 'Удалить', admin_promotion_path(promotion), method: :delete, data: { confirm: 'Удалить?' } %>
+<%= button_to 'Удалить', admin_promotion_path(promotion), method: :delete, data: { confirm: 'Вы уверены?' } %>
+
+
         </td>
       </tr>
     <% end %>

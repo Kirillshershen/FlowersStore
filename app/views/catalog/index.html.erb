@@ -62,7 +62,8 @@
 
         </div>
 
-        <%= button_to 'В корзину', add_item_order_path(product_id: product.id), method: :post, class: 'add-to-order-btn' %>
+<%= link_to 'Купить', catalog_product_path(product), class: 'add-to-order-btn' %>
+
       </li>
     <% end %>
   <% else %>

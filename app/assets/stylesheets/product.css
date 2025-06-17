@@ -192,3 +192,7 @@
   color: #333;
   font-weight: bold;
 }
+.active-discount {
+  font-weight: bold;
+  color: red; /* по желанию */
+}

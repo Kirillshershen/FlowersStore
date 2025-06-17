@@ -10,3 +10,7 @@ ru:
   time:
     formats:
       default: "%d.%m.%Y %H:%M"
+ru:
+  time:
+    formats:
+      short: "%d.%m %H:%M"

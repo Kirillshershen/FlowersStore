@@ -1,4 +1,6 @@
 class Admin::OrdersController < ApplicationController
+    before_action :authenticate_user!        
+  before_action :check_admin!
   STATUS_OPTIONS = %w[подтвержден готов завершен отменен] 
 
   def index
@@ -26,5 +28,12 @@ class Admin::OrdersController < ApplicationController
     end
 
     redirect_to admin_order_path(@order)
+  end
+    private
+
+  def check_admin!
+    unless current_user&.admin?
+      redirect_to root_path, alert: 'Access denied.'
+    end
   end
 end

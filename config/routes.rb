@@ -57,7 +57,7 @@ patch '/orders/update_quantity', to: 'orders#update_quantity', as: :update_quant
   # Админка
   namespace :admin do
     root to: "products#index"
-
+    get 'sales_statistics', to: 'statistics#sales'
     resources :packagings
     resources :banners
     resources :products

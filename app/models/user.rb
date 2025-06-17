@@ -1,18 +1,17 @@
 class User < ApplicationRecord
+  # Devise модули
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
 
+  # Ассоциации
+  has_many :orders, dependent: :destroy
 
+  # Метод для проверки администратора
   def admin?
     admin
   end
 
   private
 
-
-
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  has_many :orders, dependent: :destroy
-
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+  # Приватные методы (если есть) размещаются здесь
 end

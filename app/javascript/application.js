@@ -9,3 +9,4 @@ Rails.start()
 import $ from 'jquery';
 window.$ = $;
 window.jQuery = $;
+import "./masks/phone_mask"

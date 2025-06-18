@@ -1,5 +1,6 @@
 ru:
   hello: "Привет мир"
+
   date:
     order:
       - day
@@ -7,67 +8,96 @@ ru:
       - year
     formats:
       default: "%d.%m.%Y"
+
   time:
     formats:
       default: "%d.%m.%Y %H:%M"
-ru:
-  time:
-    formats:
       short: "%d.%m %H:%M"
-ru:
+
   datetime:
     distance_in_words:
       half_a_minute: "полминуты"
       less_than_x_seconds:
-        one:   "меньше секунды"
+        one: "меньше секунды"
         other: "меньше %{count} секунд"
       x_seconds:
-        one:   "1 секунда"
-        few:   "%{count} секунды"
-        many:  "%{count} секунд"
+        one: "1 секунда"
+        few: "%{count} секунды"
+        many: "%{count} секунд"
         other: "%{count} секунды"
       less_than_x_minutes:
-        one:   "меньше минуты"
-        few:   "меньше %{count} минут"
-        many:  "меньше %{count} минут"
+        one: "меньше минуты"
+        few: "меньше %{count} минут"
+        many: "меньше %{count} минут"
         other: "меньше %{count} минут"
       x_minutes:
-        one:   "1 минута"
-        few:   "%{count} минуты"
-        many:  "%{count} минут"
+        one: "1 минута"
+        few: "%{count} минуты"
+        many: "%{count} минут"
         other: "%{count} минуты"
       about_x_hours:
-        one:   "около часа"
-        few:   "около %{count} часов"
-        many:  "около %{count} часов"
+        one: "около часа"
+        few: "около %{count} часов"
+        many: "около %{count} часов"
         other: "около %{count} часов"
       x_days:
-        one:   "1 день"
-        few:   "%{count} дня"
-        many:  "%{count} дней"
+        one: "1 день"
+        few: "%{count} дня"
+        many: "%{count} дней"
         other: "%{count} дня"
       about_x_months:
-        one:   "около месяца"
-        few:   "около %{count} месяцев"
-        many:  "около %{count} месяцев"
+        one: "около месяца"
+        few: "около %{count} месяцев"
+        many: "около %{count} месяцев"
         other: "около %{count} месяцев"
       x_months:
-        one:   "%{count} месяц"
-        few:   "%{count} месяца"
-        many:  "%{count} месяцев"
+        one: "%{count} месяц"
+        few: "%{count} месяца"
+        many: "%{count} месяцев"
         other: "%{count} месяца"
       about_x_years:
-        one:   "около года"
-        few:   "около %{count} лет"
-        many:  "около %{count} лет"
+        one: "около года"
+        few: "около %{count} лет"
+        many: "около %{count} лет"
         other: "около %{count} лет"
       over_x_years:
-        one:   "больше года"
-        few:   "больше %{count} лет"
-        many:  "больше %{count} лет"
+        one: "больше года"
+        few: "больше %{count} лет"
+        many: "больше %{count} лет"
         other: "больше %{count} лет"
       almost_x_years:
-        one:   "почти год"
-        few:   "почти %{count} лет"
-        many:  "почти %{count} лет"
+        one: "почти год"
+        few: "почти %{count} лет"
+        many: "почти %{count} лет"
         other: "почти %{count} лет"
+
+  errors:
+    messages:
+      not_saved: "Ошибка сохранения: %{count} ошибок."
+      blank: "не может быть пустым"
+      taken: "уже занято"
+      invalid: "некорректный формат"
+      too_short: "слишком короткий (минимум %{count} символов)"
+      too_long: "слишком длинный (максимум %{count} символов)"
+      confirmation: "не совпадает с подтверждением"
+
+  activerecord:
+    attributes:
+      user:
+        email: "электронная почта"
+        password: "пароль"
+        phone: "телефон"
+    errors:
+      models:
+        user:
+          attributes:
+            email: {}
+            password: {}
+
+  devise:
+    failure:
+      user:
+        invalid: "Неверная электронная почта или пароль"
+      invalid: "Неверная электронная почта или пароль"
+    sessions:
+      signed_out: "Вы вышли из системы."

@@ -11,6 +11,7 @@ class User < ApplicationRecord
   def admin?
     admin
   end
+validates :phone, format: { with: /\A\+375 \(\d{2}\) \d{3}-\d{2}-\d{2}\z/, message: "введите номер в формате +375 (XX) XXX-XX-XX" }
 
   private
 

@@ -6,7 +6,10 @@ User.create!(
   email: "admin@example.com",
   password: "111111",
   password_confirmation: "111111",
-  admin: true
+  admin: true,
+  first_name: "Алексей",       # или "Alexey" для англоязычного варианта
+  last_name: "Петров",         # или "Petrov"
+  phone: "+375 (29) 234-24-35"  # международный формат
 )
 require 'open-uri'
 

@@ -1,276 +1,357 @@
+/* Основные стили */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f8faf7;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
 .catalog-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
-  background-color: #fff;
+  padding: 20px;
 }
 
-.catalog-list {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 0;
-  margin: 0;
-}
-
-@media (max-width: 1024px) {
-  .catalog-list {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .catalog-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .catalog-list {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-.catalog-item {
-  background-color: white;
-  border-radius: 0;
-  padding: 16px;
+/* Герой-секция */
+.hero-section {
+  background: linear-gradient(135deg, #d1e6d8 0%, #e0f0e8 100%);
+  padding: 60px 20px;
   text-align: center;
-  transition: background-color 0.3s;
+  margin-bottom: 40px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(107, 158, 126, 0.2);
 }
 
-.catalog-item:hover {
-  background-color: #e7fafa;
-}
-
-.product-image {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 16px;
-  margin-bottom: 12px;
-}
-
-.product-name {
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-
-.product-price {
-  color: #00bfa5;
-  font-weight: 500;
-  margin-bottom: 12px;
-}
-
-.add-to-order-btn {
-  background-color: #00bfa5;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 0;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.add-to-order-btn:hover {
-  background-color: #009f8a;
-}
-
-.product-name a {
-  text-decoration: none; /* убирает подчеркивание */
-  color: black;          /* делает текст чёрным */
-}
-
-.product-name a:hover {
-  text-decoration: none;
-  color: black;
-}
-
-.category-with-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-
-
-.category-with-dropdown:hover .bouquet-dropdown {
-  display: block;
-}
-
-.dropdown-item {
-  display: block;
-  padding: 8px 12px;
-  text-decoration: none;
-  color: black;
-}
-
-.dropdown-item:hover {
-  background-color: #f0f0f0;
-}
-
-.dropdown-item.selected {
-  font-weight: bold;
-  background-color: #e0e0e0;
-}
-
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 40px;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.pagination a,
-.pagination span {
-  display: inline-block;
-  padding: 8px 14px;
-  background-color: #f4f4f4;
-  color: #333;
-  border-radius:0;
-  text-decoration: none;
-  font-size: 14px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.pagination a:hover {
-  background-color: #00bfa5;
-  color: white;
-}
-
-.pagination .current {
-  background-color: #00bfa5;
-  color: white;
-  font-weight: bold;
-}
-
-.sort-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+.hero-title {
+  font-size: 2.5rem;
+  color: #4a8c6d;
   margin-bottom: 20px;
-  gap: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.sort-label {
-  font-size: 14px;
-  color: #333;
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: #6b9e7e;
+  margin-bottom: 30px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.sort-select {
-  padding: 8px 12px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 0;
-  background-color: #fff;
-  color: #333;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  cursor: pointer;
+.cta-button {
+  display: inline-block;
+  background-color: #6b9e7e;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(107, 158, 126, 0.3);
 }
 
-.sort-select:hover {
-  border-color: #00bfa5;
-  box-shadow: 0 0 0 2px rgba(0, 191, 165, 0.2);
+.cta-button:hover {
+  background-color: #5a8c6d;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(107, 158, 126, 0.4);
 }
 
-.price-filter {
-  margin-top: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
+/* О нас */
+.about-section {
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0f0e8;
 }
 
-.price-input {
-  width: 80px;
-  padding: 0.3rem;
+.about-title {
+  font-size: 1.8rem;
+  color: #4a8c6d;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
-.price-submit {
-  padding: 0.3rem 0.8rem;
-  cursor: pointer;
+.about-text {
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 20px;
 }
+
+/* Качество */
+.quality-section {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.quality-title {
+  font-size: 2rem;
+  color: #4a8c6d;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.quality-subtitle {
+  font-size: 1.5rem;
+  color: #6b9e7e;
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+.quality-highlight {
+  display: inline-block;
+  font-size: 1.8rem;
+  color: #4a8c6d;
+  border-bottom: 3px solid #c8e6d5;
+  padding-bottom: 5px;
+  margin: 0 5px;
+}
+
+/* Фильтры */
 .filter-bar {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  background-color: #fff;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  border: 1px solid #e0f0e8;
 }
 
 .filter-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  margin: 5px 0;
 }
 
 .filter-label {
+  margin-right: 10px;
   font-weight: 500;
+  color: #6b9e7e;
 }
 
-.filter-select,
-.filter-input {
-  padding: 0.3rem 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 0;
+.filter-select, .filter-input {
+  padding: 8px 12px;
+  border: 1px solid #d1e6d8;
+  border-radius: 6px;
+  background-color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  margin-right: 10px;
+  transition: all 0.3s ease;
+}
+
+.filter-select:focus, .filter-input:focus {
+  outline: none;
+  border-color: #6b9e7e;
+  box-shadow: 0 0 0 2px rgba(107, 158, 126, 0.2);
 }
 
 .filter-button {
-  padding: 0.3rem 0.8rem;
-  background-color: #5a9;
+  background-color: #6b9e7e;
   color: white;
   border: none;
-  border-radius: 0;
+  padding: 8px 15px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .filter-button:hover {
-  background-color: #48a07a;
-}
-.old-price {
-  text-decoration: line-through;
-  color: #999;
-  margin-right: 8px;
+  background-color: #5a8c6d;
 }
 
-.discounted-price {
-  color: #d32f2f;
-  font-weight: bold;
+/* Список товаров */
+.catalog-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
-.price {
-  color: #333;
-  font-weight: bold;
-}
-.quantity-selector {
+.catalog-item {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 10px 0;
+  flex-direction: column;
+  border: 1px solid #e0f0e8;
 }
 
-.qty-input {
-  width: 60px;
+.catalog-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #e0f0e8;
+  transition: opacity 0.3s ease;
+}
+
+.catalog-item:hover .product-image {
+  opacity: 0.9;
+}
+
+.product-name {
+  padding: 15px;
+  font-weight: 600;
+  color: #5e4e4e;
+  flex-grow: 1;
+}
+
+.product-name a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.product-name a:hover {
+  color: #6b9e7e;
+}
+
+.product-price {
+  padding: 0 15px 15px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #6b9e7e;
+}
+
+.add-to-order-btn {
+  display: block;
   text-align: center;
-  font-size: 16px;
-  padding: 4px 8px;
+  padding: 10px;
+  margin: 0 15px 15px;
+  background-color: #e0f0e8;
+  color: #6b9e7e;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-.qty-btn {
-  background-color: #eee;
-  border: none;
-  font-size: 20px;
-  padding: 4px 10px;
-  cursor: pointer;
-  border-radius: 0;
-  transition: background-color 0.2s ease;
+.add-to-order-btn:hover {
+  background-color: #6b9e7e;
+  color: white;
 }
 
-.qty-btn:hover {
-  background-color: #ccc;
+/* Пагинация */
+.pagination {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.pagination a, .pagination span {
+  display: inline-block;
+  padding: 8px 15px;
+  margin: 0 5px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #6b9e7e;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.pagination a {
+  background-color: #fff;
+  border: 1px solid #e0f0e8;
+}
+
+.pagination a:hover {
+  background-color: #e0f0e8;
+  color: #6b9e7e;
+}
+
+.pagination .current {
+  background-color: #6b9e7e;
+  color: white;
+  border: 1px solid #6b9e7e;
+}
+
+.pagination .disabled {
+  color: #d1c7c7;
+  pointer-events: none;
+}
+
+/* Нет результатов */
+.no-results {
+  text-align: center;
+  grid-column: 1 / -1;
+  padding: 40px;
+  color: #a89b9b;
+  font-size: 1.1rem;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 15px;
+  }
+  
+  .filter-label {
+    margin-bottom: 5px;
+    margin-right: 0;
+  }
+  
+  .filter-select, .filter-input {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  .catalog-list {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+  
+  .catalog-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .quality-title {
+    font-size: 1.5rem;
+  }
+  
+  .quality-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .quality-highlight {
+    font-size: 1.3rem;
+  }
 }

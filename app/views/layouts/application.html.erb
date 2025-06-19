@@ -1,186 +1,165 @@
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <title><%= content_for?(:title) ? yield(:title) : "Flowers Store" %></title>
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      <meta name="apple-mobile-web-app-capable" content="yes">
-      <meta name="mobile-web-app-capable" content="yes">
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for?(:title) ? yield(:title) : "Flowers Store" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <%= yield :head %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <%= yield :head %>
 
-      <link rel="icon" href="/icon.png" type="image/png">
-      <link rel="icon" href="/icon.svg" type="image/svg+xml">
-      <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
 
+    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag 'header', "data-turbo-track": "reload" %>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Marck+Script&display=swap" rel="stylesheet">
+  </head>
 
-      <%= javascript_importmap_tags %>
-          <%= stylesheet_link_tag 'header', "data-turbo-track": "reload" %>
-    </head>
-
-    <body>
-      <div class="page-wrapper">
-        <!-- Верхняя информационная строка -->
-        <div class="top-info-bar">
-          <div>Работаем с 10:00 до 21:00</div>
-          <div>
+  <body>
+    <div class="page-wrapper">
+      <!-- Верхняя информационная строка -->
+      <div class="top-info-bar">
+        <div>Работаем с 10:00 до 21:00</div>
+        <div>
           <% if current_user&.admin? %>
+            <%= link_to "Админ панель", admin_products_path, class: "admin-link" %>
+          <% end %>
+          <%= link_to 'Главная', root_path %>
+          <%= link_to 'О нас', about_path %>
+          <%= link_to 'Доставка и оплата', delivery_path %>
+          <%= link_to 'Контакты', contacts_path %>
+        </div>
+      </div>
 
+      <header class="header">
+        <div class="header-container">
+          <div class="logo">
+            <%= link_to root_path, class: "logo-link" do %>
+              <span class="store-name">Тюльпаново</span>
+            <% end %>
+            <span class="store-address">Гродно, ул. Лиможа, 41</span>
+          </div>
 
-    <%= link_to "Админ панель", admin_products_path %>
-  <% end %>
-            <%= link_to 'Главная', root_path %>
-            <%= link_to 'О нас', about_path %>
-            <%= link_to 'Доставка и оплата', delivery_path %>
-            <%= link_to 'Контакты', contacts_path %>
+          <%= search_form_for @q, url: catalog_path, method: :get, html: {class: "search-form mobile-search"} do |f| %>
+            <%= f.search_field :name_cont, placeholder: "Поиск по продуктам", class: "search-input" %>
+            <%= f.submit "Поиск", class: "search-button" %>
+          <% end %>
+
+          <div class="user-links mobile-flex-container">
+            <% if user_signed_in? %>
+              <div id="notifications-dropdown" class="notifications-dropdown">
+                <button id="notifications-toggle" class="notifications-toggle">
+                  🔔 <span id="unread-count"><%= @unread_count %></span>
+                </button>
+                <div id="notifications-list" class="notifications-list hidden">
+                  <% @notifications.each do |notification| %>
+                    <div class="notification-item <%= 'unread' unless notification.read %>">
+                      <%= notification.message %>
+                      <small><%= time_ago_in_words(notification.created_at) %> назад</small>
+                    </div>
+                  <% end %>
+                  <%= link_to 'Все уведомления', notifications_path, class: 'notifications-link' %>
+                </div>
+              </div>
+
+              <%= link_to 'Мой аккаунт', orders_path %>
+              <%= link_to '🛒 Корзина', order_path, class: "cart-link" %>
+              <%= link_to 'Выйти', destroy_user_session_path %>
+            <% else %>
+              <%= link_to 'Войти', new_user_session_path %>
+              <%= link_to 'Регистрация', new_user_registration_path %>
+            <% end %>
           </div>
         </div>
 
-        <header class="header">
-          <div class="header-container">
-  <div class="logo">
-    <%= link_to root_path, class: "logo-link" do %>
-      <span class="store-name">Тюльпаново</span>
-    <% end %>
-    <span class="store-address">Гродно, ул. Лиможа, 41</span>
-  </div>
+        <div class="nav-social-wrapper">
+          <nav class="nav-categories">
+            <div class="category-buttons">
+              <% categories = [
+                ['Букеты', 'Букет'],
+                ['Растения', 'Растение'],
+                ['Вазы', 'Ваза'],
+                ['Игрушки', 'Игрушка'],
+                ['Товары со скидкой', 'discounted']
+              ] %>
 
+              <% plant_types = ['Комнатные', 'Дачные'] %>
 
-            <%= search_form_for @q, url: catalog_path, method: :get, html: {class: "search-form"} do |f| %>
-              <%= f.search_field :name_cont, placeholder: "Поиск по продуктам", class: "search-input" %>
-              <%= f.submit "Поиск", class: "search-button" %>
-            <% end %>
+              <% categories.each do |name, value| %>
+                <% params_for_link = if value == 'discounted'
+                  { q: { discounted_eq: true } }
+                else
+                  { q: { product_type_eq: value } }
+                end %>
 
-            <div class="user-links">
-              <% if user_signed_in? %>
-              <div id="notifications-dropdown" class="notifications-dropdown">
-    <button id="notifications-toggle" class="notifications-toggle">
-      🔔 <span id="unread-count"><%= @unread_count %></span>
-    </button>
-
-    <div id="notifications-list" class="notifications-list hidden">
-      <% @notifications.each do |notification| %>
-        <div class="notification-item <%= 'unread' unless notification.read %>">
-          <%= notification.message %>
-          <small><%= time_ago_in_words(notification.created_at) %> назад</small>
-        </div>
-      <% end %>
-      <%= link_to 'Все уведомления', notifications_path, class: 'notifications-link' %>
-    </div>
-  </div>
-
-                <%= link_to 'Мой аккаунт', orders_path %>
-                <%= link_to '🛒 Корзина', order_path, class: "cart-link" %>
-  <%= link_to 'Выйти', destroy_user_session_path %>
-
-
-              <% else %>
-                <%= link_to 'Войти', new_user_session_path %>
-                <%= link_to 'Регистрация', new_user_registration_path %>
+                <% if value == 'Букет' %>
+                  <div class="category-with-dropdown">
+                    <%= link_to name, catalog_index_path(params_for_link), class: "category-button #{'active' if params.dig(:q, :product_type_eq) == value}" %>
+                    <div class="bouquet-dropdown">
+                      <%= link_to "Цветы поштучно", catalog_index_path(q: { product_type_eq: 'Цветок' }), class: "dropdown-item #{'selected' if params.dig(:q, :product_type_eq) == 'цветы'}" %>
+                      <% @bouquet_types.each do |bt| %>
+                        <%= link_to bt, catalog_index_path(q: { product_type_eq: 'Букет', metadata_bouquet_type_eq: bt }), class: "dropdown-item #{'selected' if params.dig(:q, :metadata_bouquet_type_eq) == bt}" %>
+                      <% end %>
+                    </div>
+                  </div>
+                <% elsif value == 'Растение' %>
+                  <div class="category-with-dropdown">
+                    <%= link_to name, catalog_index_path(params_for_link), class: "category-button #{'active' if params.dig(:q, :product_type_eq) == value}" %>
+                    <div class="bouquet-dropdown">
+                      <% plant_types.each do |pt| %>
+                        <%= link_to pt, catalog_index_path(q: { product_type_eq: 'plant', metadata_plant_type_eq: pt }), class: "dropdown-item #{'selected' if params.dig(:q, :metadata_plant_type_eq) == pt}" %>
+                      <% end %>
+                    </div>
+                  </div>
+                <% elsif value == 'discounted' %>
+                  <%= link_to name, catalog_index_path(params_for_link), class: "category-button #{'active' if params.dig(:q, :discounted_eq) == 'true'}" %>
+                <% else %>
+                  <%= link_to name, catalog_index_path(params_for_link), class: "category-button #{'active' if params.dig(:q, :product_type_eq) == value}" %>
+                <% end %>
               <% end %>
             </div>
-          </div>
+          </nav>
 
-          <div class="nav-social-wrapper">
-            <nav class="nav-categories">
-            <div class="category-buttons">
-    <% categories = [
-      ['Букеты', 'Букет'],
-      ['Растения', 'Растение'],
-      ['Вазы', 'Ваза'],
-      ['Игрушки', 'Игрушка'],
-      ['Товары со скидкой', 'discounted'] # Добавляем категорию скидок
-    ] %>
-
-    <% plant_types = ['Комнатные', 'Дачные'] %>
-
-    <% categories.each do |name, value| %>
-      <% params_for_link = if value == 'discounted'
-        { q: { discounted_eq: true } }
-      else
-        { q: { product_type_eq: value } }
-      end %>
-
-      <% if value == 'Букет' && params.dig(:q, :metadata_bouquet_type_eq).present? %>
-        <% params_for_link[:q][:metadata_bouquet_type_eq] = params.dig(:q, :metadata_bouquet_type_eq) %>
-      <% end %>
-
-      <% if value == 'Растение' && params.dig(:q, :metadata_plant_type_eq).present? %>
-        <% params_for_link[:q][:metadata_plant_type_eq] = params.dig(:q, :metadata_plant_type_eq) %>
-      <% end %>
-
-      <% if value == 'Букет' %>
-        <div class="category-with-dropdown">
-          <%= link_to name, catalog_index_path(params_for_link), class: "category-button #{'active' if params.dig(:q, :product_type_eq) == value}" %>
-
-          <div class="bouquet-dropdown">
-            <%= link_to "Цветы поштучно", catalog_index_path(q: { product_type_eq: 'Цветок' }), class: "dropdown-item #{'selected' if params.dig(:q, :product_type_eq) == 'цветы'}" %>
-
-            <% @bouquet_types.each do |bt| %>
-              <%= link_to bt, catalog_index_path(q: { product_type_eq: 'Букет', metadata_bouquet_type_eq: bt }), class: "dropdown-item #{'selected' if params.dig(:q, :metadata_bouquet_type_eq) == bt}" %>
-            <% end %>
-          </div>
-        </div>
-
-      <% elsif value == 'Растение' %>
-        <div class="category-with-dropdown">
-          <%= link_to name, catalog_index_path(params_for_link), class: "category-button #{'active' if params.dig(:q, :product_type_eq) == value}" %>
-
-          <div class="bouquet-dropdown">
-            <% plant_types.each do |pt| %>
-              <%= link_to pt, catalog_index_path(q: { product_type_eq: 'plant', metadata_plant_type_eq: pt }), class: "dropdown-item #{'selected' if params.dig(:q, :metadata_plant_type_eq) == pt}" %>
-            <% end %>
-          </div>
-        </div>
-
-      <% elsif value == 'discounted' %>
-        <%= link_to name, catalog_index_path(params_for_link), class: "category-button #{'active' if params.dig(:q, :discounted_eq) == 'true'}" %>
-
-      <% else %>
-        <%= link_to name, catalog_index_path(params_for_link), class: "category-button #{'active' if params.dig(:q, :product_type_eq) == value}" %>
-      <% end %>
-    <% end %>
-  </div>
-
-            </nav>
-
-            <div class="social-links">
-
+          <div class="social-links">
             <a href="tel:+375298937145" class="phone-link">+375 29 893 7145</a>
-              <a href="https://t.me/viola_kondrat" target="_blank" aria-label="Telegram">
-                <%= image_tag 'telegram.jpg', alt: 'Telegram', class: 'social-icon' %>
-              </a>
-              <a href="https://www.instagram.com/viola__kondrat?igsh=bjUxZXdkemc1Mjlh" target="_blank" aria-label="Instagram">
-                <%= image_tag 'instagram.jpg', alt: 'Instagram', class: 'social-icon' %>
-              </a>
-            </div>
+            <a href="https://t.me/viola_kondrat" target="_blank" aria-label="Telegram">
+              <%= image_tag 'telegram.jpg', alt: 'Telegram', class: 'social-icon' %>
+            </a>
+            <a href="https://www.instagram.com/viola__kondrat?igsh=bjUxZXdkemc1Mjlh" target="_blank" aria-label="Instagram">
+              <%= image_tag 'instagram.jpg', alt: 'Instagram', class: 'social-icon' %>
+            </a>
           </div>
-        </header>
+        </div>
+      </header>
 
-        <main class="main-content">
-          <%= yield %>
-        </main>
+      <main class="main-content">
+        <%= yield %>
+      </main>
 
-        <%= render 'layouts/footer' %>
-      </div>
-    </body>
-  </html>
+      <%= render 'layouts/footer' %>
+    </div>
+
     <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const toggle = document.getElementById('notifications-toggle');
-    const list = document.getElementById('notifications-list');
+      document.addEventListener("DOMContentLoaded", function() {
+        const toggle = document.getElementById('notifications-toggle');
+        const list = document.getElementById('notifications-list');
 
-    toggle.addEventListener('click', () => {
-      list.classList.toggle('hidden');
-    });
+        toggle.addEventListener('click', () => {
+          list.classList.toggle('hidden');
+        });
 
-    // Чтобы закрывать уведомления при клике вне блока
-    document.addEventListener('click', (event) => {
-      if (!toggle.contains(event.target) && !list.contains(event.target)) {
-        list.classList.add('hidden');
-      }
-    });
-  });
+        document.addEventListener('click', (event) => {
+          if (!toggle.contains(event.target) && !list.contains(event.target)) {
+            list.classList.add('hidden');
+          }
+        });
+      });
     </script>
+  </body>
+</html>

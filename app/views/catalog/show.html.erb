@@ -1,235 +1,568 @@
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= @product.name %> - Flowers Store</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  body {
-    font-family: 'Poppins', sans-serif;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= @product.name %> - Flowers Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-green: #6b9e7e;
+      --dark-green: #4a8c6d;
+      --light-green: #e0f0e8;
+      --lighter-green: #f8faf7;
+      --white: #ffffff;
+      --text-dark: #333;
+      --border-color: #d1e6d8;
+    }
 
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--lighter-green);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
 
-    <%= stylesheet_link_tag 'product.css', "data-turbo-track": "reload" %>
+    .product-card-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
 
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-  </head>
-  <body>
+    .product-card-flex {
+      display: flex;
+      gap: 40px;
+      background-color: var(--white);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(107, 158, 126, 0.1);
+    }
 
-  <main class="product-card-container">
+    .product-image-container {
+      flex: 1;
+      min-width: 300px;
+    }
 
-    <div class="product-card-flex">
-      <% if @product.image.attached? %>
-        <div class="product-image-container">
-          <%= image_tag @product.image, class: "product-image" %>
+    .product-image {
+      width: 100%;
+      height: auto;
+      max-height: 500px;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .product-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .product-info h1 {
+      color: var(--dark-green);
+      font-size: 28px;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .product-price {
+      font-size: 22px;
+      color: var(--dark-green);
+      font-weight: 600;
+    }
+
+    .price {
+      color: var(--dark-green);
+      font-weight: 700;
+    }
+
+    .quantity-discounts {
+      background-color: var(--light-green);
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .quantity-discounts h3 {
+      margin-top: 0;
+      color: var(--dark-green);
+      font-size: 18px;
+    }
+
+    .quantity-discounts ul {
+      margin: 10px 0 0 0;
+      padding-left: 20px;
+    }
+
+    .quantity-discounts li {
+      margin-bottom: 5px;
+      color: var(--text-dark);
+    }
+
+    .product-info h3 {
+      color: var(--dark-green);
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .product-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .product-info li {
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    .product-info li strong {
+      color: var(--dark-green);
+    }
+
+    .flower-list {
+      list-style-type: none;
+      padding-left: 0;
+      margin-top: 5px;
+    }
+
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+      background-color: var(--light-green);
+      padding: 10px 15px;
+      border-radius: 30px;
+      width: fit-content;
+    }
+
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      background-color: var(--primary-green);
+      color: var(--white);
+      border: none;
+      border-radius: 50%;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(107, 158, 126, 0.1);
+    }
+
+    .qty-btn:hover {
+      background-color: var(--dark-green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(74, 140, 109, 0.2);
+    }
+
+    .quantity-input {
+      width: 60px;
+      padding: 8px;
+      text-align: center;
+      border: 2px solid var(--primary-green);
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark-green);
+      background-color: var(--white);
+    }
+
+    .add-to-order-btn {
+      display: inline-block;
+      background-color: var(--primary-green);
+      color: var(--white);
+      padding: 14px 30px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      max-width: 300px;
+      margin-top: 15px;
+      box-shadow: 0 4px 10px rgba(107, 158, 126, 0.3);
+      border: none;
+    }
+
+    .add-to-order-btn:hover {
+      background-color: var(--dark-green);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(74, 140, 109, 0.4);
+    }
+
+    #total-price {
+      font-weight: 700;
+      color: var(--primary-green);
+      font-size: 20px;
+      margin-left: 5px;
+    }
+
+    .back-link a {
+      color: var(--primary-green);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .back-link a:hover {
+      color: var(--dark-green);
+      text-decoration: underline;
+    }
+
+    /* Стили для похожих товаров */
+    .similar-products-container {
+      margin-top: 50px;
+      padding: 0 20px;
+    }
+
+    .similar-products-container h2 {
+      color: var(--dark-green);
+      font-size: 24px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .similar-products-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 25px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .catalog-item {
+      background-color: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border-color);
+    }
+
+    .catalog-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .catalog-item .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--border-color);
+      transition: opacity 0.3s ease;
+    }
+
+    .catalog-item:hover .product-image {
+      opacity: 0.9;
+    }
+
+    .catalog-item .product-name {
+      padding: 15px;
+      font-weight: 600;
+      color: var(--text-dark);
+      flex-grow: 1;
+    }
+
+    .catalog-item .product-name a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .catalog-item .product-name a:hover {
+      color: var(--primary-green);
+    }
+
+    .catalog-item .product-price {
+      padding: 0 15px 15px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary-green);
+    }
+
+    .catalog-item .add-to-order-btn {
+      display: block;
+      background-color: var(--light-green);
+      color: var(--primary-green);
+      text-align: center;
+      padding: 10px;
+      margin: 0 15px 15px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .catalog-item .add-to-order-btn:hover {
+      background-color: var(--primary-green);
+      color: var(--white);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 992px) {
+      .product-card-flex {
+        flex-direction: column;
+        gap: 30px;
+      }
+      
+      .product-image-container {
+        min-width: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .product-card-container {
+        padding: 0 15px;
+      }
+      
+      .product-card-flex {
+        padding: 20px;
+        gap: 20px;
+      }
+      
+      .quantity-selector {
+        margin: 15px 0;
+      }
+      
+      .add-to-order-btn {
+        padding: 12px 20px;
+      }
+      
+      .similar-products-list {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .product-card-flex {
+        padding: 15px;
+      }
+      
+      .similar-products-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+</head>
+<body>
+
+<main class="product-card-container">
+  <div class="product-card-flex">
+    <% if @product.image.attached? %>
+      <div class="product-image-container">
+        <%= image_tag @product.image, class: "product-image" %>
+      </div>
+    <% end %>
+
+    <div class="product-info">
+      <h1><%= @product.name %></h1>
+
+      <div class="product-price">
+        <strong>Цена за штуку:</strong>
+        <span class="price">
+          <%= number_to_currency(@product.price, unit: "Br", separator: ",") %>
+        </span>
+      </div>
+
+      <% if @quantity_discounts.present? && @quantity_discounts.any? %>
+        <div class="quantity-discounts">
+          <h3>Скидки при покупке больших количеств:</h3>
+          <ul>
+            <% @quantity_discounts.each do |discount| %>
+              <li>При покупке от <%= discount.min_quantity %> штук скидка <%= discount.discount_value %>%</li>
+            <% end %>
+          </ul>
         </div>
       <% end %>
 
-      <div class="product-info">
-        <h1><%= @product.name %></h1>
+      <% if @discount_info %>
+        <p style="color: var(--primary-green); font-weight: bold;"><%= @discount_info[:display_text] %></p>
+      <% end %>
 
-        <div class="product-price">
-          <strong>Цена за штуку:</strong>
-          <span class="price">
-            <%= number_to_currency(@product.price, unit: "Br", separator: ",") %>
-          </span>
-        </div>
+      <p class="product-price"><strong>Рейтинг:</strong> <%= @product.rating %></p>
 
-        <% if @quantity_discounts.present? && @quantity_discounts.any? %>
-          <div class="quantity-discounts">
-            <h3>Скидки при покупке больших количеств:</h3>
-            <ul>
-              <% @quantity_discounts.each do |discount| %>
-  <li>При покупке от <%= discount.min_quantity %> штук скидка <%= discount.discount_value %>%</li>
+      <% translations = {
+        "flower_type" => "Тип цветка",
+        "category" => "Категория",
+        "size" => "Размер",
+        "material" => "Материал",
+        "diameter" => "Диаметр",
+        "bouquet_type" => "Тип букета",
+        "packaging" => "Упаковка",
+        "flowers" => "Цветы"
+      } %>
 
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-
-        <% if @discount_info %>
-          <p style="color: red; font-weight: bold;"><%= @discount_info[:display_text] %></p>
-        <% end %>
-
-        <p class="product-price"><strong>Рейтинг:</strong> <%= @product.rating %></p>
-
-        <% translations = {
-          "flower_type" => "Тип цветка",
-          "category" => "Категория",
-          "size" => "Размер",
-          "material" => "Материал",
-          "diameter" => "Диаметр",
-          "bouquet_type" => "Тип букета",
-          "packaging" => "Упаковка",
-          "flowers" => "Цветы"
-        } %>
-
-<% if @product.metadata.present? %>
-  <h3>Подробности:</h3>
-  <ul>
-    <% @product.metadata.each do |key, value| %>
-      <li>
-        <strong><%= translations[key] || key.humanize %>:</strong>
-        <% if key == "flowers" && value.is_a?(Hash) %>
-          <ul class="flower-list">
-            <% flower_ids = value.map { |_, f| f["product_id"].to_i } %>
-            <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
-            <% value.each do |_, flower_info| %>
-              <% flower = flowers[flower_info["product_id"].to_i] %>
-              <% if flower %>
-                <li style="font-family: monospace;">
-                  <%= link_to flower.name.ljust(50, '.'), catalog_product_path(flower) %>
-                  <%= "#{flower_info["quantity"]} шт." %>
-                </li>
+      <% if @product.metadata.present? %>
+        <h3>Подробности:</h3>
+        <ul>
+          <% @product.metadata.each do |key, value| %>
+            <li>
+              <strong><%= translations[key] || key.humanize %>:</strong>
+              <% if key == "flowers" && value.is_a?(Hash) %>
+                <ul class="flower-list">
+                  <% flower_ids = value.map { |_, f| f["product_id"].to_i } %>
+                  <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
+                  <% value.each do |_, flower_info| %>
+                    <% flower = flowers[flower_info["product_id"].to_i] %>
+                    <% if flower %>
+                      <li style="font-family: monospace;">
+                        <%= link_to flower.name.ljust(50, '.'), catalog_product_path(flower) %>
+                        <%= "#{flower_info["quantity"]} шт." %>
+                      </li>
+                    <% else %>
+                      <li style="font-family: monospace;">
+                        <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(50, '.') %>
+                        <%= "#{flower_info["quantity"]} шт." %>
+                      </li>
+                    <% end %>
+                  <% end %>
+                </ul>
+              <% elsif key == "flowers" && value.is_a?(Array) %>
+                <ul class="flower-list">
+                  <% flower_ids = value.map { |f| f["product_id"].to_i } %>
+                  <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
+                  <% value.each do |flower_info| %>
+                    <% flower = flowers[flower_info["product_id"].to_i] %>
+                    <% if flower %>
+                      <li style="font-family: monospace;">
+                        <%= link_to flower.name.ljust(20, '.'), catalog_product_path(flower) %>
+                        <%= "#{flower_info["quantity"]} шт." %>
+                      </li>
+                    <% else %>
+                      <li style="font-family: monospace;">
+                        <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(20, '.') %>
+                        <%= "#{flower_info["quantity"]} шт." %>
+                      </li>
+                    <% end %>
+                  <% end %>
+                </ul>
+              <% elsif value.is_a?(Array) || value.is_a?(Hash) %>
+                <pre><%= JSON.pretty_generate(value) %></pre>
               <% else %>
-                <li style="font-family: monospace;">
-                  <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(50, '.') %>
-                  <%= "#{flower_info["quantity"]} шт." %>
-                </li>
+                <%= value %>
               <% end %>
-            <% end %>
-          </ul>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
 
-        <% elsif key == "flowers" && value.is_a?(Array) %>
-          <ul class="flower-list">
-            <% flower_ids = value.map { |f| f["product_id"].to_i } %>
-            <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
-            <% value.each do |flower_info| %>
-              <% flower = flowers[flower_info["product_id"].to_i] %>
-              <% if flower %>
-                <li style="font-family: monospace;">
-                  <%= link_to flower.name.ljust(20, '.'), catalog_product_path(flower) %>
-                  <%= "#{flower_info["quantity"]} шт." %>
-                </li>
-              <% else %>
-                <li style="font-family: monospace;">
-                  <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(20, '.') %>
-                  <%= "#{flower_info["quantity"]} шт." %>
-                </li>
-              <% end %>
-            <% end %>
-          </ul>
-
-        <% elsif value.is_a?(Array) || value.is_a?(Hash) %>
-          <pre><%= JSON.pretty_generate(value) %></pre>
-        <% else %>
-          <%= value %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
-
-
-
-        <%= form_with url: add_item_order_path(product_id: @product.id), method: :post, local: true do |f| %>
-          <div class="quantity-selector">
-            <button type="button" class="qty-btn" id="decrement">–</button>
-            <%= number_field_tag :quantity, 1, min: 1, class: "quantity-input" %>
-            <button type="button" class="qty-btn" id="increment">+</button>
-          </div>
-          <%= hidden_field_tag :product_id, @product.id %>
-
-          <p>Итоговая цена: <span id="total-price"><%= number_to_currency(@product.price, unit: "Br") %></span></p>
-
-          <%= f.submit 'Добавить в заказ', class: 'add-to-order-btn' %>
-        <% end %>
-
-        <div class="back-link">
-          <%= link_to "Вернуться в каталог", catalog_path %>
+      <%= form_with url: add_item_order_path(product_id: @product.id), method: :post, local: true do |f| %>
+        <div class="quantity-selector">
+          <button type="button" class="qty-btn" id="decrement">–</button>
+          <%= number_field_tag :quantity, 1, min: 1, class: "quantity-input" %>
+          <button type="button" class="qty-btn" id="increment">+</button>
         </div>
+        <%= hidden_field_tag :product_id, @product.id %>
+
+        <p>Итоговая цена: <span id="total-price"><%= number_to_currency(@product.price, unit: "Br") %></span></p>
+
+        <%= f.submit 'Добавить в заказ', class: 'add-to-order-btn' %>
+      <% end %>
+
+      <div class="back-link">
+        <%= link_to "Вернуться в каталог", catalog_path %>
       </div>
     </div>
+  </div>
+</main>
 
-  </main>
+<% if @similar_products.any? %>
+  <section class="similar-products-container">
+    <h2>Похожие товары</h2>
+    <ul class="similar-products-list">
+      <% @similar_products.each do |product| %>
+        <li class="catalog-item">
+          <% if product.image.attached? %>
+            <%= link_to image_tag(product.image, class: "product-image"), catalog_product_path(product) %>
+          <% end %>
 
-  <% if @similar_products.any? %>
-    <section class="similar-products-container">
-      <h2>Похожие товары</h2>
-      <ul class="catalog-list similar-products-list">
-        <% @similar_products.each do |product| %>
-          <li class="catalog-item">
-            <% if product.image.attached? %>
-              <%= link_to image_tag(product.image, class: "product-image"), catalog_product_path(product) %>
-            <% end %>
+          <div class="product-name">
+            <%= link_to product.name, catalog_product_path(product) %>
+          </div>
 
-            <div class="product-name">
-              <%= link_to product.name, catalog_product_path(product) %>
-            </div>
+          <div class="product-price">
+            <%= number_to_currency(product.price, unit: "Br", separator: ",") %>
+          </div>
 
-            <div class="product-price">
-              <%= number_to_currency(product.price, unit: "Br", separator: ",") %>
-            </div>
+          <%= button_to 'В корзину', add_item_order_path(product_id: product.id), method: :post, class: 'add-to-order-btn' %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+<% end %>
 
-            <%= button_to 'В корзину', add_item_order_path(product_id: product.id), method: :post, class: 'add-to-order-btn' %>
-          </li>
-        <% end %>
-      </ul>
-    </section>
-  <% end %>
+<script>
+  const productPrice = <%= @product.price.to_f %>;
+  const promotions = <%= raw @quantity_discounts.to_json %>;
 
-  <script>
-    const productPrice = <%= @product.price.to_f %>;
-    const promotions = <%= raw @quantity_discounts.to_json %>;
+  document.addEventListener("DOMContentLoaded", () => {
+    const incrementBtn = document.getElementById("increment");
+    const decrementBtn = document.getElementById("decrement");
+    const quantityInput = document.querySelector(".quantity-input");
+    const totalPriceElem = document.getElementById("total-price");
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const incrementBtn = document.getElementById("increment");
-      const decrementBtn = document.getElementById("decrement");
-      const quantityInput = document.querySelector(".quantity-input");
-      const totalPriceElem = document.getElementById("total-price");
+    function calculatePrice(quantity) {
+      let totalPrice = productPrice * quantity;
 
-      function calculatePrice(quantity) {
-        let totalPrice = productPrice * quantity;
+      const applicable = promotions
+        .filter(p => quantity >= p.min_quantity)
+        .sort((a, b) => b.min_quantity - a.min_quantity)[0];
 
-        // Находим подходящую скидку по количеству (максимальную min_quantity <= quantity)
-        const applicable = promotions
-          .filter(p => quantity >= p.min_quantity)
-          .sort((a, b) => b.min_quantity - a.min_quantity)[0];
-
-  if (applicable) {
-    // discount_value — процент скидки, например 10 = 10%
-    const discountPercent = applicable.discount_value;
-    totalPrice = totalPrice * (1 - discountPercent / 100);
-  }
-
-        return totalPrice;
+      if (applicable) {
+        const discountPercent = applicable.discount_value;
+        totalPrice = totalPrice * (1 - discountPercent / 100);
       }
 
-      function updateTotal() {
-        let qty = parseInt(quantityInput.value);
-        if (isNaN(qty) || qty < 1) qty = 1;
-        quantityInput.value = qty;
+      return totalPrice;
+    }
 
-        const price = calculatePrice(qty);
-        totalPriceElem.textContent = price.toFixed(2) + " Br";
-      }
+    function updateTotal() {
+      let qty = parseInt(quantityInput.value);
+      if (isNaN(qty) || qty < 1) qty = 1;
+      quantityInput.value = qty;
 
-      incrementBtn.addEventListener("click", () => {
-        quantityInput.value = parseInt(quantityInput.value) + 1;
-        updateTotal();
-      });
+      const price = calculatePrice(qty);
+      totalPriceElem.textContent = price.toFixed(2) + " Br";
+    }
 
-      decrementBtn.addEventListener("click", () => {
-        let currentQty = parseInt(quantityInput.value);
-        if (currentQty > 1) {
-          quantityInput.value = currentQty - 1;
-          updateTotal();
-        }
-      });
-
-      quantityInput.addEventListener("input", () => {
-        let val = parseInt(quantityInput.value);
-        if (isNaN(val) || val < 1) val = 1;
-        quantityInput.value = val;
-        updateTotal();
-      });
-
+    incrementBtn.addEventListener("click", () => {
+      quantityInput.value = parseInt(quantityInput.value) + 1;
       updateTotal();
     });
-  </script>
 
-  </body>
-  </html>
+    decrementBtn.addEventListener("click", () => {
+      let currentQty = parseInt(quantityInput.value);
+      if (currentQty > 1) {
+        quantityInput.value = currentQty - 1;
+        updateTotal();
+      }
+    });
+
+    quantityInput.addEventListener("input", () => {
+      let val = parseInt(quantityInput.value);
+      if (isNaN(val) || val < 1) val = 1;
+      quantityInput.value = val;
+      updateTotal();
+    });
+
+    updateTotal();
+  });
+</script>
+
+</body>
+</html>

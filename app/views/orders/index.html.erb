@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Ваши заказы</title>
-  <%= stylesheet_link_tag "orders", media: "all" %>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Вставить здесь CSS код выше */
+  </style>
 </head>
 <body>
   <h1>Ваши заказы</h1>
@@ -18,7 +21,7 @@
           </ul>
 
           <p><strong>Дата готовности заказа:</strong> <%= order.ready_date ? order.ready_date.strftime('%d-%m-%Y %H:%M') : 'Дата не указана' %></p>
-          <p><strong>Статус:</strong> <%= order.status.capitalize %></p>
+          <p class="status-<%= order.status %>"><strong>Статус:</strong> <%= order.status.capitalize %></p>
 
           <%= link_to 'Подробнее о заказе', details_order_path(order), class: 'btn btn-info' %>
 
@@ -29,7 +32,7 @@
       <% end %>
     </ul>
   <% else %>
-    <p>У вас нет подтвержденных заказов.</p>
+    <p class="empty-orders-message">У вас нет подтвержденных заказов.</p>
   <% end %>
 </body>
 </html>

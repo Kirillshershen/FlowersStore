@@ -1,49 +1,172 @@
+:root {
+  --primary-green: #6b9e7e;
+  --dark-green: #4a8c6d;
+  --light-green: #e0f0e8;
+  --lighter-green: #f8faf7;
+  --white: #ffffff;
+  --text-dark: #333;
+  --border-color: #d1e6d8;
+  --error-color: #ff6b6b;
+  --info-color: #17a2b8;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--lighter-green);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 20px;
+  line-height: 1.6;
+}
+
 h1 {
+  color: var(--dark-green);
+  text-align: center;
+  margin-bottom: 30px;
   font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #333;
 }
 
 .orders-list {
   list-style: none;
   padding: 0;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .order-item {
-  background: #f8f8f8;
-  padding: 15px 20px;
+  background-color: var(--white);
+  padding: 25px;
   margin-bottom: 20px;
-  border-radius: 6px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.order-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
 .order-item strong {
+  color: var(--dark-green);
   font-size: 1.2rem;
-  color: #222;
+  display: block;
+  margin-bottom: 15px;
 }
 
 .order-products {
-  list-style: disc inside;
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+  border-top: 1px dashed var(--border-color);
+  border-bottom: 1px dashed var(--border-color);
+  padding: 10px 0;
+}
+
+.order-products li {
+  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.order-item p {
+  margin: 10px 0;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-right: 10px;
   margin-top: 10px;
-  margin-bottom: 10px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.order-product-item {
-  margin-bottom: 5px;
+.btn-info {
+  background-color: var(--info-color);
+  color: var(--white);
 }
 
-.quantity {
-  font-weight: 500;
-  color: #555;
+.btn-info:hover {
+  background-color: #138496;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.price {
-  font-weight: 700;
-  color: #007bff;
+button[type="submit"] {
+  background-color: var(--error-color);
+  color: var(--white);
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-top: 10px;
 }
 
-p {
-  margin: 5px 0;
-  font-size: 0.9rem;
-  color: #444;
+button[type="submit"]:hover {
+  background-color: #dc3545;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для статусов */
+.status-pending {
+  color: #ffc107;
+}
+
+.status-confirmed {
+  color: var(--primary-green);
+}
+
+.status-completed {
+  color: #28a745;
+}
+
+.status-cancelled {
+  color: var(--error-color);
+}
+
+/* Сообщение об отсутствии заказов */
+.empty-orders-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--dark-green);
+  padding: 40px;
+  background-color: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+  
+  h1 {
+    font-size: 1.7rem;
+  }
+  
+  .order-item {
+    padding: 20px;
+  }
+  
+  .btn {
+    display: block;
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+  }
 }

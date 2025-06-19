@@ -5,55 +5,232 @@
   <title>Тюльпаново</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-
+    /* Основные стили подвала */
     .footer {
-      background-color: #f8f8f8;
-      padding: 20px 0;
-      text-align: center;
-      border-top: 1px solid #ddd;
+      background-color: var(--dark-teal);
+      color: var(--pure-white);
+      padding: 40px 0 20px;
+      border-top: 1px solid var(--border-color);
+      font-family: 'Montserrat', sans-serif;
     }
 
     .footer-container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      text-align: left;
+    }
+
+    .footer-column {
+      margin-bottom: 20px;
+    }
+
+    .footer-column h3 {
+      color: var(--sunny-yellow);
+      font-size: 18px;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .footer-column h3::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50px;
+      height: 2px;
+      background-color: var(--flower-pink);
     }
 
     .footer-nav {
-      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .footer-nav a {
-      color: #333;
+      color: var(--pure-white);
       text-decoration: none;
-      margin: 0 10px;
+      transition: all 0.3s ease;
+      font-size: 14px;
     }
 
     .footer-nav a:hover {
-      text-decoration: underline;
+      color: var(--flower-pink);
+      padding-left: 5px;
+    }
+
+    .footer-contacts {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .contact-icon {
+      color: var(--flower-pink);
+      font-size: 18px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .social-icon:hover {
+      background-color: var(--flower-pink);
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      grid-column: 1 / -1;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 20px;
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .copyright {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .footer-payment {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .payment-method {
+      width: 50px;
+      height: 30px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+      
+      .footer-column {
+        margin-bottom: 15px;
+      }
+      
+      .footer-column h3 {
+        margin-bottom: 15px;
+      }
+      
+      .footer-social {
+        justify-content: flex-start;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Контент страницы -->
-  <main>
-  </main>
-
   <!-- Футер -->
   <footer class="footer">
     <div class="footer-container">
-      <p>© <%= Time.current.year %> Тюльпаново. Все права защищены.</p>
-      <nav class="footer-nav">
-        <%= link_to 'Главная', root_path %> |
-        <%= link_to 'О нас', about_path %> |
-        <%= link_to 'Доставка и оплата', delivery_path %> |
-        <%= link_to 'Контакты', contacts_path %>
-      </nav>
+      <!-- Колонка 1: Навигация -->
+      <div class="footer-column">
+        <h3>Навигация</h3>
+        <nav class="footer-nav">
+          <%= link_to 'Главная', root_path %>
+          <%= link_to 'Каталог', catalog_path %>
+          <%= link_to 'О нас', about_path %>
+          <%= link_to 'Доставка и оплата', delivery_path %>
+          <%= link_to 'Контакты', contacts_path %>
+          <%= link_to 'Блог', blog_path if defined?(blog_path) %>
+        </nav>
+      </div>
+      
+      <!-- Колонка 2: Категории -->
+      <div class="footer-column">
+        <h3>Категории</h3>
+        <nav class="footer-nav">
+          <%= link_to 'Букеты', catalog_index_path(q: { product_type_eq: 'Букет' }) %>
+          <%= link_to 'Цветы поштучно', catalog_index_path(q: { product_type_eq: 'Цветок' }) %>
+          <%= link_to 'Растения', catalog_index_path(q: { product_type_eq: 'Растение' }) %>
+          <%= link_to 'Вазы', catalog_index_path(q: { product_type_eq: 'Ваза' }) %>
+          <%= link_to 'Товары со скидкой', catalog_index_path(q: { discounted_eq: true }) %>
+        </nav>
+      </div>
+      
+      <!-- Колонка 3: Контакты -->
+      <div class="footer-column">
+        <h3>Контакты</h3>
+        <div class="footer-contacts">
+          <div class="contact-item">
+            <span class="contact-icon">📍</span>
+            <span>Гродно, ул. Лиможа, 41</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">✉️</span>
+            <span>tulpanovo@example.com</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📞</span>
+            <span>+375 29 893 7145</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">🕒</span>
+            <span>Ежедневно с 10:00 до 21:00</span>
+          </div>
+          
+          <div class="footer-social">
+            <a href="https://t.me/viola_kondrat" target="_blank" class="social-icon" aria-label="Telegram">
+              <%= image_tag 'telegram.jpg', alt: 'Telegram', width: 20 %>
+            </a>
+            <a href="https://www.instagram.com/viola__kondrat" target="_blank" class="social-icon" aria-label="Instagram">
+              <%= image_tag 'instagram.jpg', alt: 'Instagram', width: 20 %>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Нижняя часть футера -->
+      <div class="footer-bottom">
+        <div class="copyright">
+          © <%= Time.current.year %> Тюльпаново. Все права защищены.
+        </div>
+        <div class="footer-payment">
+          <div class="payment-method">💳</div>
+          <div class="payment-method">📱</div>
+          <div class="payment-method">🏦</div>
+          <div class="payment-method">💰</div>
+        </div>
+      </div>
     </div>
   </footer>
 

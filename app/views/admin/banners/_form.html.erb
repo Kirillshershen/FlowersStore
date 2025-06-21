@@ -1,28 +1,60 @@
-<%= form_with model: [:admin, @banner], local: true do |f| %>
-  <div>
-    <%= f.label :title %>
-    <%= f.text_field :title %>
-  </div>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Создать / Редактировать баннер</title>
+  <!-- Подключение CSS -->
+<%= stylesheet_link_tag 'banner_form', media: 'all' %>
+</head>
+<body>
 
-  <div>
-    <%= f.label :subtitle %>
-    <%= f.text_field :subtitle %>
-  </div>
+  <div class="form-container">
+    <h1>Создать / Редактировать баннер</h1>
 
-  <div>
-    <%= f.label :link %>
-    <%= f.text_field :link %>
-  </div>
+    <%= form_with model: [:admin, @banner], local: true do |f| %>
+      <% if @banner.errors.any? %>
+        <div class="error-explanation">
+          <h2><%= pluralize(@banner.errors.count, "ошибка") %> запрещают сохранение:</h2>
+          <ul>
+            <% @banner.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
 
-  <div>
-    <%= f.label :image %>
-    <%= f.file_field :image %>
-    <% if @banner.image.attached? %>
-      <div>
-        Текущее изображение: <%= image_tag @banner.image.variant(resize_to_limit: [100, 100]) %>
+      <div class="form-group">
+        <%= f.label :title %>
+        <%= f.text_field :title, class: "form-input" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :subtitle %>
+        <%= f.text_field :subtitle, class: "form-input" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :link %>
+        <%= f.text_field :link, class: "form-input" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :image %>
+        <%= f.file_field :image, class: "form-input" %>
+        <% if @banner.image.attached? %>
+          <div class="current-image">
+            Текущее изображение:
+            <%= image_tag @banner.image.variant(resize_to_limit: [100, 100]), class: "preview-image" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Сохранить", class: "button" %>
       </div>
     <% end %>
   </div>
 
-  <%= f.submit %>
-<% end %>
+</body>
+</html>

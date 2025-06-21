@@ -1,0 +1,196 @@
+:root {
+  --primary-green: #6b9e7e;
+  --dark-green: #4a8c6d;
+  --light-green: #e0f0e8;
+  --lighter-green: #f8faf7;
+  --white: #ffffff;
+  --text-dark: #333;
+  --border-color: #d1e6d8;
+  --error-red: #dc3545;
+  --gray-light: #f1f1f1;
+}
+
+/* Общие стили */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--lighter-green);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 20px;
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  color: var(--dark-green);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+h2 {
+  margin-top: 30px;
+  font-size: 1.4rem;
+  border-bottom: 2px solid var(--primary-green);
+  padding-bottom: 5px;
+}
+
+/* Форма */
+form {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: var(--white);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Сообщения об ошибках */
+#error_explanation {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 20px;
+}
+
+#error_explanation h2 {
+  margin-top: 0;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+#error_explanation ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+#error_explanation li {
+  padding-left: 1em;
+  position: relative;
+}
+
+/* Группа полей */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--dark-green);
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea,
+input[type="file"] {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+input[type="file"]:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 2px rgba(107, 158, 126, 0.2);
+}
+
+/* Кнопка отправки */
+.button,
+button[type="submit"],
+input[type="submit"] {
+  background-color: var(--primary-green);
+  color: var(--white);
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.button:hover,
+button[type="submit"]:hover,
+input[type="submit"]:hover {
+  background-color: var(--dark-green);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(107, 158, 126, 0.3);
+}
+
+/* Метаданные по типу продукта */
+.metadata-block {
+  background-color: var(--light-green);
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-green);
+  margin-top: 20px;
+}
+
+/* Цветы в букете */
+#flowers {
+  margin-top: 10px;
+}
+
+.flower-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.flower-item select,
+.flower-item input[type="number"] {
+  flex: 1;
+}
+
+.remove-flower {
+  background-color: var(--error-red);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.remove-flower:hover {
+  background-color: #c82333;
+}
+
+/* Текущее изображение */
+.current-image {
+  margin-top: 15px;
+}
+
+.current-image img {
+  max-width: 150px;
+  border-radius: 6px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+
+  form {
+    padding: 20px;
+  }
+}

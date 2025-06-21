@@ -1,33 +1,50 @@
-<h2>Вход в аккаунт</h2>
-<% if flash[:alert] %>
-  <div class="alert alert-danger"><%= flash[:alert] %></div>
-<% end %>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Вход в аккаунт</title>
+<%= stylesheet_link_tag 'auth_form.css', "data-turbo-track": "reload" %>
+</head>
+<body>
 
-<% if flash[:notice] %>
-  <div class="notice"><%= flash[:notice] %></div>
-<% end %>
+<div class="auth-container">
+  <h2>Вход в аккаунт</h2>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email, "Электронная почта" %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Введите ваш email" %>
-  </div>
+  <% if flash[:alert] %>
+    <div class="alert"><%= flash[:alert] %></div>
+  <% end %>
 
-  <div class="field">
-    <%= f.label :password, "Пароль" %><br />
-    <%= f.password_field :password, autocomplete: "current-password", placeholder: "Введите пароль" %>
-  </div>
+  <% if flash[:notice] %>
+    <div class="notice"><%= flash[:notice] %></div>
+  <% end %>
 
-  <% if devise_mapping.rememberable? %>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
     <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me, "Запомнить меня" %>
+      <%= f.label :email, "Электронная почта" %><br />
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Введите ваш email" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password, "Пароль" %><br />
+      <%= f.password_field :password, autocomplete: "current-password", placeholder: "Введите пароль" %>
+    </div>
+
+    <% if devise_mapping.rememberable? %>
+      <div class="field">
+        <%= f.check_box :remember_me %>
+        <%= f.label :remember_me, "Запомнить меня" %>
+      </div>
+    <% end %>
+
+    <div class="actions">
+      <%= f.submit "Войти" %>
     </div>
   <% end %>
 
-  <div class="actions">
-    <%= f.submit "Войти" %>
-  </div>
-<% end %>
+  <%= render "devise/shared/links" %>
+</div>
 
-<%= render "devise/shared/links" %>
+</body>
+
+</html>

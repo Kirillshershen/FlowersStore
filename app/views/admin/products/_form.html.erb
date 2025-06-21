@@ -1,3 +1,5 @@
+<%= stylesheet_link_tag 'product_form', media: 'all' %>
+<div class="auth-container">
 <%= form_with(model: [:admin, @product], local: true, html: { multipart: true }) do |form| %>
   <% if @product.errors.any? %>
     <div id="error_explanation">
@@ -125,7 +127,7 @@
     <%= form.submit %>
   </div>
 <% end %>
-
+</div>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const typeSelect = document.querySelector('select[name="product[product_type]"]');

@@ -7,7 +7,6 @@
   --text-dark: #333;
   --border-color: #d1e6d8;
   --gray-light: #f1f1f1;
-  --error-red: #dc3545;
 }
 
 /* Общие стили */
@@ -20,7 +19,7 @@ body {
   line-height: 1.6;
 }
 
-h1, h2, h3, h4 {
+h1, h2, h3 {
   color: var(--dark-green);
 }
 
@@ -30,21 +29,9 @@ h1 {
   font-size: 2rem;
 }
 
-h2 {
-  margin: 30px 0 15px;
-  font-size: 1.5rem;
-  border-bottom: 2px solid var(--primary-green);
-  padding-bottom: 10px;
-}
-
-h4 {
-  margin-top: 20px;
-  color: var(--primary-green);
-}
-
 /* Форма */
 form {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   background-color: var(--white);
   padding: 30px;
@@ -52,7 +39,7 @@ form {
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* Группа полей */
+/* Группы полей */
 .form-group {
   margin-bottom: 20px;
 }
@@ -137,25 +124,21 @@ textarea:focus {
 
 .button,
 button[type="submit"],
-input[type="submit"],
-a.button {
-  display: inline-block;
+input[type="submit"] {
   background-color: var(--primary-green);
   color: var(--white);
   padding: 10px 20px;
   border-radius: 6px;
-  text-decoration: none;
   font-weight: 600;
-  transition: all 0.3s ease;
+  font-size: 1rem;
   border: none;
   cursor: pointer;
-  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .button:hover,
 button[type="submit"]:hover,
-input[type="submit"]:hover,
-a.button:hover {
+input[type="submit"]:hover {
   background-color: var(--dark-green);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(107, 158, 126, 0.3);
@@ -163,46 +146,58 @@ a.button:hover {
 
 /* Список товаров */
 #products-list {
-  max-height: 300px;
-  overflow-y: auto;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 10px;
-  background-color: var(--gray-light);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .product-checkbox {
-  margin-bottom: 10px;
-  padding: 8px;
-  border-radius: 4px;
+  background-color: var(--gray-light);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   transition: background-color 0.2s;
 }
 
 .product-checkbox:hover {
   background-color: var(--light-green);
+  cursor: pointer;
+}
+
+.product-checkbox input[type="checkbox"] {
+  transform: scale(1.2);
+  margin: 0;
 }
 
 .product-checkbox label {
-  margin-left: 8px;
-  font-weight: normal;
+  user-select: none;
+  font-size: 0.95rem;
+  cursor: pointer;
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
-  body {
-    padding: 15px;
+  #products-list {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 
-  form {
-    padding: 20px;
+  .product-checkbox {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 480px) {
+  #products-list {
+    grid-template-columns: 1fr;
   }
 
-  .actions {
-    flex-direction: column;
-  }
-
-  .button,
-  button[type="submit"] {
-    width: 100%;
+  .product-checkbox {
+    flex-direction: row;
   }
 }

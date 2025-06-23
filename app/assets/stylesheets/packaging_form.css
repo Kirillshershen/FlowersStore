@@ -1,0 +1,101 @@
+:root {
+  --primary-green: #6b9e7e;
+  --dark-green: #4a8c6d;
+  --light-green: #e0f0e8;
+  --lighter-green: #f8faf7;
+  --white: #ffffff;
+  --text-dark: #333;
+  --border-color: #d1e6d8;
+}
+
+/* Общие стили */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--lighter-green);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 20px;
+  line-height: 1.6;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: var(--dark-green);
+}
+
+/* Форма */
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: var(--white);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Группа полей */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--dark-green);
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 2px rgba(107, 158, 126, 0.2);
+}
+
+/* Кнопка */
+.button,
+button[type="submit"],
+input[type="submit"] {
+  background-color: var(--primary-green);
+  color: var(--white);
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.button:hover,
+button[type="submit"]:hover,
+input[type="submit"]:hover {
+  background-color: var(--dark-green);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(107, 158, 126, 0.3);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+
+  form {
+    padding: 20px;
+  }
+}

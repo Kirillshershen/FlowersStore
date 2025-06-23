@@ -102,9 +102,9 @@
 
               <div class="form-group">
                 <label>Способ доставки:</label><br>
-                <%= f.radio_button :delivery_method, 'pickup', id: 'pickup', required: true %>
+                <%= f.radio_button :delivery_method, 'Самовывоз', id: 'pickup', required: true %>
                 <%= f.label :delivery_method_pickup, 'Самовывоз' %><br>
-                <%= f.radio_button :delivery_method, 'delivery', id: 'delivery', required: true %>
+                <%= f.radio_button :delivery_method, 'Доставка по адресу', id: 'delivery', required: true %>
                 <%= f.label :delivery_method_delivery, 'Доставка по адресу' %>
               </div>
 

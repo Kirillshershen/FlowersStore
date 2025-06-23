@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Создать / Редактировать баннер</title>
+  <!-- Подключение CSS -->
+<%= stylesheet_link_tag 'promotion_form', media: 'all' %>
+</head>
+<body>
+
+
 <%= form_with model: [:admin, @promotion], local: true do |f| %>
   <div>
     <%= f.label :name, "Название" %>
@@ -74,7 +86,8 @@
 
   <%= f.submit "Сохранить" %>
 <% end %>
-
+</body>
+</html>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     // --- Фильтрация продуктов ---

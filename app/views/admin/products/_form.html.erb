@@ -1,3 +1,16 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Создать / Редактировать баннер</title>
+  <!-- Подключение CSS -->
+<%= stylesheet_link_tag 'banner_form', media: 'all' %>
+</head>
+<body>
+
+
 <%= stylesheet_link_tag 'product_form', media: 'all' %>
 <div class="auth-container">
 <%= form_with(model: [:admin, @product], local: true, html: { multipart: true }) do |form| %>
@@ -17,10 +30,89 @@
     <%= form.text_field :name %>
   </div>
 
-  <div>
-    <%= form.label :price %><br>
-    <%= form.number_field :price, step: 0.01 %>
-  </div>
+<div id="price-field" class="form-group">
+  <%= form.label :price, "Цена" %><br>
+  <%= form.number_field :price, step: 0.01, readonly: false, id: "product_price" %>
+</div>
+<div id="bouquet-total-price" class="bouquet-total-price" style="display: none;">
+  <strong>Текущая цена букета:</strong> <span>0.00 Br</span>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const productTypeSelect = document.querySelector("select[name='product[product_type]']");
+    const priceField = document.getElementById("product_price");
+    const flowersContainer = document.getElementById("flowers");
+
+function togglePriceField() {
+  const isBouquet = productTypeSelect.value === "Букет";
+  
+  // Скрываем/показываем поле цены
+  const priceGroup = priceField.closest(".form-group");
+  priceGroup.style.display = isBouquet ? "none" : "block";
+  priceField.readOnly = isBouquet;
+
+  // Показываем/скрываем текущую цену букета
+  const bouquetPriceDisplay = document.getElementById("bouquet-total-price");
+  if (bouquetPriceDisplay) {
+    bouquetPriceDisplay.style.display = isBouquet ? "block" : "none";
+  }
+
+  if (isBouquet) calculateBouquetPrice();
+}
+
+function calculateBouquetPrice() {
+  let total = 0;
+
+  // Собираем все цветы из формы
+  document.querySelectorAll("#flowers .flower-item").forEach(item => {
+    const select = item.querySelector("select");
+    const input = item.querySelector("input[type='number']");
+    const productId = select?.value;
+    const quantity = parseFloat(input?.value) || 0;
+
+    if (productId && quantity > 0 && select.dataset.prices) {
+      const prices = JSON.parse(select.dataset.prices);
+      total += (prices[productId] || 0) * quantity;
+    }
+  });
+
+  // Добавляем цену упаковки
+  const packagingSelect = document.querySelector("select[name='product[metadata][packaging]']");
+  if (packagingSelect) {
+    const packagingPrice = parseFloat(packagingSelect.options[packagingSelect.selectedIndex]?.dataset.price || 0);
+    total += packagingPrice;
+  }
+
+  // Обновляем поле "price"
+  priceField.value = total.toFixed(2);
+
+  // Обновляем отображаемое значение цены букета
+  const totalPriceDisplay = document.getElementById("bouquet-total-price")?.querySelector("span");
+  if (totalPriceDisplay) {
+    totalPriceDisplay.textContent = `${total.toFixed(2)} Br`;
+  }
+}
+
+    // Подставляем цены как data-атрибуты для JS
+    <% Product.where(product_type: "Цветок").each do |flower| %>
+      document.querySelectorAll("select[name$='[product_id]']").forEach(select => {
+        select.dataset.prices = select.dataset.prices ? JSON.parse(select.dataset.prices) : {};
+        select.dataset.prices["<%= flower.id %>"] = <%= flower.price %>;
+      });
+    <% end %>
+
+    // Отслеживаем изменения
+    productTypeSelect.addEventListener("change", togglePriceField);
+
+    // При добавлении/удалении цветка пересчитываем цену
+    flowersContainer?.addEventListener("change", calculateBouquetPrice);
+    flowersContainer?.addEventListener("input", calculateBouquetPrice);
+    document.addEventListener("change", calculateBouquetPrice);
+    document.addEventListener("input", calculateBouquetPrice);
+
+    togglePriceField();
+  });
+</script>
 <div>
   <%= form.label :product_type, "Тип продукта" %><br>
   <%= form.select :product_type, options_for_select(["Цветок", "Ваза", "Игрушка", "Букет"], @product.product_type), prompt: "Выберите тип продукта" %>
@@ -85,7 +177,10 @@
   </div>
   <div>
     <%= form.label :packaging, "Упаковка" %><br>
-    <%= select_tag "product[metadata][packaging]", options_from_collection_for_select(Packaging.all, :id, :name, @product.metadata&.dig("packaging")), prompt: "Выберите упаковку" %>
+<%= select_tag "product[metadata][packaging]", 
+       options_from_collection_for_select(Packaging.all, :id, :name, @product.metadata&.dig("packaging")), 
+       prompt: "Выберите упаковку",
+       data: { price: Packaging.find_by(id: @product.metadata&.dig("packaging"))&.price } %>
   </div>
 
     <h4>Цветы в букете</h4>
@@ -93,14 +188,17 @@
       <% flowers = @product.metadata&.dig("flowers") || [] %>
       <% flowers.each_with_index do |flower, index| %>
         <div class="flower-item" data-index="<%= index %>">
-         <% @product.metadata["flowers"].each do |index, flower| %>
-  <select name="product[metadata][flowers][<%= index %>][product_id]">
-    <option value=""></option>
-    <% Product.where(product_type: "Цветок").each do |flower_option| %>
-      <option value="<%= flower_option.id %>" <%= "selected" if flower_option.id == flower["product_id"] %>><%= flower_option.name %></option>
-    <% end %>
-  </select>
-  <input type="number" name="product[metadata][flowers][<%= index %>][quantity]" min="1" value="<%= flower["quantity"] %>" />
+<% @product.metadata["flowers"].each do |index, flower| %>
+  <div class="flower-item" data-index="<%= index %>">
+    <select name="product[metadata][flowers][<%= index %>][product_id]" 
+            data-prices='<%= Product.where(product_type: 'Цветок').pluck(:id, :price).to_h.to_json %>'>
+      <option value=""></option>
+      <% Product.where(product_type: "Цветок").each do |flower_option| %>
+        <option value="<%= flower_option.id %>" <%= "selected" if flower_option.id == flower["product_id"] %>><%= flower_option.name %></option>
+      <% end %>
+    </select>
+    <input type="number" name="product[metadata][flowers][<%= index %>][quantity]" min="1" value="<%= flower["quantity"] %>" />
+  </div>
 <% end %>
 
         </div>
@@ -128,6 +226,8 @@
   </div>
 <% end %>
 </div>
+</body>
+</html>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const typeSelect = document.querySelector('select[name="product[product_type]"]');
@@ -159,11 +259,16 @@
       newFlowerDiv.classList.add("flower-item");
       newFlowerDiv.dataset.index = index;
 
-      newFlowerDiv.innerHTML = `
-        <select name="product[metadata][flowers][${index}][product_id]">${options}</select>
-        <input type="number" name="product[metadata][flowers][${index}][quantity]" min="1" value="1" />
-        <button type="button" class="remove-flower">Удалить</button>
-      `;
+newFlowerDiv.innerHTML = `
+  <select name="product[metadata][flowers][${index}][product_id]" data-prices='<%= Product.where(product_type: 'Цветок').pluck(:id, :price).to_h.to_json %>'>
+    <option value=""></option>
+    <% Product.where(product_type: "Цветок").each do |flower| %>
+      <option value="<%= flower.id %>"><%= flower.name %></option>
+    <% end %>
+  </select>
+  <input type="number" name="product[metadata][flowers][${index}][quantity]" min="1" value="1" />
+  <button type="button" class="remove-qp">Удалить</button>
+`;
 
       flowersContainer.appendChild(newFlowerDiv);
     });

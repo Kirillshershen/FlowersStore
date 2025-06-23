@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Админ-панель | Цветочная мастерская</title>
+  <title>Админ-панель</title>
     <%= stylesheet_link_tag 'admin_panel.css', "data-turbo-track": "reload" %>
 </head>
 <body>
@@ -19,12 +19,7 @@
   </div>
 
   <main>
-    <!-- Здесь будет основное содержимое страницы -->
     <%= yield %>
   </main>
-
-  <footer style="margin-top: 50px; text-align: center; color: var(--dark-green); padding: 20px 0; border-top: 1px solid var(--border-color);">
-    <p>Админ-панель Цветочной мастерской &copy; <%= Time.current.year %></p>
-  </footer>
 </body>
 </html>

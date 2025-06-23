@@ -395,71 +395,85 @@
       <% end %>
 
       <p class="product-price"><strong>Рейтинг:</strong> <%= @product.rating %></p>
+<% translations = {
+  "flower_type" => "Тип цветка",
+  "category" => "Категория",
+  "size" => "Размер",
+  "material" => "Материал",
+  "diameter" => "Диаметр",
+  "bouquet_type" => "Тип букета",
+  "packaging" => "Упаковка",
+  "flowers" => "Цветы"
+} %>
 
-      <% translations = {
-        "flower_type" => "Тип цветка",
-        "category" => "Категория",
-        "size" => "Размер",
-        "material" => "Материал",
-        "diameter" => "Диаметр",
-        "bouquet_type" => "Тип букета",
-        "packaging" => "Упаковка",
-        "flowers" => "Цветы"
-      } %>
+<% if @product.metadata.present? %>
+  <h3>Подробности:</h3>
+  <ul>
+    <% packaging_options = Packaging.all.index_by(&:id) %>
 
-      <% if @product.metadata.present? %>
-        <h3>Подробности:</h3>
-        <ul>
-          <% @product.metadata.each do |key, value| %>
-            <li>
-              <strong><%= translations[key] || key.humanize %>:</strong>
-              <% if key == "flowers" && value.is_a?(Hash) %>
-                <ul class="flower-list">
-                  <% flower_ids = value.map { |_, f| f["product_id"].to_i } %>
-                  <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
-                  <% value.each do |_, flower_info| %>
-                    <% flower = flowers[flower_info["product_id"].to_i] %>
-                    <% if flower %>
-                      <li style="font-family: monospace;">
-                        <%= link_to flower.name.ljust(50, '.'), catalog_product_path(flower) %>
-                        <%= "#{flower_info["quantity"]} шт." %>
-                      </li>
-                    <% else %>
-                      <li style="font-family: monospace;">
-                        <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(50, '.') %>
-                        <%= "#{flower_info["quantity"]} шт." %>
-                      </li>
-                    <% end %>
-                  <% end %>
-                </ul>
-              <% elsif key == "flowers" && value.is_a?(Array) %>
-                <ul class="flower-list">
-                  <% flower_ids = value.map { |f| f["product_id"].to_i } %>
-                  <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
-                  <% value.each do |flower_info| %>
-                    <% flower = flowers[flower_info["product_id"].to_i] %>
-                    <% if flower %>
-                      <li style="font-family: monospace;">
-                        <%= link_to flower.name.ljust(20, '.'), catalog_product_path(flower) %>
-                        <%= "#{flower_info["quantity"]} шт." %>
-                      </li>
-                    <% else %>
-                      <li style="font-family: monospace;">
-                        <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(20, '.') %>
-                        <%= "#{flower_info["quantity"]} шт." %>
-                      </li>
-                    <% end %>
-                  <% end %>
-                </ul>
-              <% elsif value.is_a?(Array) || value.is_a?(Hash) %>
-                <pre><%= JSON.pretty_generate(value) %></pre>
-              <% else %>
-                <%= value %>
-              <% end %>
-            </li>
+    <% @product.metadata.each do |key, value| %>
+      <li>
+        <strong><%= translations[key] || key.humanize %>:</strong>
+
+        <% if key == "packaging" && value.present? %>
+
+          <% packaging_id = value.to_i rescue nil %>
+          <% if packaging_id && packaging = packaging_options[packaging_id] %>
+            <%= packaging.name %>
+          <% else %>
+            Неизвестная упаковка (ID: <%= value %>)
           <% end %>
-        </ul>
-      <% end %>
+
+        <% elsif key == "flowers" && value.is_a?(Hash) %>
+          <ul class="flower-list">
+            <% flower_ids = value.map { |_, f| f["product_id"].to_i } %>
+            <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
+            <% value.each do |_, flower_info| %>
+              <% flower = flowers[flower_info["product_id"].to_i] %>
+              <% if flower %>
+                <li style="font-family: monospace;">
+                  <%=flower.name.ljust(50, '.') %>
+                  <%= "#{flower_info["quantity"]} шт." %>
+                </li>
+              <% else %>
+                <li style="font-family: monospace;">
+                  <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(50, '.') %>
+                  <%= "#{flower_info["quantity"]} шт." %>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+
+        <% elsif key == "flowers" && value.is_a?(Array) %>
+          <ul class="flower-list">
+            <% flower_ids = value.map { |f| f["product_id"].to_i } %>
+            <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
+            <% value.each do |flower_info| %>
+              <% flower = flowers[flower_info["product_id"].to_i] %>
+              <% if flower %>
+                <li style="font-family: monospace;">
+                  <%= link_to flower.name.ljust(20, '.'), catalog_product_path(flower) %>
+                  <%= "#{flower_info["quantity"]} шт." %>
+                </li>
+              <% else %>
+                <li style="font-family: monospace;">
+                  <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(20, '.') %>
+                  <%= "#{flower_info["quantity"]} шт." %>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+
+        <% elsif value.is_a?(Array) || value.is_a?(Hash) %>
+          <pre><%= JSON.pretty_generate(value) %></pre>
+
+        <% else %>
+          <%= value %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
 
       <%= form_with url: add_item_order_path(product_id: @product.id), method: :post, local: true do |f| %>
         <div class="quantity-selector">

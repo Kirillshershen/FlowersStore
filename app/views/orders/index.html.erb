@@ -5,7 +5,122 @@
   <title>Ваши заказы</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Вставить здесь CSS код выше */
+    :root {
+      --primary-green: #6b9e7e; 
+      --dark-green: #4a8c6d;
+      --light-green: #e0f0e8;
+      --lighter-green: #f8faf7;
+      --white: #ffffff;
+      --text-dark: #333;
+      --border-color: #d1e6d8;
+      --error-red: #dc3545;
+      --warning-yellow: #ffc107;
+      --success-green: #28a745;
+      --gray-light: #f1f1f1;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--lighter-green);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3 {
+      color: var(--dark-green);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+
+    .orders-list {
+      list-style: none;
+      padding: 0;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .order-item {
+      background-color: var(--white);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+
+    .order-item strong {
+      color: var(--dark-green);
+    }
+
+    .status-pending {
+      color: var(--warning-yellow);
+      font-weight: 600;
+    }
+
+    .status-completed {
+      color: var(--success-green);
+      font-weight: 600;
+    }
+
+    .status-cancelled {
+      color: var(--error-red);
+      font-weight: 600;
+    }
+
+    .status-new,
+    .status-in_progress {
+      color: var(--primary-green);
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: var(--primary-green);
+      color: var(--white);
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      font-size: 0.95rem;
+    }
+
+    .btn:hover {
+      background-color: var(--dark-green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(107, 158, 126, 0.3);
+    }
+
+    .btn.btn-info {
+      background-color: var(--dark-green);
+    }
+
+    .btn.btn-info:hover {
+      background-color: var(--primary-green);
+    }
+
+    .empty-orders-message {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--text-dark);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -26,7 +141,7 @@
           <%= link_to 'Подробнее о заказе', details_order_path(order), class: 'btn btn-info' %>
 
           <% unless ['отменен', 'выполнен'].include?(order.status) %>
-            <%= button_to 'Отменить заказ', cancel_order_path(order), method: :patch, data: { confirm: 'Вы уверены, что хотите отменить этот заказ?' } %>
+            <%= button_to 'Отменить заказ', cancel_order_path(order), method: :patch, data: { confirm: 'Вы уверены, что хотите отменить этот заказ?' }, class: 'btn' %>
           <% end %>
         </li>
       <% end %>

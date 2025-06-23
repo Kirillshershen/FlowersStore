@@ -183,7 +183,9 @@ input[type="submit"]:hover {
   max-width: 150px;
   border-radius: 6px;
 }
-
+.bouquet-mode #price-field {
+  display: none;
+}
 /* Адаптивность */
 @media (max-width: 768px) {
   body {

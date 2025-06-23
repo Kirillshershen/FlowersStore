@@ -1,3 +1,14 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<%= stylesheet_link_tag 'packaging_form', media: 'all' %>
+</head>
+<body>
+
+
 <h1><%= @packaging.new_record? ? "Новая упаковка" : "Редактировать упаковку" %></h1>
 
 <%= form_with model: [:admin, @packaging] do |form| %>
@@ -15,3 +26,6 @@
     <%= form.submit %>
   </div>
 <% end %>
+
+</body>
+</html>

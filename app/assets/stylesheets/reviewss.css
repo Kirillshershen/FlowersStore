@@ -1,0 +1,127 @@
+:root {
+  --primary-green: #6b9e7e;
+  --dark-green: #4a8c6d;
+  --light-green: #e0f0e8;
+  --lighter-green: #f8faf7;
+  --white: #ffffff;
+  --text-dark: #333;
+  --border-color: #d1e6d8;
+}
+
+/* Заголовок */
+.page-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: var(--dark-green);
+}
+
+/* Контейнер отзывов */
+.reviews-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Карточка отзыва */
+.review-card {
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+/* Имя пользователя и рейтинг */
+.review-header {
+  font-weight: bold;
+  color: var(--dark-green);
+}
+
+.stars {
+  color: gold;
+  font-size: 1.2rem;
+  margin-left: 10px;
+}
+
+/* Текст отзыва */
+.review-content {
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+/* Дата отзыва */
+.review-date {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #999;
+}
+
+/* Сообщение об отсутствии отзывов */
+.no-reviews {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+  margin: 40px 0;
+}
+
+/* Кнопка "Оставить отзыв" */
+.btn {
+  background-color: var(--primary-green);
+  color: var(--white);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.btn:hover {
+  background-color: var(--dark-green);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(107, 158, 126, 0.3);
+}
+
+.actions {
+  text-align: center;
+  margin-top: 30px;
+}
+
+/* Сообщения об ошибках и уведомления */
+.flash-notice,
+.flash-alert {
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+  padding: 15px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.flash-notice {
+  background-color: var(--light-green);
+  color: var(--dark-green);
+}
+
+.flash-alert {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.6rem;
+  }
+
+  .review-card {
+    padding: 15px;
+  }
+
+  .stars {
+    font-size: 1rem;
+  }
+}

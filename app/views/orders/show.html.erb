@@ -5,12 +5,13 @@
   <title>Корзина</title>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
+  
   <%= stylesheet_link_tag 'order.css', "data-turbo-track": "reload" %>
+  
   <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
 </head>
 <body>
   <h1 class="cart-title">Корзина</h1>
-
   <div style="position: sticky; top: 0; background: white; z-index: 1000; padding: 20px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     <div class="cart-page-container">
       <div class="cart-main-wrapper">
@@ -18,62 +19,63 @@
 
           <% if @product_in_orders.any? %>
             <% total_price = 0 %>
-            <% @product_in_orders.each do |item| %>
-              <% discount_percent = @discounts_by_order_item[item.id] || 0 %>
-              <% max_discount_percent = @max_possible_discounts[item.id] || 0 %>
+         <% @product_in_orders.each do |item| %>
+  <% discount_percent = @discounts_by_order_item[item.id] || 0 %>
+  <% max_discount_percent = @max_possible_discounts[item.id] || 0 %>
 
-              <% price = item.product.price %>
-              <% quantity = item.quantity %>
-              <% discounted_price = price * (1 - discount_percent / 100.0) %>
-              <% item_total = discounted_price * quantity %>
-              <% total_price += item_total %>
+  <% price = item.product.price %>
+  <% quantity = item.quantity %>
 
-              <div class="cart-item" id="order_item_<%= item.id %>">
-                <% if item.product.image.attached? %>
-                  <div class="cart-image-wrapper">
-                    <%= link_to catalog_product_path(item.product) do %>
-                      <%= image_tag item.product.image, class: "cart-product-image" %>
-                    <% end %>
-                  </div>
-                <% end %>
+  <% discounted_price = price * (1 - discount_percent / 100.0) %>
+  <% item_total = discounted_price * quantity %>
+  <% total_price += item_total %>
 
-                <div class="cart-details">
-                  <h2 class="cart-product-name"><%= item.product.name %></h2>
+  <div class="cart-item" id="order_item_<%= item.id %>">
+    <% if item.product.image.attached? %>
+      <div class="cart-image-wrapper">
+        <%= link_to catalog_product_path(item.product) do %>
+          <%= image_tag item.product.image, class: "cart-product-image" %>
+        <% end %>
+      </div>
+    <% end %>
 
-                  <p>
-                    <strong>Количество:</strong>
-                    <%= form_with url: update_quantity_order_path(product_id: item.product.id), method: :patch, remote: true, html: { class: "quantity-form", data: { item_id: item.id } } do |f| %>
-                      <%= button_tag "+", type: "button", class: "quantity-button increase", data: { item_id: item.id } %>
-                      <%= f.number_field :quantity, value: quantity, min: 1, class: "quantity-input", data: { item_id: item.id } %>
-                      <%= button_tag "-", type: "button", class: "quantity-button decrease", data: { item_id: item.id } %>
-                    <% end %>
-                  </p>
+    <div class="cart-details">
+      <h2 class="cart-product-name"><%= item.product.name %></h2>
 
-                  <% if discount_percent > 0 %>
-                    <p><strong>Цена за штуку:</strong>
-                      <span style="text-decoration: line-through; color: gray;">
-                        <%= number_to_currency(price, unit: "BYN ") %>
-                      </span>
-                      <span style="color: green;">
-                        <%= number_to_currency(discounted_price, unit: "BYN ") %> (-<%= discount_percent %>%)
-                      </span>
-                    </p>
-                    <p><strong>Итого со скидкой:</strong> <%= number_to_currency(item_total, unit: "BYN ") %></p>
-                  <% else %>
-                    <p><strong>Цена за штуку:</strong> <%= number_to_currency(price, unit: "BYN ") %></p>
-                    <p><strong>Итого:</strong> <%= number_to_currency(price * quantity, unit: "BYN ") %></p>
-                  <% end %>
+      <p>
+        <strong>Количество:</strong>
+        <%= form_with url: update_quantity_order_path(product_id: item.product.id), method: :patch, remote: true, html: { class: "quantity-form", data: { item_id: item.id } } do |f| %>
+          <%= button_tag "+", type: "button", class: "quantity-button increase", data: { item_id: item.id } %>
+          <%= f.number_field :quantity, value: quantity, min: 1, class: "quantity-input", data: { item_id: item.id } %>
+          <%= button_tag "-", type: "button", class: "quantity-button decrease", data: { item_id: item.id } %>
+        <% end %>
+      </p>
 
-                  <% if max_discount_percent > discount_percent %>
-                    <p class="max-discount-info" style="color: #888;">
-                      Возможная скидка при большем количестве: <%= max_discount_percent %>%
-                    </p>
-                  <% end %>
+      <% if discount_percent > 0 %>
+        <p><strong>Цена за штуку:</strong>
+          <span style="text-decoration: line-through; color: gray;">
+            <%= number_to_currency(price, unit: "BYN ") %>
+          </span>
+          <span style="color: green;">
+            <%= number_to_currency(discounted_price, unit: "BYN ") %> (-<%= discount_percent %>%)
+          </span>
+        </p>
+        <p><strong>Итого со скидкой:</strong> <%= number_to_currency(item_total, unit: "BYN ") %></p>
+      <% else %>
+        <p><strong>Цена за штуку:</strong> <%= number_to_currency(price, unit: "BYN ") %></p>
+        <p><strong>Итого:</strong> <%= number_to_currency(price * quantity, unit: "BYN ") %></p>
+      <% end %>
 
-                  <%= button_to 'Удалить', remove_item_order_path(product_id: item.product.id), method: :delete, data: { confirm: 'Вы уверены?' }, class: "remove-button" %>
-                </div>
-              </div>
-            <% end %>
+      <% if max_discount_percent > discount_percent %>
+        <p class="max-discount-info" style="color: #888;">
+          Возможная скидка при большем количестве: <%= max_discount_percent %>%
+        </p>
+      <% end %>
+
+      <%= button_to 'Удалить', remove_item_order_path(product_id: item.product.id), method: :delete, data: { confirm: 'Вы уверены?' }, class: "remove-button" %>
+    </div>
+  </div>
+<% end %>
 
           <% else %>
             <p class="empty-cart-message">Ваша корзина пуста</p>
@@ -84,12 +86,7 @@
         <% if @product_in_orders.any? %>
           <div class="cart-summary">
             <h3>Итоговая сумма</h3>
-            <p class="total-price" id="total-price"><%= number_to_currency(total_price, unit: "BYN ") %></p>
-
-            <!-- Блок с информацией о доставке -->
-            <div id="delivery-info" class="delivery-info" style="display: none; margin-bottom: 20px;">
-              <p id="delivery-text" style="font-size: 1rem;"></p>
-            </div>
+            <p class="total-price"><%= number_to_currency(total_price, unit: "BYN ") %></p>
 
             <%= form_with url: confirm_order_path, method: :post, scope: :order, local: true do |f| %>
               <% if @order.errors.any? %>
@@ -126,12 +123,7 @@
                 <%= f.text_area :comment, rows: 3, class: "input" %>
               </div>
 
-              <%= f.hidden_field :price, value: total_price, id: "hidden_total_price" %>
-              <%= f.hidden_field :delivery_cost, id: "hidden_delivery_cost", value: 0 %>
-
-              <div class="final-total" id="final-total" style="font-weight: bold; font-size: 1.2rem; margin-top: 10px;">
-                Итого: <%= number_to_currency(total_price, unit: "BYN ") %>
-              </div>
+              <%= f.hidden_field :price, value: total_price %>
 
               <%= f.submit 'Подтвердить заказ', class: "confirm-button" %>
             <% end %>
@@ -143,71 +135,15 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const deliveryRadio = document.getElementById('delivery');
-      const pickupRadio = document.getElementById('pickup');
-      const addressField = document.getElementById('address-field');
-      const deliveryText = document.getElementById('delivery-text');
-      const deliveryInfo = document.getElementById('delivery-info');
-
-      const totalPrice = parseFloat(<%= total_price.to_f %>);
-      const hiddenTotalPriceInput = document.getElementById('hidden_total_price');
-      const hiddenDeliveryCostInput = document.getElementById('hidden_delivery_cost');
-      const finalTotalDiv = document.getElementById('final-total');
-
-      function updateFinalPrice() {
-        let finalPrice = totalPrice;
-        let deliveryCost = 0;
-
-        if (deliveryRadio.checked && totalPrice < 40) {
-          deliveryCost = 7;
-          deliveryText.textContent = "Доставка нашим курьером — 7 BYN.";
-          deliveryInfo.style.display = 'block';
-        } else if (deliveryRadio.checked && totalPrice >= 40) {
-          deliveryCost = 0;
-          deliveryText.innerHTML = "Доставка нашим курьером — <strong>бесплатно</strong> (так как заказ от 40 BYN).";
-          deliveryInfo.style.display = 'block';
-        } else {
-          deliveryInfo.style.display = 'none';
-        }
-
-        finalPrice += deliveryCost;
-
-        // Обновляем скрытое поле цены + стоимость доставки
-        hiddenTotalPriceInput.value = finalPrice.toFixed(2);
-        hiddenDeliveryCostInput.value = deliveryCost.toFixed(2);
-
-        // Обновляем отображаемую сумму
-        finalTotalDiv.textContent = `Итого: ${finalPrice.toFixed(2)} BYN`;
-      }
-
-      function toggleAddressField() {
-        if (deliveryRadio && deliveryRadio.checked) {
-          addressField.style.display = 'block';
-        } else {
-          addressField.style.display = 'none';
-        }
-        updateFinalPrice();
-      }
-
-      if (pickupRadio && deliveryRadio) {
-        pickupRadio.addEventListener('change', () => {
-          localStorage.setItem('delivery_method', 'pickup');
-          toggleAddressField();
-        });
-        deliveryRadio.addEventListener('change', () => {
-          localStorage.setItem('delivery_method', 'delivery');
-          toggleAddressField();
-        });
-      }
-
-      toggleAddressField(); // Проверяем при загрузке
-
-      // --- Логика изменения количества ---
+      // Функция для отправки формы изменения количества
       function submitQuantityForm(itemId) {
         const form = document.querySelector(`.quantity-form[data-item-id='${itemId}']`);
-        if (form) form.requestSubmit();
+        if (form) {
+          form.requestSubmit();
+        }
       }
 
+      // Обработчики кнопок увеличения количества
       document.querySelectorAll('.quantity-button.increase').forEach(button => {
         button.addEventListener('click', () => {
           const itemId = button.dataset.itemId;
@@ -220,6 +156,7 @@
         });
       });
 
+      // Обработчики кнопок уменьшения количества
       document.querySelectorAll('.quantity-button.decrease').forEach(button => {
         button.addEventListener('click', () => {
           const itemId = button.dataset.itemId;
@@ -234,44 +171,75 @@
         });
       });
 
+      // Отправка формы при уходе с поля ввода количества
       document.querySelectorAll('.quantity-input').forEach(input => {
         input.addEventListener('blur', () => {
-          if (input.value < 1 || isNaN(input.value)) input.value = 1;
+          if (input.value < 1 || isNaN(input.value)) {
+            input.value = 1;
+          }
           submitQuantityForm(input.dataset.itemId);
         });
       });
 
-      // --- Восстановление данных из localStorage ---
+      // Переключение поля адреса доставки в зависимости от выбранного способа
+      const pickupRadio = document.getElementById('pickup');
+      const deliveryRadio = document.getElementById('delivery');
+      const addressField = document.getElementById('address-field');
       const addressInput = document.querySelector('input[name="order[delivery_address]"]');
       const readyDateInput = document.querySelector('input[name="order[ready_date]"]');
 
-      function restoreFormValues() {
-        const deliveryMethod = localStorage.getItem('delivery_method');
-        const deliveryAddress = localStorage.getItem('delivery_address');
-        const readyDate = localStorage.getItem('ready_date');
-
-        if (deliveryMethod === 'pickup' && pickupRadio) pickupRadio.checked = true;
-        else if (deliveryMethod === 'delivery' && deliveryRadio) deliveryRadio.checked = true;
-
-        if (deliveryAddress !== null && addressInput) addressInput.value = deliveryAddress;
-        if (readyDate !== null && readyDateInput) readyDateInput.value = readyDate;
-
-        toggleAddressField();
+      function toggleAddressField() {
+        if (deliveryRadio && deliveryRadio.checked) {
+          addressField.style.display = 'block';
+        } else {
+          addressField.style.display = 'none';
+        }
       }
 
-      restoreFormValues();
+      if (pickupRadio && deliveryRadio && addressField) {
+        pickupRadio.addEventListener('change', () => {
+          localStorage.setItem('delivery_method', 'pickup');
+          toggleAddressField();
+        });
+        deliveryRadio.addEventListener('change', () => {
+          localStorage.setItem('delivery_method', 'delivery');
+          toggleAddressField();
+        });
+      }
 
       if (addressInput) {
         addressInput.addEventListener('input', () => {
           localStorage.setItem('delivery_address', addressInput.value);
         });
       }
-
       if (readyDateInput) {
         readyDateInput.addEventListener('input', () => {
           localStorage.setItem('ready_date', readyDateInput.value);
         });
       }
+
+      // Восстановление значений из localStorage при загрузке страницы
+      function restoreFormValues() {
+        const deliveryMethod = localStorage.getItem('delivery_method');
+        const deliveryAddress = localStorage.getItem('delivery_address');
+        const readyDate = localStorage.getItem('ready_date');
+
+        if (deliveryMethod === 'pickup' && pickupRadio) {
+          pickupRadio.checked = true;
+        } else if (deliveryMethod === 'delivery' && deliveryRadio) {
+          deliveryRadio.checked = true;
+        }
+        toggleAddressField();
+
+        if (deliveryAddress !== null && addressInput) {
+          addressInput.value = deliveryAddress;
+        }
+        if (readyDate !== null && readyDateInput) {
+          readyDateInput.value = readyDate;
+        }
+      }
+
+      restoreFormValues();
     });
   </script>
 </body>

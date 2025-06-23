@@ -74,7 +74,7 @@ patch '/orders/update_quantity', to: 'orders#update_quantity', as: :update_quant
       end
     end
   end
-    
+    resources :reviews, only: [:index, :new, :create]
 resources :notifications, only: [:index] do
   member do
     patch :mark_as_read

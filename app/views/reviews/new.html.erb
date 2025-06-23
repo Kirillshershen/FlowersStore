@@ -1,0 +1,31 @@
+<h1 class="page-title">Оставить отзыв</h1>
+
+<div class="review-form-container">
+  <%= form_with model: @review, url: reviews_path, local: true do |form| %>
+    <% if @review.errors.any? %>
+      <div class="errors">
+        <h2><%= pluralize(@review.errors.count, "ошибка") %> запрещают сохранить отзыв:</h2>
+        <ul>
+          <% @review.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= form.label :rating, "Ваша оценка (1–5)" %>
+      <%= form.number_field :rating, min: 1, max: 5, class: "form-input" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :content, "Ваш отзыв" %>
+      <%= form.text_area :content, rows: 5, class: "form-input" %>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Отправить отзыв", class: "btn" %>
+    </div>
+  <% end %>
+</div>
+<%= stylesheet_link_tag 'reviews', media: 'all' %>

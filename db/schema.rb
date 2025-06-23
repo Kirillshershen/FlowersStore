@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_17_222922) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_23_131032) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -123,18 +123,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_222922) do
 
   create_table "quantity_promotions", force: :cascade do |t|
     t.integer "promotion_id", null: false
-    t.integer "min_quantity", null: false
-    t.decimal "discount_value", null: false
+    t.integer "min_quantity"
+    t.decimal "discount_value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["promotion_id"], name: "index_quantity_promotions_on_promotion_id"
   end
 
   create_table "reviews", force: :cascade do |t|
-    t.integer "rating"
-    t.text "comment"
+    t.integer "user_id", null: false
+    t.text "content"
+    t.integer "rating", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -165,4 +167,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_222922) do
   add_foreign_key "product_promotions", "products"
   add_foreign_key "product_promotions", "promotions"
   add_foreign_key "quantity_promotions", "promotions"
+  add_foreign_key "reviews", "users"
 end

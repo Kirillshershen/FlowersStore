@@ -2,10 +2,10 @@
 
 one:
   user: one
+  content: MyText
   rating: 1
-  comment: MyText
 
 two:
   user: two
+  content: MyText
   rating: 1
-  comment: MyText

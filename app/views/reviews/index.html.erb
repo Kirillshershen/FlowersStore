@@ -1,0 +1,43 @@
+<h1 class="page-title">Отзывы о магазине</h1>
+
+<% if flash[:notice] %>
+  <div class="flash-notice"><%= flash[:notice] %></div>
+<% end %>
+
+<% if flash[:alert] %>
+  <div class="flash-alert"><%= flash[:alert] %></div>
+<% end %>
+
+<div class="reviews-container">
+  <% if @reviews.any? %>
+    <% @reviews.each do |review| %>
+      <div class="review-card">
+        <div class="review-header">
+          <%= review.user.first_name.presence || "Покупатель" %> — 
+          <span class="stars">
+            <% (1..5).each do |i| %>
+              <%= i <= review.rating ? "★" : "☆" %>
+            <% end %>
+          </span>
+        </div>
+        <p class="review-content"><%= review.content %></p>
+        <small class="review-date"><%= review.created_at.strftime("%d.%m.%Y") %></small>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="no-reviews">Нет отзывов. Станьте первым!</p>
+  <% end %>
+</div>
+
+<% if current_user && current_user.can_review? %>
+  <% if current_user.reviews.where("created_at >= ?", Time.current.beginning_of_day).exists? %>
+    <p>Вы уже оставили отзыв сегодня. Следующий можно будет завтра.</p>
+  <% else %>
+    <div class="actions">
+      <%= link_to "Оставить отзыв", new_review_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+<% else %>
+  <p>Вы можете оставить отзыв только после выполнения заказа.</p>
+<% end %>
+<%= stylesheet_link_tag 'reviewss', media: 'all' %>

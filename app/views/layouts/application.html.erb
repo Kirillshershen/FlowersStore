@@ -30,6 +30,7 @@
           <% if current_user&.admin? %>
             <%= link_to "Админ панель", admin_products_path, class: "admin-link" %>
           <% end %>
+          <%= link_to 'Отзывы', reviews_path %>
           <%= link_to 'Главная', root_path %>
           <%= link_to 'О нас', about_path %>
           <%= link_to 'Доставка и оплата', delivery_path %>

@@ -242,7 +242,13 @@ input[type="radio"] {
   margin-right: 8px;
   accent-color: var(--primary-green);
 }
-
+.delivery-info {
+  background-color: var(--light-green);
+  border-left: 4px solid var(--primary-green);
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
 /* Адаптивность */
 @media (max-width: 768px) {
   .cart-main-wrapper {

@@ -42,6 +42,10 @@
     const productTypeSelect = document.querySelector("select[name='product[product_type]']");
     const priceField = document.getElementById("product_price");
     const flowersContainer = document.getElementById("flowers");
+    const packagingSelect = document.querySelector("select[name='product[metadata][packaging]']");
+if (packagingSelect) {
+  packagingSelect.addEventListener("change", calculateBouquetPrice);
+}
 
 function togglePriceField() {
   const isBouquet = productTypeSelect.value === "Букет";
@@ -63,7 +67,7 @@ function togglePriceField() {
 function calculateBouquetPrice() {
   let total = 0;
 
-  // Собираем все цветы из формы
+  // Считаем цену цветов
   document.querySelectorAll("#flowers .flower-item").forEach(item => {
     const select = item.querySelector("select");
     const input = item.querySelector("input[type='number']");
@@ -76,14 +80,14 @@ function calculateBouquetPrice() {
     }
   });
 
-  // Добавляем цену упаковки
+  // Получаем цену упаковки
   const packagingSelect = document.querySelector("select[name='product[metadata][packaging]']");
   if (packagingSelect) {
     const packagingPrice = parseFloat(packagingSelect.options[packagingSelect.selectedIndex]?.dataset.price || 0);
     total += packagingPrice;
   }
 
-  // Обновляем поле "price"
+  // Обновляем скрытое поле цены продукта
   priceField.value = total.toFixed(2);
 
   // Обновляем отображаемое значение цены букета
@@ -117,24 +121,13 @@ function calculateBouquetPrice() {
   <%= form.label :product_type, "Тип продукта" %><br>
   <%= form.select :product_type, options_for_select(["Цветок", "Ваза", "Игрушка", "Букет"], @product.product_type), prompt: "Выберите тип продукта" %>
 </div>
-
-
-
-
-
-
   <hr>
-
   <!-- Flower -->
   <div class="metadata-block" data-type="Цветок" style="display: none; margin-bottom: 20px;">
     <h3>Данные для Цветка</h3>
     <div>
       <%= form.label :flower_type, "Тип цветка" %><br>
       <%= text_field_tag "product[metadata][flower_type]", @product.metadata&.dig("flower_type") || "" %>
-    </div>
-    <div>
-      <%= form.label :discount, "Скидка (%)" %><br>
-      <%= number_field_tag "product[metadata][discount]", @product.metadata&.dig("discount") || 0, min: 0, max: 100 %>
     </div>
   </div>
 
@@ -177,10 +170,12 @@ function calculateBouquetPrice() {
   </div>
   <div>
     <%= form.label :packaging, "Упаковка" %><br>
-<%= select_tag "product[metadata][packaging]", 
-       options_from_collection_for_select(Packaging.all, :id, :name, @product.metadata&.dig("packaging")), 
-       prompt: "Выберите упаковку",
-       data: { price: Packaging.find_by(id: @product.metadata&.dig("packaging"))&.price } %>
+<select name="product[metadata][packaging]" id="product_metadata_packaging">
+  <option value="">Выберите упаковку</option>
+  <% Packaging.all.each do |package| %>
+    <option value="<%= package.id %>" data-price="<%= package.price %>"><%= package.name %></option>
+  <% end %>
+</select>
   </div>
 
     <h4>Цветы в букете</h4>

@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
   get "notifications/index"
   get "notifications/mark_as_read"
-  namespace :admin do
-    get "statistics/sales"
-  end
+namespace :admin do
+  resources :users, only: [:index, :edit, :update]
+    get 'statistics/sales'
+  resources :statistics, only: [:index]
+end
   # Маршруты для кастомных букетов
   get "custom_bouquets/new"
   get "custom_bouquets/create"

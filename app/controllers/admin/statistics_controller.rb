@@ -1,56 +1,63 @@
 class Admin::StatisticsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :require_admin
 
+  def sales
+    @completed_orders = Order.where(status: 'выполнен').includes(product_in_orders: :product)
 
-def sales
-  @completed_orders = Order.includes(product_in_orders: :product).where(status: 'завершен')
+    # Общая выручка
+    @total_revenue = @completed_orders.sum(&:price)
 
-  @sales_data = @completed_orders.map do |order|
-    {
-      order: order,
-      items: order.product_in_orders.map do |item|
-        {
-          quantity: item.quantity,
-          snapshot: item.metadata || {}
-        }
-      end
-    }
-  end
+    # Подсчёт цветов
+    flower_sales = Hash.new(0)
+    @completed_orders.each do |order|
+      order.product_in_orders.each do |item|
+        product = item.product
+        next unless product&.product_type == "Букет"
 
-  @total_revenue = @completed_orders.sum(&:price)
+        flowers_data = item.metadata.dig("metadata", "flowers") || {}
+        flowers_data.values.each do |flower_info|
+          flower_id = flower_info["product_id"].to_i
+          quantity = flower_info["quantity"].to_i
+          next if flower_id.zero? || quantity.zero?
 
-  flower_sales = Hash.new(0)
-
-  @completed_orders.each do |order|
-    order.product_in_orders.each do |item|
-      product = item.product
-      next unless product.product_type == "Букет"
-
-      # Здесь берем цветы из item.metadata['metadata']['flowers']
-      flowers = item.metadata.dig("metadata", "flowers") || {}
-      next if flowers.blank?
-
-      flowers.each do |_, flower_data|
-        flower_id = flower_data["product_id"].to_i
-        qty = flower_data["quantity"].to_i
-        flower_sales[flower_id] += qty * item.quantity
+          flower_sales[flower_id] += quantity * item.quantity
+        end
       end
     end
+
+    top_flower_ids = flower_sales.keys
+    @top_flowers = Product.where(id: top_flower_ids).index_by(&:id)
+    @top_flowers_list = flower_sales.map do |flower_id, total_quantity|
+      {
+        name: @top_flowers[flower_id]&.name || "Неизвестный цветок (ID: #{flower_id})",
+        quantity_sold: total_quantity
+      }
+    end.sort_by { |f| -f[:quantity_sold] }
+
+    # Топ букетов
+    bouquet_sales = Hash.new(0)
+    @completed_orders.each do |order|
+      order.product_in_orders.each do |item|
+        product = item.product
+        next unless product&.product_type == "Букет"
+        bouquet_sales[product.id] += item.quantity
+      end
+    end
+
+    @top_bouquets = Product.where(id: bouquet_sales.keys).index_by(&:id)
+    @top_bouquets_list = bouquet_sales.map do |bouquet_id, total_quantity|
+      {
+        name: @top_bouquets[bouquet_id]&.name || "Неизвестный букет (ID: #{bouquet_id})",
+        quantity_sold: total_quantity,
+        price: @top_bouquets[bouquet_id]&.price || 0
+      }
+    end.sort_by { |b| -b[:quantity_sold] }
   end
-
-  @top_flowers = Product.where(id: flower_sales.keys).map do |flower|
-    {
-      flower: flower,
-      quantity_sold: flower_sales[flower.id] || 0
-    }
-  end.sort_by { |h| -h[:quantity_sold] }
-end
-
 
   private
 
-  def check_admin!
-    unless current_user&.admin?
-      redirect_to root_path, alert: 'Access denied.'
-    end
+  def require_admin
+    redirect_to root_path, alert: "Доступ запрещён" unless current_user&.admin?
   end
 end

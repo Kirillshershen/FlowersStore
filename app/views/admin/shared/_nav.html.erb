@@ -14,6 +14,8 @@
       <%= link_to "Упаковки", admin_packagings_path %>
       <%= link_to "Баннеры", admin_banners_path %>
       <%= link_to "Акции", admin_promotions_path %>
+        <%= link_to 'Статистика продаж', admin_statistics_sales_path %>
+        <%= link_to 'Пользователи', admin_users_path %>
       <%= link_to "Вернуться на сайт", root_path %>
     </nav>
   </div>
@@ -23,3 +25,47 @@
   </main>
 </body>
 </html>
+<script>
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.user-table thead th {
+  background-color: #6b9e7e;
+  color: white;
+  padding: 12px;
+  text-align: left;
+}
+
+.user-table tbody tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+.user-table td,
+.user-table th {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.btn {
+  background-color: #6b9e7e;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #5a8c6d;
+}</script>

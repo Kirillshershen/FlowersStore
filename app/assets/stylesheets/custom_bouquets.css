@@ -283,3 +283,35 @@ h2.section-title {
     grid-template-columns: 1fr;
   }
 }
+  .available-flowers-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+    list-style: none;
+    gap: 20px;
+  }
+
+  .flower-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 180px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #fafafa;
+  }
+
+  .flower-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 6px;
+  }
+
+  .btn-add-flower {
+    margin-top: 10px;
+  }

@@ -29,9 +29,10 @@
       <input type="hidden" name="bouquet[flowers]" id="bouquet_flowers_json" />
 
 <%= form.label :packaging, "Упаковка", class: "form-label" %>
-<%= form.select :packaging, Packaging.all.pluck(:name, :id), { prompt: "Выберите упаковку" }, class: "form-input" %>
-
-
+<%= form.select :packaging, 
+      Packaging.all.map { |p| ["#{p.name} (#{number_to_currency(p.price, unit: 'Br', separator: ',')})", p.id, { "data-price": p.price }] }, 
+      { prompt: "Выберите упаковку" }, 
+      class: "form-input", id: "packaging-select" %>
       <%= form.submit "Создать букет", class: "btn create-bouquet-btn" %>
     </div>
   <% end %>
@@ -42,8 +43,8 @@
 
 <input type="text" id="flower-search" placeholder="Поиск цветов по названию..." class="search-input" autocomplete="off" />
 
+
 <ul id="available-flowers" class="available-flowers-list">
-  <ul id="available-flowers" class="available-flowers-list">
   <% Product.where(product_type: "Цветок").each do |flower| %>
     <li class="flower-item" data-id="<%= flower.id %>" data-name="<%= flower.name.downcase %>">
       <% if flower.image.attached? %>
@@ -54,11 +55,9 @@
       <div class="flower-info">
         <strong class="flower-name"><%= flower.name %></strong>
         <div class="flower-price">
-        
-            <span class="price">
-              <%= number_to_currency(flower.price, unit: "Br", separator: ",") %>
-            </span>
-
+          <span class="price">
+            <%= number_to_currency(flower.price, unit: "Br", separator: ",") %>
+          </span>
         </div>
       </div>
       <button type="button" class="btn btn-add-flower">Добавить</button>
@@ -66,7 +65,8 @@
   <% end %>
 </ul>
 
-</ul>
+
+
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -74,7 +74,8 @@
     const hiddenInput = document.getElementById('bouquet_flowers_json');
     const totalPriceEl = document.getElementById('total-price');
     const flowerSearchInput = document.getElementById('flower-search');
-
+    const packagingSelect = document.getElementById('packaging-select');
+    let packagingPrice = 0;
     let flowers = {}; // { id: quantity }
 
     function formatPrice(num) {
@@ -157,7 +158,9 @@
         selectedList.appendChild(li);
       }
 
-      totalPriceEl.textContent = 'Общая цена букета: ' + formatPrice(totalPrice);
+const finalPrice = totalPrice + packagingPrice;
+totalPriceEl.textContent = 'Общая цена букета: ' + formatPrice(finalPrice);
+
 
       updateHiddenInput();
     }
@@ -196,6 +199,11 @@
         const flowerName = item.dataset.name;
         item.style.display = flowerName.includes(searchTerm) ? '' : 'none';
       });
+    });
+        packagingSelect?.addEventListener('change', () => {
+      const selectedOption = packagingSelect.options[packagingSelect.selectedIndex];
+      packagingPrice = parseFloat(selectedOption.dataset.price) || 0;
+      renderSelectedFlowers(); // пересчёт
     });
   });
 </script>

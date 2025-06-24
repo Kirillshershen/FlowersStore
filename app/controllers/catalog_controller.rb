@@ -68,7 +68,9 @@ def index
       quantity_promos: quantity_promos
     }
   end
-
+ if params.dig(:q, :discounted_eq) == 'true'
+    @products = @products.joins(:promotions).where(promotions: { active: true }).distinct
+  end
   # Сортировка
   case params[:sort]
   when 'newest' then @products = @products.order(created_at: :desc)
@@ -111,7 +113,7 @@ def show
       end
     end
 
-    # Цена со скидкой
+
     if @best_fixed_discount > 0
       @discounted_price = @product.price - @best_fixed_discount
       @discount_percent = (@best_fixed_discount / @product.price * 100).round(2)

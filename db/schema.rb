@@ -149,8 +149,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_24_002908) do
     t.boolean "admin", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "telegram_chat_id"
-    t.string "telegram_link_token"
     t.string "first_name"
     t.string "last_name"
     t.string "phone"

@@ -1,53 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Заказ №<%= @order.id %></title>
+  <%= stylesheet_link_tag 'details.css', "data-turbo-track": "reload" %>
+</head>
+<body>
+
 <h1>Заказ №<%= @order.id %></h1>
 
-<p><strong>Пользователь:</strong> <%= @order.user.email %></p>
-<p><strong>Цена:</strong> <%= number_to_currency(@order.price, unit: "Br") %></p>
-<p><strong>Метод оплаты:</strong> <%= @order.payment_method %></p>
-<p><strong>Метод доставки:</strong> <%= @order.delivery_method %></p>
-<p><strong>Адрес доставки:</strong> <%= @order.delivery_address %></p>
-<p><strong>Дата готовности:</strong> <%= @order.ready_date&.strftime("%d.%m.%Y %H:%M") %></p>
+<div class="order-details">
+  <p><strong>Пользователь:</strong> <%= @order.user.email %></p>
+  <p><strong>Цена:</strong> <%= number_to_currency(@order.price, unit: "Br") %></p>
+  <p><strong>Метод доставки:</strong> <%= @order.delivery_method || "Не указан" %></p>
+  <p><strong>Адрес доставки:</strong> <%= @order.delivery_address || "Не указан" %></p>
+  <p><strong>Дата готовности:</strong> <%= @order.ready_date&.strftime("%d.%m.%Y %H:%M") %></p>
+  <p><strong>Статус:</strong> 
+    <span class="status status-<%= @order.status %>">
+      <%= @order.status.capitalize %>
+    </span>
+  </p>
+  <p><strong>Комментарий:</strong> <%= @order.comment.presence || "Нет" %></p>
 
-<p><strong>Статус:</strong> <%= @order.status.capitalize %></p>
+  <!-- Форма изменения статуса -->
+  <%= form_with url: update_status_admin_order_path(@order), method: :patch, local: true do |f| %>
+    <div class="form-group">
+      <%= label_tag :status, "Изменить статус:" %>
+      <%= select_tag :status, options_for_select(Admin::OrdersController::STATUS_OPTIONS.map { |s| [s.capitalize, s] }, @order.status), include_blank: "Выберите статус", class: "form-select" %>
+      <%= f.submit "Обновить статус", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
 
-<%= form_with url: update_status_admin_order_path(@order), method: :patch, local: true do |f| %>
-  <div>
-    <%= label_tag :status, "Изменить статус заказа:" %>
-    <%= select_tag :status, options_for_select(Admin::OrdersController::STATUS_OPTIONS.map { |s| [s.capitalize, s] }, @order.status), include_blank: "Выберите статус" %>
-    <%= f.submit "Обновить", class: "btn btn-primary" %>
+<hr />
+
+<!-- Товары в заказе -->
+<h2>Товары в заказе</h2>
+
+<ul class="order-products-list">
+  <% @order.product_in_orders.each do |item| %>
+    <% metadata = item.metadata %>
+    <% price = metadata["price"].to_f %>
+    <% quantity = item.quantity %>
+    <% item_total = price * quantity %>
+
+    <li class="product-card">
+      <!-- Название и ссылка -->
+      <h3 class="product-name">
+        <%= link_to metadata["name"], catalog_product_path(Product.find_by(name: metadata["name"])) %>
+      </h3>
+
+      <!-- Изображение -->
+      <% if metadata["image_url"].present? %>
+        <div class="product-image-wrapper">
+          <%= image_tag metadata["image_url"], class: "product-image" %>
+        </div>
+      <% else %>
+        <div class="product-image-placeholder">Нет изображения</div>
+      <% end %>
+
+      <!-- Цена и количество -->
+      <div class="product-info">
+        <p><strong>Цена за штуку:</strong> <%= number_to_currency(price, unit: "BYN ") %></p>
+        <p><strong>Количество:</strong> <%= quantity %> шт.</p>
+        <p><strong>Итого:</strong> <%= number_to_currency(item_total, unit: "BYN ") %></p>
+
+        <!-- Состав букета -->
+       <!-- Состав букета -->
+   <!-- Состав букета -->
+<% inner_metadata = metadata["metadata"] || {} %>
+
+<% if inner_metadata["flowers"].present? && inner_metadata["flowers"].is_a?(Hash) %>
+  <div class="bouquet-composition">
+    <strong>Состав букета:</strong>
+    <ul class="composition-list">
+      <% 
+        # Извлекаем только значения, чтобы пропустить индексы '0', '1', '2'
+        flowers_data = inner_metadata["flowers"].values.select { |f| f.is_a?(Hash) && f["product_id"].present? } 
+      %>
+
+      <% flower_ids = flowers_data.map { |f| f["product_id"].to_i } %>
+      <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
+
+      <% flowers_data.each do |flower_info| %>
+        <% flower = flowers[flower_info["product_id"].to_i] %>
+        <% if flower %>
+          <li>
+            <%= flower.name %> — <%= flower_info["quantity"] %> шт.
+          </li>
+        <% else %>
+          <li style="color: #888;">
+            Неизвестный цветок (ID: <%= flower_info["product_id"] %>) — <%= flower_info["quantity"] %> шт.
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
   </div>
 <% end %>
-
-<p><strong>Комментарий:</strong> <%= @order.comment.presence || "Нет" %></p>
-
-<hr>
-
-<h2>Товары в заказе:</h2>
-<ul>
-  <% @order.product_in_orders.includes(:product).each do |item| %>
-    <% product = item.product %>
-    <li>
-      <strong>
-        <%= link_to product.name, catalog_product_path(product) %>
-      </strong>
-      (<%= product.product_type %>) —
-      <%= number_to_currency(product.price, unit: "Br") %> × <%= item.quantity %> шт.
-
-      <% if product.product_type == "Букет" && product.metadata["flowers"].present? %>
-        <br>
-        <em>Состав букета:</em>
-        <ul>
-          <% product.metadata["flowers"].each do |_index, flower_info| %>
-            <% flower = Product.find_by(id: flower_info["product_id"]) %>
-            <% if flower %>
-              <li>
-                <%= link_to flower.name, catalog_product_path(flower) %> — <%= flower_info["quantity"] %> шт.
-              </li>
-            <% else %>
-              <li>Неизвестный цветок (ID: <%= flower_info["product_id"] %>)</li>
-            <% end %>
-          <% end %>
-        </ul>
+  <!-- Упаковка -->
+  <% if inner_metadata["packaging"].present? %>
+    <% packaging_id = inner_metadata["packaging"].to_i rescue nil %>
+    <% packaging = Packaging.find_by(id: packaging_id) %>
+    <div class="bouquet-packaging">
+      <strong>Упаковка:</strong>
+      <% if packaging %>
+        <%= packaging.name %>
+      <% else %>
+        Неизвестная упаковка (ID: <%= inner_metadata["packaging"] %>)
       <% end %>
-    </li>
+    </div>
   <% end %>
+<% end %>
 </ul>
+
+<!-- Блок информации о способах доставки -->
+
+
+</body>
+</html>

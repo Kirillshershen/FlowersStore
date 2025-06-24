@@ -21,127 +21,136 @@
 
     <div class="product-info">
       <h1><%= @product.name %></h1>
-<% if @product.description.present? %>
-  <div class="product-description">
-    <%= simple_format(@product.description) %>
-  </div>
-<% end %>
+
+      <% if @product.description.present? %>
+        <div class="product-description">
+          <%= simple_format(@product.description) %>
+        </div>
+      <% end %>
+
+      <!-- Вывод цены со скидкой -->
       <div class="product-price">
         <strong>Цена за штуку:</strong>
-        <span class="price">
-          <%= number_to_currency(@product.price, unit: "Br", separator: ",") %>
-        </span>
+        <% price = @product.price %>
+        <% if @best_fixed_discount > 0 || @best_percent_discount > 0 %>
+          <span style="text-decoration: line-through; color: gray;">
+            <%= number_to_currency(price, unit: "Br", separator: ",") %>
+          </span><br />
+          <span style="color: green; font-weight: bold;">
+            <%= number_to_currency(@discounted_price, unit: "Br", separator: ",") %> 
+            (-<%= @discount_percent.round(2) %> Br)
+          </span>
+        <% else %>
+          <span><%= number_to_currency(price, unit: "Br", separator: ",") %></span>
+        <% end %>
       </div>
 
-    <% if @promotions.any? %>
-  <div class="all-discounts">
-    <h4>Доступные акции:</h4>
-    <ul>
-      <% @promotions.each do |promo| %>
-        <li>
-          <% case promo.discount_type %>
-          <% when 'fixed' %>
-            Скидка <%= number_to_currency(promo.discount_value, unit: "Br") %> за штуку
-
-          <% when 'percent' %>
-            Скидка <%= promo.discount_value.to_f.round(2) %>% от суммы
-
-          <% when 'quantity' %>
-            <% promo.quantity_promotions.each do |qp| %>
-              <p style="margin: 0;">
-                При покупке от <%= qp.min_quantity %> шт. — <%= qp.discount_value.to_f.round(2) %>% скидка
-              </p>
-            <% end %>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-
-      <% if @discount_info %>
-        <p style="color: var(--primary-green); font-weight: bold;"><%= @discount_info[:display_text] %></p>
-      <% end %>
-<% translations = {
-  "flower_type" => "Тип цветка",
-  "category" => "Категория",
-  "size" => "Размер",
-  "material" => "Материал",
-  "diameter" => "Диаметр",
-  "bouquet_type" => "Тип букета",
-  "packaging" => "Упаковка",
-  "flowers" => "Цветы"
-} %>
-
-<% if @product.metadata.present? %>
-  <h3>Подробности:</h3>
-  <ul>
-    <% packaging_options = Packaging.all.index_by(&:id) %>
-
-    <% @product.metadata.each do |key, value| %>
-      <li>
-        <strong><%= translations[key] || key.humanize %>:</strong>
-
-        <% if key == "packaging" && value.present? %>
-
-          <% packaging_id = value.to_i rescue nil %>
-          <% if packaging_id && packaging = packaging_options[packaging_id] %>
-            <%= packaging.name %>
-          <% else %>
-            Неизвестная упаковка (ID: <%= value %>)
-          <% end %>
-
-        <% elsif key == "flowers" && value.is_a?(Hash) %>
-          <ul class="flower-list">
-            <% flower_ids = value.map { |_, f| f["product_id"].to_i } %>
-            <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
-            <% value.each do |_, flower_info| %>
-              <% flower = flowers[flower_info["product_id"].to_i] %>
-              <% if flower %>
-                <li style="font-family: monospace;">
-                  <%=flower.name.ljust(50, '.') %>
-                  <%= "#{flower_info["quantity"]} шт." %>
-                </li>
-              <% else %>
-                <li style="font-family: monospace;">
-                  <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(50, '.') %>
-                  <%= "#{flower_info["quantity"]} шт." %>
-                </li>
-              <% end %>
+      <!-- Акции -->
+      <% if @promotions.any? %>
+        <div class="all-discounts">
+          <h4>Доступные акции:</h4>
+          <ul>
+            <% @promotions.each do |promo| %>
+              <li>
+                <% case promo.discount_type %>
+                  <% when 'fixed' %>
+                    Скидка <%= number_to_currency(promo.discount_value, unit: "Br") %> за штуку
+                  <% when 'percent' %>
+                    Скидка <%= promo.discount_value.to_f.round(2) %>% от суммы
+                  <% when 'quantity' %>
+                    <% promo.quantity_promotions.each do |qp| %>
+                      <p style="margin: 0;">
+                        При покупке от <%= qp.min_quantity %> шт. — <%= qp.discount_value.to_f.round(2) %>% скидка
+                      </p>
+                    <% end %>
+                  <% end %>
+              </li>
             <% end %>
           </ul>
+        </div>
+      <% end %>
 
-        <% elsif key == "flowers" && value.is_a?(Array) %>
-          <ul class="flower-list">
-            <% flower_ids = value.map { |f| f["product_id"].to_i } %>
-            <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
-            <% value.each do |flower_info| %>
-              <% flower = flowers[flower_info["product_id"].to_i] %>
-              <% if flower %>
-                <li style="font-family: monospace;">
-                  <%= link_to flower.name.ljust(20, '.'), catalog_product_path(flower) %>
-                  <%= "#{flower_info["quantity"]} шт." %>
-                </li>
+      <% translations = {
+        "flower_type" => "Тип цветка",
+        "category" => "Категория",
+        "size" => "Размер",
+        "material" => "Материал",
+        "diameter" => "Диаметр",
+        "bouquet_type" => "Тип букета",
+        "packaging" => "Упаковка",
+        "flowers" => "Состав букета"
+      } %>
+
+      <% if @product.metadata.present? %>
+        <h3>Подробности:</h3>
+        <ul>
+          <% packaging_options = Packaging.all.index_by(&:id) %>
+
+          <% @product.metadata.each do |key, value| %>
+            <% next if key == 'custom' %>
+
+            <li>
+              <strong><%= translations[key] || key.humanize %>:</strong>
+
+              <% if key == "packaging" && value.present? %>
+                <% packaging_id = value.to_i rescue nil %>
+                <% if packaging_id && packaging = packaging_options[packaging_id] %>
+                  <%= packaging.name %>
+                <% else %>
+                  Неизвестная упаковка (ID: <%= value %>)
+                <% end %>
+
+              <% elsif key == "flowers" && value.is_a?(Hash) %>
+                <ul class="flower-list">
+                  <% flower_ids = value.map { |_, f| f["product_id"].to_i } %>
+                  <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
+                  <% value.each do |_, flower_info| %>
+                    <% flower = flowers[flower_info["product_id"].to_i] %>
+                    <% if flower %>
+                      <li style="font-family: monospace;">
+                        <%= flower.name.ljust(50, '.') %>
+                        <%= "#{flower_info["quantity"]} шт." %> 
+                      </li>
+                    <% else %>
+                      <li style="font-family: monospace;">
+                        <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(50, '.') %>
+                        <%= "#{flower_info["quantity"]} шт." %>
+                      </li>
+                    <% end %>
+                  <% end %>
+                </ul>
+
+              <% elsif key == "flowers" && value.is_a?(Array) %>
+                <ul class="flower-list">
+                  <% flower_ids = value.map { |f| f["product_id"].to_i } %>
+                  <% flowers = Product.where(id: flower_ids).index_by(&:id) %>
+                  <% value.each do |flower_info| %>
+                    <% flower = flowers[flower_info["product_id"].to_i] %>
+                    <% if flower %>
+                      <li style="font-family: monospace;">
+                        <%= link_to flower.name.ljust(20, '.'), catalog_product_path(flower) %>
+                        <%= "#{flower_info["quantity"]} шт." %>
+                      </li>
+                    <% else %>
+                      <li style="font-family: monospace;">
+                        <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(20, '.') %>
+                        <%= "#{flower_info["quantity"]} шт." %>
+                      </li>
+                    <% end %>
+                  <% end %>
+                </ul>
+
+              <% elsif value.is_a?(Array) || value.is_a?(Hash) %>
+                <pre><%= JSON.pretty_generate(value) %></pre>
               <% else %>
-                <li style="font-family: monospace;">
-                  <%= "Неизвестный цветок (ID: #{flower_info["product_id"]})".ljust(20, '.') %>
-                  <%= "#{flower_info["quantity"]} шт." %>
-                </li>
+                <%= value %>
               <% end %>
-            <% end %>
-          </ul>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
 
-        <% elsif value.is_a?(Array) || value.is_a?(Hash) %>
-          <pre><%= JSON.pretty_generate(value) %></pre>
-
-        <% else %>
-          <%= value %>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
-
+      <!-- Форма добавления в заказ -->
       <%= form_with url: add_item_order_path(product_id: @product.id), method: :post, local: true do |f| %>
         <div class="quantity-selector">
           <button type="button" class="qty-btn" id="decrement">–</button>
@@ -160,7 +169,6 @@
       </div>
     </div>
   </div>
-  
 </main>
 
 <% if @similar_products.any? %>
@@ -190,9 +198,10 @@
   </section>
 <% end %>
 
+<!-- JS для динамического расчёта цены -->
 <script>
   const productPrice = <%= @product.price.to_f %>;
-  const promotions = <%= raw @quantity_discounts.to_json %>;
+  const promotions = <%= raw @quantity_promotions_for_js.to_json %>;
 
   document.addEventListener("DOMContentLoaded", () => {
     const incrementBtn = document.getElementById("increment");
@@ -224,12 +233,12 @@
       totalPriceElem.textContent = price.toFixed(2) + " Br";
     }
 
-    incrementBtn.addEventListener("click", () => {
+    incrementBtn?.addEventListener("click", () => {
       quantityInput.value = parseInt(quantityInput.value) + 1;
       updateTotal();
     });
 
-    decrementBtn.addEventListener("click", () => {
+    decrementBtn?.addEventListener("click", () => {
       let currentQty = parseInt(quantityInput.value);
       if (currentQty > 1) {
         quantityInput.value = currentQty - 1;
@@ -237,10 +246,7 @@
       }
     });
 
-    quantityInput.addEventListener("input", () => {
-      let val = parseInt(quantityInput.value);
-      if (isNaN(val) || val < 1) val = 1;
-      quantityInput.value = val;
+    quantityInput?.addEventListener("input", () => {
       updateTotal();
     });
 

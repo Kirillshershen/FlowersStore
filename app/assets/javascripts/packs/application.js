@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Inputmask("+375 (99) 999-99-99", {
       placeholder: "+375 (__) ___-__-__",
       showMaskOnHover: false,
+      autoUnmask: true,
       clearMaskOnLostFocus: false
     }).mask(phoneInput);
   }

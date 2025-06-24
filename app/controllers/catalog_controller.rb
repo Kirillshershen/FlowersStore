@@ -89,42 +89,52 @@ def index
                     .compact.map(&:strip).sort_by(&:downcase)
 end
 def show
-  @product = Product.find(params[:id])
+    @product = Product.find(params[:id])
 
-  # Получаем активные акции (через SQL, чтобы сохранить includes)
-  @promotions = @product.promotions.where(active: true).includes(:quantity_promotions)
+    # Получаем активные промоакции
+    @promotions = @product.promotions.where(active: true).includes(:quantity_promotions)
 
-  # Подготавливаем данные для JS
-  @quantity_promotions_for_js = @promotions.flat_map do |promo|
-    promo.quantity_promotions.map do |qp|
-      {
-        min_quantity: qp.min_quantity,
-        discount_value: qp.discount_value.to_f,
-        promotion_id: qp.promotion_id
-      }
+    # Лучшая фиксированная скидка
+    @best_fixed_discount = @promotions.select { |p| p.discount_type == 'fixed' }.map(&:discount_value).max&.to_f || 0.0
+
+    # Лучшая процентная скидка
+    @best_percent_discount = @promotions.select { |p| p.discount_type == 'percent' }.map(&:discount_value).max&.to_f || 0.0
+
+    # Все quantity_promotions для JS
+    @quantity_promotions_for_js = []
+    @promotions.each do |promo|
+      promo.quantity_promotions.each do |qp|
+        @quantity_promotions_for_js << {
+          min_quantity: qp.min_quantity,
+          discount_value: qp.discount_value.to_f
+        }
+      end
     end
+
+    # Цена со скидкой
+    if @best_fixed_discount > 0
+      @discounted_price = @product.price - @best_fixed_discount
+      @discount_percent = (@best_fixed_discount / @product.price * 100).round(2)
+    elsif @best_percent_discount > 0
+      @discounted_price = @product.price * (1 - @best_percent_discount / 100.0)
+      @discount_percent = @best_percent_discount
+    else
+      @discounted_price = @product.price
+      @discount_percent = 0.0
+    end
+
+    # Похожие товары
+    @similar_products = Product
+                         .where.not(id: @product.id)
+                         .where(product_type: @product.product_type)
+
+    if @product.product_type == 'Букет' && @product.metadata["bouquet_type"].present?
+      @similar_products = @similar_products
+                          .where("metadata->>'bouquet_type' = ?", @product.metadata["bouquet_type"])
+    end
+
+    @similar_products = @similar_products.limit(10)
   end
-
-  @quantity_discounts = @promotions.flat_map(&:quantity_promotions) || []
-
-  @bouquet_types = Product
-                    .where(product_type: 'Букет')
-                    .pluck(Arel.sql("DISTINCT metadata->>'bouquet_type'"))
-                    .compact.map(&:strip).sort_by(&:downcase)
-
-  @quantity = params[:quantity].to_i > 0 ? params[:quantity].to_i : 1
-
-  # Похожие товары
-  @similar_products = Product
-                       .where.not(id: @product.id)
-                       .where(product_type: @product.product_type)
-
-  if @product.product_type == 'Букет' && @product.metadata["bouquet_type"].present?
-    @similar_products = @similar_products.where("metadata->>'bouquet_type' = ?", @product.metadata["bouquet_type"])
-  end
-
-  @similar_products = @similar_products.limit(10)
-end
   private
 
   def product_params

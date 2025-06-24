@@ -7,6 +7,50 @@ class Product < ApplicationRecord
 
   has_many :product_promotions
   has_many :promotions, through: :product_promotions
+after_save :update_related_bouquets_price, if: :saved_change_to_price?
+
+def update_related_bouquets_price
+  # Пробегаем по всем продуктам, у которых есть metadata
+  Product.all.each do |product|
+    next unless product.metadata.is_a?(Hash)
+
+    flowers_data = product.metadata["flowers"]
+    packaging_id = product.metadata["packaging"]&.to_s
+
+    # Собираем все product_id цветов из metadata["flowers"]
+    flower_ids = flowers_data&.values&.map { |f| f["product_id"].to_s } || []
+
+    # Если текущий продукт (self) используется как цветок или упаковка — обновляем букет
+    if flower_ids.include?(id.to_s) || packaging_id == id.to_s
+      product.recalculate_price!
+    end
+  end
+end
+
+
+# в модели Product
+def recalculate_price!
+  return unless self_is_bouquet?
+
+  flower_total = metadata["flowers"].values.sum do |flower_info|
+    flower = Product.find_by(id: flower_info["product_id"])
+    next 0 unless flower
+    flower.price * flower_info["quantity"].to_i
+  end
+
+  packaging_price = 0
+  if metadata["packaging"]
+    packaging = Product.find_by(id: metadata["packaging"])
+    packaging_price = packaging&.price.to_f
+  end
+
+  update(price: flower_total + packaging_price)
+end
+
+def self_is_bouquet?
+  # реализуй свой способ — например, по типу или метаданным
+  metadata["flowers"].present?
+end
 
     def current_promotion_info
     active_promo = promotions

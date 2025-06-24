@@ -1,81 +1,101 @@
-<h1 class="stats-title">📊 Статистика продаж</h1>
     <%= stylesheet_link_tag 'statistics.css', "data-turbo-track": "reload" %>
-<div class="stats-summary">
-  <div class="stat-card revenue">
-    <h3>Общая выручка</h3>
-    <p><%= number_to_currency(@total_revenue, unit: "BYN ") %></p>
+    <!-- График для цветов -->
+<% if @top_flowers.any? %>
+  <div class="stat-card">
+    <h3>Топ продаваемых цветов</h3>
+    <canvas id="flowersChart" width="600" height="400"></canvas>
   </div>
-
-  <% if @top_flowers.any? %>
-    <div class="stat-card top-flower">
-      <h3>Топ продаваемых цветов</h3>
-      <canvas id="flowersChart" width="600" height="400"></canvas>
-    </div>
-  <% else %>
-    <p>Нет данных о продажах.</p>
-  <% end %>
-</div>
-
-<hr />
-
-<!-- Список завершённых заказов -->
-<% if @completed_orders.any? %>
-  <h2>Завершённые заказы</h2>
-  <ul class="order-list">
-    <% @completed_orders.each do |order| %>
-      <li class="order-item">
-        Заказ №<%= order.id %> от <%= order.created_at.strftime("%d.%m.%Y") %>
-        — <%= number_to_currency(order.price, unit: "BYN ") %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>Нет завершённых заказов</p>
 <% end %>
 
-<!-- JS: График -->
+<!-- График для букетов -->
+<% if @top_bouquets_list.any? %>
+  <div class="stat-card">
+    <h3>Топ продаваемых букетов</h3>
+    <canvas id="bouquetChart" width="600" height="400"></canvas>
+  </div>
+<% end %>
+
+<!-- JS: Графики -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const ctx = document.getElementById('flowersChart').getContext('2d');
 
-    const flowerNames = <%= raw @top_flowers.map { |f| f[:name] }.to_json %>;
-    const quantities = <%= raw @top_flowers.map { |f| f[:quantity_sold] }.to_json %>;
+    // Цветы
+    const ctxFlowers = document.getElementById('flowersChart')?.getContext('2d');
+    if (ctxFlowers) {
+      const flowerNames = <%= raw @top_flowers.map { |f| f[:name] }.to_json %>;
+      const quantities = <%= raw @top_flowers.map { |f| f[:quantity_sold] }.to_json %>;
 
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: flowerNames,
-        datasets: [{
-          label: 'Количество проданных шт.',
-          data: quantities,
-          backgroundColor: 'rgba(75, 192, 192, 0.6)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1,
-          hoverBackgroundColor: 'rgba(75, 192, 192, 0.8)'
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return `${context.parsed.y} шт.`;
-              }
-            }
-          }
+      new Chart(ctxFlowers, {
+        type: 'bar',
+        data: {
+          labels: flowerNames,
+          datasets: [{
+            label: 'Продано шт.',
+            data: quantities,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 1
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.parsed.y} шт.`;
+                }
+              }
+            },
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { stepSize: 1 }
             }
           }
         }
-      }
-    });
+      });
+    }
+
+    // Букеты
+    const ctxBouquets = document.getElementById('bouquetChart')?.getContext('2d');
+    if (ctxBouquets) {
+      const bouquetNames = <%= raw @top_bouquets_list.map { |b| b[:name] }.to_json %>;
+      const bouquetQuantities = <%= raw @top_bouquets_list.map { |b| b[:quantity_sold] }.to_json %>;
+
+      new Chart(ctxBouquets, {
+        type: 'bar',
+        data: {
+          labels: bouquetNames,
+          datasets: [{
+            label: 'Продано букетов',
+            data: bouquetQuantities,
+            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.parsed.y} шт.`;
+                }
+              }
+            },
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { stepSize: 1 }
+            }
+          }
+        }
+      });
+    }
   });
 </script>

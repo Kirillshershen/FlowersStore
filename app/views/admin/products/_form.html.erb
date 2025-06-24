@@ -35,8 +35,9 @@
 </div>
 <div id="price-field" class="form-group">
   <%= form.label :price, "Цена" %><br>
-  <%= form.number_field :price, step: 0.01, readonly: false, id: "product_price" %>
+  <%= form.number_field :price, step: 0.01, readonly: @product.product_type == "Букет", id: "product_price" %>
 </div>
+
 <div id="bouquet-total-price" class="bouquet-total-price" style="display: none;">
   <strong>Текущая цена букета:</strong> <span>0.00 Br</span>
 </div>
@@ -44,80 +45,120 @@
   document.addEventListener("DOMContentLoaded", () => {
     const productTypeSelect = document.querySelector("select[name='product[product_type]']");
     const priceField = document.getElementById("product_price");
-    const flowersContainer = document.getElementById("flowers");
-    const packagingSelect = document.querySelector("select[name='product[metadata][packaging]']");
-if (packagingSelect) {
-  packagingSelect.addEventListener("change", calculateBouquetPrice);
-}
+    const bouquetPriceDisplay = document.getElementById("bouquet-total-price");
 
-function togglePriceField() {
-  const isBouquet = productTypeSelect.value === "Букет";
-  
-  // Скрываем/показываем поле цены
-  const priceGroup = priceField.closest(".form-group");
-  priceGroup.style.display = isBouquet ? "none" : "block";
-  priceField.readOnly = isBouquet;
-
-  // Показываем/скрываем текущую цену букета
-  const bouquetPriceDisplay = document.getElementById("bouquet-total-price");
-  if (bouquetPriceDisplay) {
-    bouquetPriceDisplay.style.display = isBouquet ? "block" : "none";
-  }
-
-  if (isBouquet) calculateBouquetPrice();
-}
-
-function calculateBouquetPrice() {
-  let total = 0;
-
-  // Считаем цену цветов
-  document.querySelectorAll("#flowers .flower-item").forEach(item => {
-    const select = item.querySelector("select");
-    const input = item.querySelector("input[type='number']");
-    const productId = select?.value;
-    const quantity = parseFloat(input?.value) || 0;
-
-    if (productId && quantity > 0 && select.dataset.prices) {
-      const prices = JSON.parse(select.dataset.prices);
-      total += (prices[productId] || 0) * quantity;
-    }
-  });
-
-  // Получаем цену упаковки
-  const packagingSelect = document.querySelector("select[name='product[metadata][packaging]']");
-  if (packagingSelect) {
-    const packagingPrice = parseFloat(packagingSelect.options[packagingSelect.selectedIndex]?.dataset.price || 0);
-    total += packagingPrice;
-  }
-
-  // Обновляем скрытое поле цены продукта
-  priceField.value = total.toFixed(2);
-
-  // Обновляем отображаемое значение цены букета
-  const totalPriceDisplay = document.getElementById("bouquet-total-price")?.querySelector("span");
-  if (totalPriceDisplay) {
-    totalPriceDisplay.textContent = `${total.toFixed(2)} Br`;
-  }
-}
-
-    // Подставляем цены как data-атрибуты для JS
-    <% Product.where(product_type: "Цветок").each do |flower| %>
+    // Подставляем цены цветов в data-prices
+    <% Product.where(product_type: 'Цветок').each do |flower| %>
       document.querySelectorAll("select[name$='[product_id]']").forEach(select => {
-        select.dataset.prices = select.dataset.prices ? JSON.parse(select.dataset.prices) : {};
-        select.dataset.prices["<%= flower.id %>"] = <%= flower.price %>;
+        if (!select.dataset.prices) {
+          select.dataset.prices = '{}';
+        }
+        const prices = JSON.parse(select.dataset.prices);
+        prices["<%= flower.id %>"] = <%= flower.price %>;
+        select.dataset.prices = JSON.stringify(prices);
       });
     <% end %>
 
-    // Отслеживаем изменения
-    productTypeSelect.addEventListener("change", togglePriceField);
+    function togglePriceField() {
+      const isBouquet = productTypeSelect.value === "Букет";
 
-    // При добавлении/удалении цветка пересчитываем цену
-    flowersContainer?.addEventListener("change", calculateBouquetPrice);
-    flowersContainer?.addEventListener("input", calculateBouquetPrice);
-    document.addEventListener("change", calculateBouquetPrice);
-    document.addEventListener("input", calculateBouquetPrice);
+      // Скрываем/показываем отображаемую цену букета
+      if (bouquetPriceDisplay) {
+        bouquetPriceDisplay.style.display = isBouquet ? "block" : "none";
+      }
 
+      // Для букета: цена рассчитывается автоматически
+      if (isBouquet) {
+        priceField.readOnly = true;
+        calculateBouquetPrice();
+      } else {
+        priceField.readOnly = false;
+      }
+    }
+
+    function calculateBouquetPrice() {
+      let total = 0;
+
+      // Цветы в букете
+      document.querySelectorAll("#flowers .flower-item").forEach(item => {
+        const select = item.querySelector("select");
+        const input = item.querySelector("input[type='number']");
+        const flowerId = select?.value;
+        const quantity = parseFloat(input?.value) || 0;
+
+        if (flowerId && quantity > 0 && select.dataset.prices) {
+          const prices = JSON.parse(select.dataset.prices);
+          total += (prices[flowerId] || 0) * quantity;
+        }
+      });
+
+      // Упаковка
+      const packagingSelect = document.querySelector("select[name='product[metadata][packaging]']");
+      if (packagingSelect) {
+        const selectedOption = packagingSelect.options[packagingSelect.selectedIndex];
+        const packagingPrice = parseFloat(selectedOption?.dataset.price || 0);
+        total += packagingPrice;
+      }
+
+      // Обновляем отображаемую цену букета
+      priceField.value = total.toFixed(2);
+      const displaySpan = bouquetPriceDisplay?.querySelector("span");
+      if (displaySpan) displaySpan.textContent = `${total.toFixed(2)} Br`;
+    }
+
+    // Отслеживаем изменения типа продукта
+    productTypeSelect.addEventListener("change", () => {
+      togglePriceField();
+    });
+
+    // Логика добавления новых цветов
+    const flowersContainer = document.getElementById("flowers");
+    const addFlowerBtn = document.getElementById("add-flower");
+
+    addFlowerBtn?.addEventListener("click", () => {
+      const index = flowersContainer.children.length;
+      const newFlowerDiv = document.createElement("div");
+      newFlowerDiv.classList.add("flower-item");
+      newFlowerDiv.dataset.index = index;
+
+      let options = `<option value=""></option>`;
+      <% Product.where(product_type: "Цветок").each do |flower| %>
+        options += `<option value="<%= flower.id %>"><%= flower.name %></option>`;
+      <% end %>
+
+      newFlowerDiv.innerHTML = `
+        <select name="product[metadata][flowers][${index}][product_id]" 
+                data-prices='<%= Product.where(product_type: 'Цветок').pluck(:id, :price).to_h.to_json %>'>
+          ${options}
+        </select>
+        <input type="number" name="product[metadata][flowers][${index}][quantity]" min="1" value="1" />
+        <button type="button" class="remove-flower">Удалить</button>
+      `;
+      flowersContainer.appendChild(newFlowerDiv);
+
+      newFlowerDiv.querySelector("select").addEventListener("change", calculateBouquetPrice);
+      newFlowerDiv.querySelector("input").addEventListener("input", calculateBouquetPrice);
+    });
+
+    // Удаление цветка
+    flowersContainer?.addEventListener("click", (e) => {
+      if (e.target.classList.contains("remove-flower")) {
+        e.target.closest(".flower-item").remove();
+        calculateBouquetPrice();
+      }
+    });
+
+    // При загрузке страницы проверяем тип
     togglePriceField();
+
+    // Если уже есть цветы — подключаем к расчёту
+    document.querySelectorAll("#flowers .flower-item").forEach(item => {
+      item.querySelector("select")?.addEventListener("change", calculateBouquetPrice);
+      item.querySelector("input")?.addEventListener("input", calculateBouquetPrice);
+    });
+
+    // При изменении упаковки — пересчёт цены
+    document.querySelector("select[name='product[metadata][packaging]']")?.addEventListener("change", calculateBouquetPrice);
   });
 </script>
 <div>

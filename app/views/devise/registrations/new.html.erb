@@ -1,10 +1,11 @@
+<
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Регистрация</title>
-
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
   <style>
     :root {
       --primary-green: #6b9e7e;
@@ -144,6 +145,11 @@
       }
     }
   </style>
+  <!-- Стили -->
+  <link rel="stylesheet" href="/assets/css/auth_form.css">
+
+  <!-- Inputmask -->
+  <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.8/dist/inputmask.min.js"></script> 
 </head>
 <body>
 
@@ -163,10 +169,11 @@
       <%= f.text_field :last_name, autocomplete: "family-name" %>
     </div>
 
-    <div class="field">
-      <%= f.label :phone, "Ваш телефон" %><br />
-      <%= f.telephone_field :phone, autocomplete: "tel", id: "user_phone" %>
-    </div>
+<div class="field">
+  <%= f.label :phone, "Ваш телефон" %><br />
+  <%= f.telephone_field :phone, autocomplete: "tel", id: "user_phone", required: true %>
+  <em>Обязательное поле</em>
+</div>
 
     <div class="field">
       <%= f.label :email, "Электронная почта" %><br />
@@ -194,5 +201,20 @@
   <%= render "devise/shared/links" %>
 </div>
 
+<!-- JS: Маска для телефона -->
+<script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.8/dist/inputmask.min.js"></script> 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const phoneInput = document.getElementById("user_phone");
+    if (phoneInput) {
+      new Inputmask("+375 (99) 999-99-99", {
+        placeholder: "+375 (__) ___-__-__",
+        showMaskOnHover: false,
+        autoUnmask: true,
+        clearMaskOnLostFocus: true
+      }).mask(phoneInput);
+    }
+  });
+</script>
 </body>
 </html>

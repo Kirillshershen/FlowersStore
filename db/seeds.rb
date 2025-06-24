@@ -94,7 +94,6 @@ flower_data.each_with_index do |(name, price, type), index|
     product_type: "Цветок",  
     metadata: {
       flower_type: type,
-      discount: 0,  
     }
   )
 

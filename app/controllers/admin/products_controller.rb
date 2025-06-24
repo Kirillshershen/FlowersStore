@@ -78,7 +78,7 @@ end
   def product_params
     # Разрешаем вложенную структуру metadata с массивом цветов
     params.require(:product).permit(
-      :name, :price, :product_type, :image,
+      :name, :price, :product_type, :image, :description,
       metadata: [
         :bouquet_type,
         :packaging,

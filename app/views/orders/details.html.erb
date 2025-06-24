@@ -38,15 +38,7 @@
       <p><strong>Количество:</strong> <%= item.quantity %></p>
       <p><strong>Цена за единицу:</strong> <%= number_to_currency(md["price"].to_f, unit: "BYN ", separator: ",", delimiter: " ") %></p>
 
-      <% if inner_md.present? %>
-        <p><strong>Дополнительные параметры:</strong></p>
-        <ul>
-          <% inner_md.each do |key, value| %>
-            <% next if key == "flowers" %>
-            <li><strong><%= key.tr('_', ' ').capitalize %>:</strong> <%= value %></li>
-          <% end %>
-        </ul>
-      <% end %>
+     
 
       <% if inner_md["flowers"].present? %>
         <p><strong>Состав букета:</strong></p>

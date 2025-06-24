@@ -45,29 +45,61 @@
   </div>
 <% end %>
 
-     <ul class="catalog-list">
+<ul class="catalog-list">
   <% if @products.any? %>
     <% @products.each do |product| %>
-      <li class="catalog-item">
-        <% if product.image.attached? %>
-          <%= link_to image_tag(product.image, class: "product-image"), catalog_product_path(product) %>
+      <% product_id = product.id %>
+<% discounts = @discounts_by_product[product_id] || {} %>
+<% base_price = product.price %>
+<% final_price = discounts[:final_price] || base_price %>
+<% quantity_promos = discounts[:quantity_promos] || [] %>
+<li class="catalog-item">
+<div class="product-image-wrapper">
+<% if product.image.attached? %>
+  <%= link_to image_tag(product.image, class: "product-image"), catalog_product_path(product) %>
+<% end %>
+</div>
+
+
+  <div class="product-name">
+    <%= link_to product.name, catalog_product_path(product) %>
+  </div>
+
+  <div class="product-price-container">
+    <span class="base-price">
+      <% if discounts[:fixed] > 0 || discounts[:percent] > 0 %>
+        <s style="color: gray;"><%= number_to_currency(base_price, unit: "Br", separator: ",") %></s>
+      <% else %>
+        <%= number_to_currency(base_price, unit: "Br", separator: ",") %>
+      <% end %>
+    </span>
+
+    <% if discounts[:fixed] > 0 || discounts[:percent] > 0 %>
+      <span class="discounted-price" style="color: green; font-weight: bold;">
+        <%= number_to_currency(final_price, unit: "Br", separator: ",") %> 
+        (-<%= (discounts[:fixed] + base_price * discounts[:percent]/100.0).round(2) %> Br)
+      </span>
+    <% end %>
+
+    <!-- Скидки по количеству — в ряд -->
+    <% if quantity_promos.present? %>
+      <div class="quantity-discounts-inline">
+        <% quantity_promos.sort_by { |d| d[:min_quantity] }.each do |discount| %>
+          <span class="inline-discount">
+          от <%= discount[:min_quantity] %> шт./<%= discount[:discount_value] %>%  
+          </span>
         <% end %>
+      </div>
+    <% end %>
 
-        <div class="product-name">
-          <%= link_to product.name, catalog_product_path(product) %>
-        </div>
+  </div>
 
-        <div class="product-price">
-            <span class="price"><%= number_to_currency(product.price, unit: "Br", separator: ",") %></span>
-
-        </div>
-
-<%= link_to 'Купить', catalog_product_path(product), class: 'add-to-order-btn' %>
-
+  <%= link_to 'Купить', catalog_product_path(product), class: 'add-to-order-btn' %>
+</li>
       </li>
     <% end %>
   <% else %>
-    <p class="no-results">По вашему запросу ничего не найдено.</p>
+    <p class="no-results">Ничего не найдено.</p>
   <% end %>
 </ul>
 

@@ -33,7 +33,11 @@ class Product < ApplicationRecord
   def discounted?
     current_promotion_info.present?
   end
-
+def best_quantity_discount(current_quantity = 1)
+  promotions.flat_map(&:quantity_promotions)
+            .select { |qp| qp.min_quantity <= current_quantity }
+            .max_by(&:discount_value)
+end
 
 
 

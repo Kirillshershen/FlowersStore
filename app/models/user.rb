@@ -11,7 +11,6 @@ class User < ApplicationRecord
   def admin?
     admin
   end
-
 # app/models/user.rb
 def can_review?
   orders.exists?(status: 'завершен')
@@ -20,8 +19,11 @@ def can_leave_review?
   can_review? && !reviews.where("created_at >= ?", Time.current.beginning_of_day).exists?
 end
 
-validates :phone, format: { with: /\A\+375 \(\d{2}\) \d{3}-\d{2}-\d{2}\z/, message: "введите номер в формате +375 (XX) XXX-XX-XX" }
+before_validation :sanitize_phone
 
+def sanitize_phone
+  self.phone = phone.gsub(/[^\d]/, '') if phone.present?
+end
   private
 
   # Приватные методы (если есть) размещаются здесь

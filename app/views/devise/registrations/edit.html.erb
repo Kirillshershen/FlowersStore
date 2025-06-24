@@ -1,3 +1,4 @@
+<div class="auth-container">
 <h2>Редактирование <%= resource_name.to_s.humanize %></h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
@@ -15,7 +16,7 @@
 
   <div class="field">
     <%= f.label :phone, "Ваш телефон" %><br />
-    <%= f.telephone_field :phone, autocomplete: "tel" %>
+    <%= f.telephone_field :phone, autocomplete: "tel", id: "phone-input" %>
   </div>
 
   <div class="field">
@@ -24,7 +25,9 @@
   </div>
 
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Ожидает подтверждения: <%= resource.unconfirmed_email %></div>
+    <div class="reconfirmation-message">
+      Ожидает подтверждения: <%= resource.unconfirmed_email %>
+    </div>
   <% end %>
 
   <div class="field">
@@ -42,7 +45,7 @@
   </div>
 
   <div class="field">
-    <%= f.label :current_password, "Текущий пароль" %> <i>(нужно для подтверждения изменений)</i><br />
+    <%= f.label :current_password, "Текущий пароль" %> <i>(нужен для подтверждения изменений)</i><br />
     <%= f.password_field :current_password, autocomplete: "current-password" %>
   </div>
 
@@ -51,11 +54,30 @@
   </div>
 <% end %>
 
-<h3>Удалить аккаунт</h3>
 
-<div>Не хотите продолжать? <%= button_to "Удалить аккаунт", registration_path(resource_name), data: { confirm: "Вы уверены?", turbo_confirm: "Вы уверены?" }, method: :delete %></div>
+
 
 <%= link_to "Назад", :back %>
-
-
+  </div>
+ <%= stylesheet_link_tag 'auth_form', "data-turbo-track": "reload" %>
+<!-- Стили -->
 <link rel="stylesheet" href="/assets/css/auth_form.css">
+
+<!-- Inputmask библиотека -->
+<script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.8/dist/inputmask.min.js"></script>    
+
+<!-- JS маски для телефона -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const phoneInput = document.getElementById("phone-input");
+    if (phoneInput) {
+      // Простая маска: +375 (__) ___-__-__
+      new Inputmask("+375 (99) 999-99-99", {
+        placeholder: "+375 (__) ___-__-__",
+        showMaskOnHover: false,
+        autoUnmask: true,
+        removeMaskOnSubmit: true
+      }).mask(phoneInput);
+    }
+  });
+</script>

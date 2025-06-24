@@ -12,23 +12,48 @@ def show
     product = item.product
     quantity = item.quantity
 
-    promotions = product.promotions.includes(:quantity_promotions)
-
     best_discount_percent = 0
     max_possible_discount = 0
 
+    # Все активные промоакции
+    promotions = product.promotions.select(&:active?)
+
     promotions.each do |promo|
-      promo.quantity_promotions.each do |qp|
-        discount_percent = qp.discount_value.to_f
-        max_possible_discount = [max_possible_discount, discount_percent].max
-        if quantity >= qp.min_quantity
-          best_discount_percent = [best_discount_percent, discount_percent].max
+      case promo.discount_type
+      when "fixed"
+        fixed_discount = promo.discount_value.to_f
+        # Фиксированная скидка — конвертируем в процентную для отображения
+        percent_fixed = (fixed_discount / product.price) * 100.0
+        max_possible_discount = [max_possible_discount, percent_fixed].max
+
+        if quantity >= 1
+          best_discount_percent = [best_discount_percent, percent_fixed].max
+        end
+
+      when "percent"
+        percent_discount = promo.discount_value.to_f
+        max_possible_discount = [max_possible_discount, percent_discount].max
+
+        if quantity >= 1
+          best_discount_percent = [best_discount_percent, percent_discount].max
+        end
+
+      when "quantity"
+        promo.quantity_promotions.each do |qp|
+          next unless qp.min_quantity.present? && qp.discount_value.present?
+
+          discount_percent = qp.discount_value.to_f
+          max_possible_discount = [max_possible_discount, discount_percent].max
+
+          if quantity >= qp.min_quantity
+            best_discount_percent = [best_discount_percent, discount_percent].max
+          end
         end
       end
     end
 
-    @discounts_by_order_item[item.id] = best_discount_percent
-    @max_possible_discounts[item.id] = max_possible_discount
+    @discounts_by_order_item[item.id] = best_discount_percent.round(2)
+    @max_possible_discounts[item.id] = max_possible_discount.round(2)
   end
 end
 

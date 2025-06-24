@@ -1,4 +1,5 @@
 class CustomBouquetsController < ApplicationController
+    before_action :authenticate_user!
   def new
     # Загрузка цветов и прочего для формы
     @flowers = Product.where(product_type: "Цветок")

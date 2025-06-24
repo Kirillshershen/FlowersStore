@@ -136,21 +136,15 @@ User.create!(
   password: "111111",
   password_confirmation: "111111",
   admin: true,
-  first_name: "Алексей",       # или "Alexey" для англоязычного варианта
-  last_name: "Петров",         # или "Petrov"
-  phone: "+375 (29) 234-24-35"  # международный формат
+  first_name: "Алексей",     
+  last_name: "Петров",        
+  phone: "+375 (29) 234-24-35"  
 )
 require 'open-uri'
 
 Banner.destroy_all
 
 banners = [
-  {
-    title: "Весеннее настроение",
-    subtitle: "Свежие тюльпаны и ромашки со скидкой 20%",
-    link: "/products?season=spring",
-    image_file: "spring_banner.jpg"
-  },
   {
     title: "Свадебные букеты",
     subtitle: "Идеальный букет на ваш важный день",
@@ -160,7 +154,7 @@ banners = [
   {
     title: "Скидка на игрушки",
     subtitle: "Добавь милую игрушку к букету",
-    link: "/products?type=Toy",
+    link: "/catalog/index?q[product_type_eq]=Игрушка",
     image_file: "promo_discount.jpg"
   }
 ]
@@ -244,7 +238,7 @@ wedding = "Свадебный"
 mono = "Моно букет"
 cascade = "Каскадный"
 hand_tied = "Букет в руках"
-
+rose = "Из роз"
 pack = "Крафт"
 
 # === 10 Ваз ===
@@ -325,7 +319,7 @@ all_flower_ids = Product.where(product_type: "Цветок").pluck(:id)  #
 # Создание букетов
 10.times do |i|
   name = bouquet_names.delete_at(rand(bouquet_names.length))
-  bouquet_type = [round, gift, wedding, mono, cascade, hand_tied].sample
+  bouquet_type = [round, gift, wedding ,hand_tied,rose].sample
 
   flower_ids = all_flower_ids.sample(3)
   flower_quantities = flower_ids.map { rand(3..7) }

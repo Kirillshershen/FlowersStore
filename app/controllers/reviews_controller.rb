@@ -1,5 +1,4 @@
 class ReviewsController < ApplicationController
-  before_action :authenticate_user!
   before_action :ensure_can_review, only: [:new, :create]
 
   def index

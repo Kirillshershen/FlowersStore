@@ -1,6 +1,16 @@
 <h1 class="page-title">Отзывы о магазине</h1>
 
-
+<% if current_user && current_user.can_review? %>
+  <% if current_user.reviews.where("created_at >= ?", Time.current.beginning_of_day).exists? %>
+    <p>Вы уже оставили отзыв сегодня. Следующий можно будет завтра.</p>
+  <% else %>
+    <div class="actions">
+      <%= link_to "Оставить отзыв", new_review_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+<% else %>
+  <p>Вы можете оставить отзыв только после выполнения заказа.</p>
+<% end %>
 <div class="reviews-container">
   <% if @reviews.any? %>
     <% @reviews.each do |review| %>
@@ -22,15 +32,5 @@
   <% end %>
 </div>
 
-<% if current_user && current_user.can_review? %>
-  <% if current_user.reviews.where("created_at >= ?", Time.current.beginning_of_day).exists? %>
-    <p>Вы уже оставили отзыв сегодня. Следующий можно будет завтра.</p>
-  <% else %>
-    <div class="actions">
-      <%= link_to "Оставить отзыв", new_review_path, class: "btn btn-primary" %>
-    </div>
-  <% end %>
-<% else %>
-  <p>Вы можете оставить отзыв только после выполнения заказа.</p>
-<% end %>
+
 <%= stylesheet_link_tag 'reviewss', media: 'all' %>

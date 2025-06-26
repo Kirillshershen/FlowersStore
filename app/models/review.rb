@@ -1,5 +1,5 @@
 class Review < ApplicationRecord
-    before_validation :sanitize_phone
+
   belongs_to :user
 
   validates :content, presence: true, length: { minimum: 10 }
@@ -15,8 +15,5 @@ class Review < ApplicationRecord
     end
   end
 
-def sanitize_phone
-  return if phone.blank?
-  self.phone = phone.gsub(/[^\d]/, '')
-end
+
 end

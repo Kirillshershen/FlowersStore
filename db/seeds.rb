@@ -363,19 +363,11 @@ end
 Promotion.destroy_all
 ProductPromotion.destroy_all
 
-promo1 = Promotion.create!(
-  name: "Весеннее предложение",
-  discount_type: "fixed", # или 'percent' если так принято в коде
-  discount_value: 10,
-  starts_at: Time.current - 1.day,
-  ends_at: Time.current + 14.days,
-  active: true
-)
 
 promo2 = Promotion.create!(
   name: "Скидка на вазы",
   discount_type: "fixed",
-  discount_value: 5.00,
+  discount_value: 2,
   starts_at: Time.current,
   ends_at: Time.current + 10.days,
   active: true
@@ -384,7 +376,7 @@ promo2 = Promotion.create!(
 promo3 = Promotion.create!(
   name: "Счастливые игрушки",
   discount_type: "fixed",
-  discount_value: 15,
+  discount_value: 1,
   starts_at: Time.current,
   ends_at: Time.current + 7.days,
   active: true
@@ -393,24 +385,58 @@ promo3 = Promotion.create!(
 promo4 = Promotion.create!(
   name: "Цветочная нежность",
   discount_type: "fixed",
-  discount_value: 12,
+  discount_value: 3,
   starts_at: Time.current,
   ends_at: Time.current + 10.days,
   active: true
 )
 
-Product.where(product_type: "Цветок").sample(5).each do |product|
+
+
+Product.where(product_type: "Букет").sample(3).each do |product|
   ProductPromotion.create!(product: product, promotion: promo4)
 end
 
-Product.where(product_type: "Букет").sample(5).each do |product|
-  ProductPromotion.create!(product: product, promotion: promo1)
-end
-
-Product.where(product_type: "Ваза").sample(5).each do |product|
+Product.where(product_type: "Ваза").sample(2).each do |product|
   ProductPromotion.create!(product: product, promotion: promo2)
 end
 
-Product.where(product_type: "Игрушка").sample(5).each do |product|
+Product.where(product_type: "Игрушка").sample(3).each do |product|
   ProductPromotion.create!(product: product, promotion: promo3)
 end
+
+# Комнатные растения
+product = Product.create!(
+  name: "Фикус Бенджамина 'Кинки'",
+  product_type: "Растение",
+  metadata: {
+    plant_type: "Комнатные",
+    height: "40-50 см",
+  },
+  price: 35.00,
+  description: "Компактный фикус с пестрыми листьями..."
+)
+  image_path = Rails.root.join("app/assets/images/plant_garden/8.jpg")
+  product.image.attach(
+    io: File.open(image_path),
+    filename: "8.jpg",
+    content_type: "image/jpeg"
+  )
+# Дачные растения
+product =  Product.create!(
+  name: "Гортензия метельчатая 'Ванилла Фрейз'",
+  product_type: "Растение",
+  metadata: {
+    plant_type: "Дачные",
+
+
+  },
+  price: 55.00,
+  description: "Красивоцветущий кустарник..."
+)
+  image_path = Rails.root.join("app/assets/images/plant_garden/3.jpg")
+  product.image.attach(
+    io: File.open(image_path),
+    filename: "3.jpg",
+    content_type: "image/jpeg"
+  )

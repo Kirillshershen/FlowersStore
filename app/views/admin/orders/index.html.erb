@@ -2,36 +2,64 @@
 
 <h1>Мои заказы</h1>
 
+<!-- Форма фильтрации -->
+<div class="filters">
 <%= form_with url: admin_orders_path, method: :get, local: true do |f| %>
   <div>
-    <%= f.label :status, "Фильтр по статусу:" %>
-    <%= f.select :status, options_for_select(["готов", "подтвержден", "завершен"].map { |s| [s.capitalize, s] }, @status_filter), include_blank: "Все статусы" %>
-    <%= f.submit "Применить" %>
+    <%= f.label :status, "Фильтр по статусу:" %><br />
+    <%= f.select :status, options_for_select(Order::STATUS_OPTIONS.map { |s| [s.capitalize, s] }, selected: @status_filter), include_blank: "Все статусы" %>
+  </div>
+
+  <div>
+    <%= f.label :delivery_date, "Дата выполнения:" %><br />
+    <%= f.date_field :delivery_date, value: @date_filter %>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <%= f.submit "Применить", class: "btn btn-primary" %>
   </div>
 <% end %>
+</div>
 
-
-<table>
+<!-- Таблица заказов -->
+<table class="order-table">
   <thead>
     <tr>
       <th>ID</th>
       <th>Цена</th>
       <th>Статус</th>
       <th>Дата создания</th>
+      <th>Дата готовности</th>
+      <th>Способ доставки</th>
+      <th>Пользователь</th>
       <th></th>
     </tr>
   </thead>
 
   <tbody>
-    <% @orders.each do |order| %>
+    <% if @orders.any? %>
+      <% @orders.each do |order| %>
+        <tr class="order-row status-<%= order.status %>">
+          <td>#<%= order.id %></td>
+          <td><%= number_to_currency(order.price, unit: "Br") %></td>
+          <td>
+            <%= link_to order.status.capitalize, edit_admin_order_path(order), class: "status-badge status-#{order.status}" %>
+          </td>
+          <td><%= order.created_at.strftime("%d.%m.%Y %H:%M") %></td>
+          <td><%= order.ready_date&.strftime("%d.%m.%Y") || "-" %></td>
+          <td><%= order.delivery_method || "-" %></td>
+          <td><%= order.user.email %></td>
+          <td><%= link_to "Просмотр", admin_order_path(order), class: "btn btn-show" %></td>
+        </tr>
+      <% end %>
+    <% else %>
       <tr>
-        <td><%= order.id %></td>
-        <td><%= number_to_currency(order.price, unit: "Br") %></td>
-        <td><%= order.status.capitalize %></td>
-        <td><%= order.created_at.strftime("%d.%m.%Y %H:%M") %></td>
-        <td><%= link_to "Просмотр", admin_order_path(order) %>
-</td>
+        <td colspan="8" style="text-align: center; color: #888;">Нет заказов по заданным критериям</td>
       </tr>
     <% end %>
   </tbody>
-</table>
+</table>\
+
+<style>
+
+</style>

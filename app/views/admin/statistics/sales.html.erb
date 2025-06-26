@@ -1,27 +1,93 @@
-    <%= render "admin/shared/nav" %>
-    <%= stylesheet_link_tag 'statistics.css', "data-turbo-track": "reload" %>
-    <!-- График для цветов -->
+<%= render "admin/shared/nav" %>
+<%= stylesheet_link_tag 'statistics', media: 'all' %>
+
+<h1 class="stats-title">📊 Статистика продаж</h1>
+
+<div class="stats-summary">
+  <!-- Основные метрики -->
+  <div class="stat-card revenue">
+    <h3>Общая выручка</h3>
+    <p><strong><%= number_to_currency(@total_revenue, unit: "BYN ") %></strong></p>
+  </div>
+
+  <div class="stat-card orders">
+    <h3>Всего заказов</h3>
+    <p><strong><%= @total_orders_count %></strong> шт.</p>
+  </div>
+
+  <div class="stat-card average-check">
+    <h3>Средний чек</h3>
+    <p><strong><%= number_to_currency(@average_order_value, unit: "BYN ") %></strong></p>
+  </div>
+</div>
+
+<!-- Таблица по цветам -->
 <% if @top_flowers.any? %>
-  <div class="stat-card">
-    <h3>Топ продаваемых цветов</h3>
+  <div class="stat-section">
+    <h2>Топ продаваемых цветов</h2>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Название</th>
+          <th>Количество</th>
+          <th>Выручка</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @top_flowers.each do |flower| %>
+          <tr>
+            <td><%= flower[:name] %></td>
+            <td><%= flower[:quantity_sold] %> шт.</td>
+            <td><%= number_to_currency(flower[:revenue], unit: "BYN ") %></td>
+          </tr>
+        <% end %>
+        <tr class="total-row">
+          <td><strong>Итого по цветам</strong></td>
+          <td><strong><%= @top_flowers.sum { |f| f[:quantity_sold] } %> шт.</strong></td>
+          <td><strong><%= number_to_currency(@total_flower_revenue, unit: "BYN ") %></strong></td>
+        </tr>
+      </tbody>
+    </table>
     <canvas id="flowersChart" width="600" height="400"></canvas>
   </div>
 <% end %>
 
-<!-- График для букетов -->
+<!-- Таблица по букетам -->
 <% if @top_bouquets_list.any? %>
-  <div class="stat-card">
-    <h3>Топ продаваемых букетов</h3>
+  <div class="stat-section">
+    <h2>Топ продаваемых букетов</h2>
+    <table class="stats-table">
+      <thead>
+        <tr>
+          <th>Название</th>
+          <th>Количество</th>
+          <th>Выручка</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @top_bouquets_list.each do |bouquet| %>
+          <tr>
+            <td><%= bouquet[:name] %></td>
+            <td><%= bouquet[:quantity_sold] %> шт.</td>
+            <td><%= number_to_currency(bouquet[:revenue], unit: "BYN ") %></td>
+          </tr>
+        <% end %>
+        <tr class="total-row">
+          <td><strong>Итого по букетам</strong></td>
+          <td><strong><%= @top_bouquets_list.sum { |b| b[:quantity_sold] } %> шт.</strong></td>
+          <td><strong><%= number_to_currency(@total_bouquet_revenue, unit: "BYN ") %></strong></td>
+        </tr>
+      </tbody>
+    </table>
     <canvas id="bouquetChart" width="600" height="400"></canvas>
   </div>
 <% end %>
 
-<!-- JS: Графики -->
+<!-- Графики -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-
-    // Цветы
+    // График цветов
     const ctxFlowers = document.getElementById('flowersChart')?.getContext('2d');
     if (ctxFlowers) {
       const flowerNames = <%= raw @top_flowers.map { |f| f[:name] }.to_json %>;
@@ -60,7 +126,7 @@
       });
     }
 
-    // Букеты
+    // График букетов
     const ctxBouquets = document.getElementById('bouquetChart')?.getContext('2d');
     if (ctxBouquets) {
       const bouquetNames = <%= raw @top_bouquets_list.map { |b| b[:name] }.to_json %>;

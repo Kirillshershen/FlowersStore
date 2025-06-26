@@ -3,7 +3,7 @@ class Order < ApplicationRecord
   has_many :product_in_orders
   has_many :products, through: :product_in_orders
  after_update :create_status_notification, if: :saved_change_to_status?
-
+  STATUS_OPTIONS = %w[подтвержден готов завершен отменен].freeze
 
   validates :delivery_method, presence: true, unless: -> { status == 'draft' }
   validates :ready_date, presence: true, unless: -> { status == 'draft' }

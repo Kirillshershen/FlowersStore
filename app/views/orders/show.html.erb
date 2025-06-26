@@ -47,9 +47,10 @@
                 <p>
                   <strong>Количество:</strong>
                   <%= form_with url: update_quantity_order_path(product_id: item.product.id), method: :patch, remote: true, html: { class: "quantity-form", data: { item_id: item.id, price: price, discount: discount_percent } } do |f| %>
-                    <%= button_tag "+", type: "button", class: "quantity-button increase", data: { item_id: item.id } %>
-                    <%= f.number_field :quantity, value: quantity, min: 1, class: "quantity-input", data: { item_id: item.id } %>
                     <%= button_tag "-", type: "button", class: "quantity-button decrease", data: { item_id: item.id } %>
+                    <%= f.number_field :quantity, value: quantity, min: 1, class: "quantity-input", data: { item_id: item.id } %>
+
+                                        <%= button_tag "+", type: "button", class: "quantity-button increase", data: { item_id: item.id } %>
                   <% end %>
                 </p>
 

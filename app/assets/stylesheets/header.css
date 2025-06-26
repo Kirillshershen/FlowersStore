@@ -542,3 +542,83 @@
     padding: 0 12px;
   }
 }
+/* Flash сообщения - центр снизу */
+.flash-notice, .flash-alert {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 25px;
+  border-radius: 6px;
+  color: white;
+  z-index: 1000;
+  animation: fadeOut 3s forwards;
+  animation-delay: 2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  max-width: 80%;
+  text-align: center;
+}
+
+.flash-notice {
+  background-color: #6b9e7e; /* Основной зеленый из вашей палитры */
+  border: 1px solid #5a8c6d;
+}
+
+.flash-alert {
+  background-color: #e74c3c; /* Более яркий красный для ошибок */
+  border: 1px solid #c0392b;
+}
+
+/* Анимация плавного исчезновения */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    visibility: visible;
+    bottom: 20px;
+  }
+  70% {
+    opacity: 1;
+    bottom: 20px;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    bottom: 10px;
+  }
+}
+
+/* Иконка перед текстом */
+.flash-notice::before, .flash-alert::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.flash-notice::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+}
+
+.flash-alert::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'/%3E%3C/svg%3E");
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .flash-notice, .flash-alert {
+    max-width: 90%;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .flash-notice::before, .flash-alert::before {
+    width: 16px;
+    height: 16px;
+  }
+}

@@ -73,7 +73,6 @@ end
     }
   end
 
-  # Метод, чтобы узнать, есть ли скидка
   def discounted?
     current_promotion_info.present?
   end

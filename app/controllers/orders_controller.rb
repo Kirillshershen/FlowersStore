@@ -68,8 +68,8 @@ def add_item
   item = @order.product_in_orders.find_or_initialize_by(product: product)
   item.quantity = (item.quantity || 0) + quantity
   item.save
-
-  redirect_to catalog_product_path(product), notice: "Добавлено в заказ"
+ flash[:notice] = "Товар добавлен в корзину"
+  redirect_to catalog_product_path(product)
 end
 
 

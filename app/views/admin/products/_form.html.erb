@@ -165,7 +165,9 @@
 </script>
 <div>
   <%= form.label :product_type, "Тип продукта" %><br>
-  <%= form.select :product_type, options_for_select(["Цветок", "Ваза", "Игрушка", "Букет"], @product.product_type), prompt: "Выберите тип продукта" %>
+  <%= form.select :product_type, 
+      options_for_select(["Цветок", "Ваза", "Игрушка", "Букет", "Растение"], @product.product_type), 
+      prompt: "Выберите тип продукта" %>
 </div>
   <hr>
   <!-- Flower -->
@@ -206,7 +208,28 @@
       <%= text_field_tag "product[metadata][material]", @product.metadata&.dig("material") || "" %>
     </div>
   </div>
-
+<!-- Plant -->
+<div class="metadata-block" data-type="Растение" style="display: none; margin-bottom: 20px;">
+  <h3>Данные для Растения</h3>
+  
+  <div>
+    <%= form.label :plant_type, "Тип растения" %><br>
+    <%= select_tag "product[metadata][plant_type]", 
+        options_for_select([["Комнатные", "Комнатные"], ["Дачные", "Дачные"]], 
+        @product.metadata&.dig("plant_type")),
+        include_blank: "Выберите тип растения" %>
+  </div>
+  
+  <div>
+    <%= form.label :care_level, "Уровень ухода" %><br>
+    <%= text_field_tag "product[metadata][care_level]", @product.metadata&.dig("care_level") || "" %>
+  </div>
+  
+  <div>
+    <%= form.label :light_requirements, "Требования к свету" %><br>
+    <%= text_field_tag "product[metadata][light_requirements]", @product.metadata&.dig("light_requirements") || "" %>
+  </div>
+</div>
   <!-- Bouquet -->
 <div class="metadata-block" data-type="Букет" style="display: none; margin-bottom: 20px;">
   <h3>Данные для Букета</h3>
@@ -266,6 +289,7 @@
     <%= form.submit %>
   </div>
 <% end %>
+
 </div>
 </body>
 </html>

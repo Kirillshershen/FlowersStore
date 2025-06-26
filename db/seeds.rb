@@ -411,7 +411,8 @@ product = Product.create!(
   product_type: "Растение",
   metadata: {
     plant_type: "Комнатные",
-    height: "40-50 см",
+    care_level: "Часто поливать",
+    light_requirements: "Любит тень"
   },
   price: 35.00,
   description: "Компактный фикус с пестрыми листьями..."
@@ -428,7 +429,8 @@ product =  Product.create!(
   product_type: "Растение",
   metadata: {
     plant_type: "Дачные",
-
+care_level: "Часто поливать",
+light_requirements: "Любит тень"
 
   },
   price: 55.00,
